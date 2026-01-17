@@ -102,13 +102,13 @@ async function renderCartItems() {
     orderDetails.innerHTML = `
       <div class="empty-cart-message" style="text-align: center; padding: 60px 20px; color: #e0e0e0;">
         <span class="material-symbols-outlined" style="font-size: 64px; color: #009900; margin-bottom: 20px; display: block;">shopping_cart</span>
-        <h3 style="margin-bottom: 10px;">Your cart is empty</h3>
-        <p style="margin-bottom: 30px; color: #a0a0a0;">Looks like you haven't added anything to your cart yet.</p>
-        <a href="/all-products" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #009900, #007700); color: white; text-decoration: none; border-radius: 8px; font-weight: 500;">Continue Shopping</a>
+        <h3 style="margin-bottom: 10px;">Vaša korpa je prazna</h3>
+        <p style="margin-bottom: 30px; color: #a0a0a0;">Izgleda da još niste dodali ništa u korpu.</p>
+        <a href="/all-products" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #009900, #007700); color: white; text-decoration: none; border-radius: 8px; font-weight: 500;">Nastavi kupovinu</a>
       </div>
     `;
     if (productCount) productCount.textContent = '0';
-    if (orderTotal) orderTotal.textContent = 'Total: $0.00';
+    if (orderTotal) orderTotal.textContent = 'Ukupno: 0.00 RSD';
     return;
   }
   
@@ -133,7 +133,7 @@ async function renderCartItems() {
     
     html += `
       <div class="order-item" data-product-id="${product.id}">
-        <button class="remove-item" aria-label="Remove item" data-product-id="${product.id}">×</button>
+        <button class="remove-item" aria-label="Ukloni proizvod" data-product-id="${product.id}">×</button>
         <div class="item-image">
           <div class="item-image-skeleton"></div>
           <div class="item-image-error" style="display: none;">
@@ -145,11 +145,11 @@ async function renderCartItems() {
           <h4 class="item-title">${product.title}</h4>
           <p class="item-brand">${product.brand || ''}</p>
           <div class="item-footer">
-            <span class="item-price">$${itemTotal.toFixed(2)}</span>
+            <span class="item-price">${formatPriceNumber(itemTotal)} RSD</span>
             <div class="quantity-controls">
-              <button class="quantity-btn minus" aria-label="Decrease quantity" data-product-id="${product.id}">-</button>
+              <button class="quantity-btn minus" aria-label="Smanji količinu" data-product-id="${product.id}">-</button>
               <span class="quantity" data-product-id="${product.id}">${quantity}</span>
-              <button class="quantity-btn plus" aria-label="Increase quantity" data-product-id="${product.id}">+</button>
+              <button class="quantity-btn plus" aria-label="Povećaj količinu" data-product-id="${product.id}">+</button>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ async function renderCartItems() {
   
   // Update totals - show number of different products, not total quantity
   if (productCount) productCount.textContent = uniqueProducts;
-  if (orderTotal) orderTotal.textContent = `Total: $${total.toFixed(2)}`;
+  if (orderTotal) orderTotal.textContent = `Ukupno: ${formatPriceNumber(total)} RSD`;
   
   // Fetch images from Cloudinary and update
   if (validCartItems.length > 0) {

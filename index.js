@@ -231,12 +231,20 @@ function slugify(value) {
     .toLowerCase();
 }
 
+// Format price string with thousand separators
+function formatPriceString(price) {
+  if (price === null || price === undefined || price === '/' || price === '') return price;
+  const num = typeof price === 'string' ? parseFloat(price.replace(/[^\d]/g, '')) : parseFloat(price);
+  if (isNaN(num)) return price;
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 app.get("/product/:slug", (req, res) => {
   const slug = req.params.slug;
   const products = loadProductsData();
   
   if (!slug) {
-    return res.render("product", { product: null, recommendedProducts: [] });
+    return res.render("product", { product: null, recommendedProducts: [], formatPriceString });
   }
   
   // Find product by matching slugified title with URL slug
@@ -246,7 +254,7 @@ app.get("/product/:slug", (req, res) => {
   });
   
   if (!product) {
-    return res.render("product", { product: null, recommendedProducts: [] });
+    return res.render("product", { product: null, recommendedProducts: [], formatPriceString });
   }
   
   // Get recommended products (same category, exclude current product)
@@ -258,7 +266,7 @@ app.get("/product/:slug", (req, res) => {
       slug: slugify(p.title)
     }));
   
-  res.render("product", { product, recommendedProducts, slugify });
+  res.render("product", { product, recommendedProducts, slugify, formatPriceString });
 });
 
 // Keep old route for backward compatibility
@@ -267,13 +275,13 @@ app.get("/product", (req, res) => {
   const products = loadProductsData();
   
   if (!productId) {
-    return res.render("product", { product: null, recommendedProducts: [] });
+    return res.render("product", { product: null, recommendedProducts: [], formatPriceString });
   }
   
   const product = products.find(p => p.id === productId);
   
   if (!product) {
-    return res.render("product", { product: null, recommendedProducts: [] });
+    return res.render("product", { product: null, recommendedProducts: [], formatPriceString });
   }
   
   const recommendedProducts = products
@@ -284,7 +292,7 @@ app.get("/product", (req, res) => {
       slug: slugify(p.title)
     }));
   
-  res.render("product", { product, recommendedProducts, slugify });
+  res.render("product", { product, recommendedProducts, slugify, formatPriceString });
 });
 
 // Custom page routes - serve custom-page.html for category URLs
@@ -340,7 +348,7 @@ app.get("/:slug", (req, res, next) => {
       slug: slugify(p.title)
     }));
   
-  res.render("product", { product, recommendedProducts, slugify });
+  res.render("product", { product, recommendedProducts, slugify, formatPriceString });
 });
 
 // Catch all route for category URLs - serve custom-page.html

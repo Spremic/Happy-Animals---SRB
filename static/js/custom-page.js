@@ -150,7 +150,8 @@ function filterBySelection(products, selection) {
 // This function is for HTML display only in custom-page
 function formatPriceForDisplay(product) {
   const price = product.salePrice && product.salePrice !== '/' ? product.salePrice : product.price;
-  return `<div class="price-range">${price} $</div>`;
+  const formattedPrice = formatPriceString(price);
+  return `<div class="price-range">${formattedPrice} RSD</div>`;
 }
 
 function createProductCard(product) {
@@ -163,7 +164,7 @@ function createProductCard(product) {
 
   const hasDiscount = product.salePrice && product.salePrice !== '/' && product.percentage && product.percentage !== '/' && product.percentage !== '0%';
   const badge = hasDiscount ? `<div class="product-badge">-${product.percentage}</div>` : "";
-  const oldPriceOnImage = hasDiscount ? `<div class="product-old-price-on-image">${product.price} $</div>` : "";
+  const oldPriceOnImage = hasDiscount ? `<div class="product-old-price-on-image">${formatPriceString(product.price)} RSD</div>` : "";
   
   // Create slug from product title for URL
   const productSlug = slugify(product.title);
@@ -514,9 +515,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const hasMid = prices.some(p => p >= 25 && p <= 75);
     const hasHigh = prices.some(p => p > 75);
     
-    if (hasLow) ranges.push({ label: 'Under 25 $', min: 0, max: 25 });
-    if (hasMid) ranges.push({ label: '25 - 75 $', min: 25, max: 75 });
-    if (hasHigh) ranges.push({ label: 'Over 75 $', min: 75, max: Infinity });
+    if (hasLow) ranges.push({ label: 'Under 25 RSD', min: 0, max: 25 });
+    if (hasMid) ranges.push({ label: '25 - 75 RSD', min: 25, max: 75 });
+    if (hasHigh) ranges.push({ label: 'Over 75 RSD', min: 75, max: Infinity });
     
     // If no ranges, add default
     if (ranges.length === 0) {

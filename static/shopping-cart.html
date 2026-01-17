@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" id="html">
+<html lang="sr" id="html">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shopping Cart – Happy Animals</title>
+    <title>Korpa – Happy Animals</title>
 
     <!-- Resource Hints -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
@@ -73,68 +73,89 @@
     <section id="shopping-cart-section">
       <div class="container">
         <div class="cart-header">
-          <h2>SHOPPING <span>CART</span></h2>
+          <h2>KORPA <span>ZA KUPOVINU</span></h2>
         </div>
 
         <div class="cart-content">
           <div class="shipping-address">
-            <h3>Shipping Address</h3>
+            <h3>Adresa za dostavu</h3>
             <div class="address-form">
               <form class="shipping-form">
                 <div class="form-row">
-                  <div class="form-group" data-placeholder="First Name *">
+                  <div class="form-group" data-placeholder="Ime *">
                     <input type="text" id="firstName" name="firstName" required>
                   </div>
-                  <div class="form-group" data-placeholder="Last Name *">
+                  <div class="form-group" data-placeholder="Prezime *">
                     <input type="text" id="lastName" name="lastName" required>
                   </div>
                 </div>
 
                 <div class="form-row">
-                  <div class="form-group" data-placeholder="Phone Number *">
+                  <div class="form-group" data-placeholder="Broj telefona *">
                     <input type="tel" id="phone" name="phone" required>
                   </div>
-                  <div class="form-group" data-placeholder="Email Address *">
+                  <div class="form-group" data-placeholder="E-pošta *">
                     <input type="email" id="email" name="email" required>
                   </div>
                 </div>
 
-                <div class="form-group" data-placeholder="ZIP / Postal Code *">
+                <div class="form-group" data-placeholder="Poštanski broj *">
                   <input type="text" id="zipCode" name="zipCode" required>
                 </div>
 
                 <div class="form-row">
-                  <div class="form-group" data-placeholder="City *">
+                  <div class="form-group" data-placeholder="Grad *">
                     <input type="text" id="city" name="city" required>
                   </div>
-                  <div class="form-group" data-placeholder="State *">
+                  <div class="form-group" data-placeholder="Država *">
                     <input type="text" id="state" name="state" maxlength="2" required>
                   </div>
                 </div>
 
                 <div class="form-row">
-                  <div class="form-group" data-placeholder="Street Address / P.O. Box *">
+                  <div class="form-group" data-placeholder="Ulica i broj *">
                     <input type="text" id="streetAddress" name="streetAddress" required>
                   </div>
-                  <div class="form-group" data-placeholder="Apartment, Suite, Unit, etc.">
+                  <div class="form-group" data-placeholder="Stan, broj, sprat, itd.">
                     <input type="text" id="apartment" name="apartment">
                   </div>
                 </div>
 
-                <div class="form-group" data-placeholder="Additional Notes">
+                <div class="form-group" data-placeholder="Dodatne napomene">
                   <textarea id="notes" name="notes" rows="8"></textarea>
                 </div>
 
                 <div class="payment-section">
-                  <h4>Payment Method</h4>
+                  <h4>Način plaćanja</h4>
 
                   <div class="payment-list">
                     <div class="payment-row">
-                        <input type="radio" id="card" name="payment" value="card">
-                        <label for="card" class="payment-label active">
+                      <input type="radio" id="cod" name="payment" value="cod" checked>
+                      <label for="cod" class="payment-label active">
                         <div class="payment-header">
                           <div class="custom-radio"></div>
-                          <span class="service-name">Credit / Debit Card</span>
+                          <span class="service-name">Pouzećem</span>
+                          <div class="service-logos">
+                            <span class="material-symbols-outlined" style="font-size: 32px; color: #009900;">payments</span>
+                          </div>
+                        </div>
+
+                        <!-- Cash on Delivery Form -->
+                        <div class="payment-form" id="cod-form">
+                          <div class="cod-notice">
+                            <p>Plaćanje se vrši prilikom preuzimanja paketa. Dostavljač će vam uručiti paket i primiti gotovinu.</p>
+                          </div>
+                          <button type="button" class="payment-btn">Završi porudžbinu</button>
+                        </div>
+                      </label>
+                    </div>
+
+                    <div class="payment-row">
+                        <input type="radio" id="card" name="payment" value="card">
+                        <label for="card" class="payment-label">
+                        <div class="payment-header">
+                          <div class="custom-radio"></div>
+                          <span class="service-name">Kreditna / Debitna kartica</span>
                           <div class="service-logos">
                           <svg xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" id="Layer_1" x="0px" y="0px" width="42" height="26" viewBox="0 0 750 471" enable-background="new 0 0 750 471" xml:space="preserve" class="logo-small">
                             <g id="visa" sketch:type="MSLayerGroup">
@@ -164,30 +185,30 @@
                         </div>
 
                         <!-- Credit Card Form -->
-                        <div class="payment-form" id="card-form">
+                        <div class="payment-form" id="card-form" style="display: none;">
                           <div class="form-row">
                             <div class="form-group">
-                              <label for="cardNumber">Card Number</label>
-                              <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required>
+                              <label for="cardNumber">Broj kartice</label>
+                              <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456">
                             </div>
                           </div>
                           <div class="form-row">
                             <div class="form-group">
-                              <label for="expiryDate">Expiry Date</label>
-                              <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+                              <label for="expiryDate">Datum isteka</label>
+                              <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/GG">
                             </div>
                             <div class="form-group">
                               <label for="cvv">CVV</label>
-                              <input type="text" id="cvv" name="cvv" placeholder="123" required>
+                              <input type="text" id="cvv" name="cvv" placeholder="123">
                             </div>
                           </div>
                           <div class="form-row">
                             <div class="form-group">
-                              <label for="cardName">Name on Card</label>
-                              <input type="text" id="cardName" name="cardName" placeholder="John Doe" required>
+                              <label for="cardName">Ime na kartici</label>
+                              <input type="text" id="cardName" name="cardName" placeholder="Marko Jovanović">
                             </div>
                           </div>
-                          <button type="button" class="payment-btn">Complete Payment</button>
+                          <button type="button" class="payment-btn">Završi plaćanje</button>
                         </div>
                       </label>
                     </div>
@@ -210,15 +231,15 @@
                         </div>
 
                         <!-- PayPal Form -->
-                        <div class="payment-form" id="paypal-form">
+                        <div class="payment-form" id="paypal-form" style="display: none;">
                           <div class="form-row">
                             <div class="form-group">
-                              <label for="paypalEmail">PayPal Email</label>
-                              <input type="email" id="paypalEmail" name="paypalEmail" placeholder="your-email@example.com" required>
+                              <label for="paypalEmail">PayPal E-pošta</label>
+                              <input type="email" id="paypalEmail" name="paypalEmail" placeholder="vas-email@example.com">
                             </div>
                           </div>
                           <div class="paypal-notice">
-                            <p>You will be redirected to PayPal to complete your payment securely.</p>
+                            <p>Bićete preusmereni na PayPal da bezbedno završite plaćanje.</p>
                           </div>
                         </div>
                       </label>
@@ -233,9 +254,9 @@
           <div class="order-summary">
             <h3 class="order-title">
               <span class="order-text">
-                Your Order<span class="product-count">0</span>
+                Vaša porudžbina<span class="product-count">0</span>
               </span>
-              <span class="order-total">Total: $0.00</span>
+              <span class="order-total">Ukupno: 0.00 RSD</span>
             </h3>
 
             <div class="order-details">
@@ -257,11 +278,62 @@
           document.querySelectorAll('.payment-label').forEach(label => {
             label.classList.remove('active');
           });
+          // Hide all payment forms
+          document.querySelectorAll('.payment-form').forEach(form => {
+            form.style.display = 'none';
+          });
           // Add active class to selected label
           if (this.checked) {
             this.nextElementSibling.classList.add('active');
+            // Show the corresponding payment form
+            const paymentValue = this.value;
+            const formId = paymentValue === 'cod' ? 'cod-form' : 
+                          paymentValue === 'card' ? 'card-form' : 
+                          paymentValue === 'paypal' ? 'paypal-form' : null;
+            if (formId) {
+              const form = document.getElementById(formId);
+              if (form) {
+                form.style.display = 'block';
+              }
+              // Add/remove required attributes based on selected payment method
+              if (paymentValue === 'card') {
+                document.getElementById('cardNumber').setAttribute('required', 'required');
+                document.getElementById('expiryDate').setAttribute('required', 'required');
+                document.getElementById('cvv').setAttribute('required', 'required');
+                document.getElementById('cardName').setAttribute('required', 'required');
+                document.getElementById('paypalEmail').removeAttribute('required');
+              } else if (paymentValue === 'paypal') {
+                document.getElementById('paypalEmail').setAttribute('required', 'required');
+                document.getElementById('cardNumber').removeAttribute('required');
+                document.getElementById('expiryDate').removeAttribute('required');
+                document.getElementById('cvv').removeAttribute('required');
+                document.getElementById('cardName').removeAttribute('required');
+              } else {
+                // COD - remove all required attributes
+                document.getElementById('cardNumber').removeAttribute('required');
+                document.getElementById('expiryDate').removeAttribute('required');
+                document.getElementById('cvv').removeAttribute('required');
+                document.getElementById('cardName').removeAttribute('required');
+                document.getElementById('paypalEmail').removeAttribute('required');
+              }
+            }
           }
         });
+      });
+
+      // Initialize payment form visibility on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        const selectedPayment = document.querySelector('input[name="payment"]:checked');
+        if (selectedPayment) {
+          selectedPayment.dispatchEvent(new Event('change'));
+        } else {
+          // If no payment is selected, show cod form by default
+          const codRadio = document.getElementById('cod');
+          if (codRadio) {
+            codRadio.checked = true;
+            codRadio.dispatchEvent(new Event('change'));
+          }
+        }
       });
 
       // Handle floating labels for shipping form

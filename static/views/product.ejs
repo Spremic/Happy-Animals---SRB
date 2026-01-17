@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" id="html">
+<html lang="sr" id="html">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= product ? product.title + ' - Happy Animals' : 'Product - Happy Animals' %></title>
+    <title><%= product ? product.title + ' - Happy Animals' : 'Proizvod - Happy Animals' %></title>
     
     <!-- Resource Hints -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
@@ -75,22 +75,22 @@
               <div class="main-image-error" style="display: none;">
                 <div class="recommended-error-content">
                   <span class="material-symbols-outlined recommended-error-icon">image_not_supported</span>
-                  <h4 class="recommended-error-title">Image Failed to Load</h4>
-                  <p class="recommended-error-message">We're having trouble loading this image. Please try again later.</p>
+                  <h4 class="recommended-error-title">Slika se nije učitala</h4>
+                  <p class="recommended-error-message">Imamo problema sa učitavanjem ove slike. Molimo pokušajte ponovo kasnije.</p>
                   <button class="recommended-error-retry">
                     <span class="material-symbols-outlined">refresh</span>
-                    Try Again
+                    Pokušaj ponovo
                   </button>
                 </div>
               </div>
               <img id="mainProductImage" src="" alt="<%= product ? product.title : 'Product Image' %>" class="main-image" />
-              <button class="image-zoom-btn" aria-label="Zoom image">
+              <button class="image-zoom-btn" aria-label="Uvećaj sliku">
                 <span class="material-symbols-outlined">zoom_in</span>
               </button>
-              <button class="image-arrow-left" aria-label="Previous image">
+              <button class="image-arrow-left" aria-label="Prethodna slika">
                 <span class="material-symbols-outlined">arrow_back_ios</span>
               </button>
-              <button class="image-arrow-right" aria-label="Next image">
+              <button class="image-arrow-right" aria-label="Sledeća slika">
                 <span class="material-symbols-outlined">arrow_forward_ios</span>
               </button>
             </div>
@@ -108,15 +108,15 @@
               <div class="seller-details">
                 <h4>Happy Animals</h4>
                 <div class="seller-rating">
-                  <span class="satisfied-customers">1000+ Satisfied Customers</span>
+                  <span class="satisfied-customers">1000+ Zadovoljnih Kupaca</span>
                 </div>
                 <div class="seller-location">
                   <span class="material-symbols-outlined">location_on</span>
-                  <span>New York, USA</span>
+                  <span>Beograd, Srbija</span>
                 </div>
               </div>
             </div>
-            <button class="view-more-btn">View More</button>
+            <button class="view-more-btn">Vidi više</button>
           </div>
         </div>
 
@@ -135,20 +135,20 @@
                   <div class="price-container">
                     <% if (product.price && product.price !== '/') { %>
                       <div class="original-price">
-                        <span class="original-amount"><%= product.price %></span>
-                        <span class="original-currency">$</span>
+                        <span class="original-amount"><%= formatPriceString(product.price) %></span>
+                        <span class="original-currency">RSD</span>
                       </div>
                     <% } %>
                     <div class="current-price">
-                      <span class="price-amount"><%= product.salePrice %></span>
-                      <span class="price-currency">$</span>
+                      <span class="price-amount"><%= formatPriceString(product.salePrice) %></span>
+                      <span class="price-currency">RSD</span>
                     </div>
                   </div>
                 <% } else { %>
                   <div class="price-container">
                     <div class="current-price">
-                      <span class="price-amount"><%= product.price %></span>
-                      <span class="price-currency">$</span>
+                      <span class="price-amount"><%= formatPriceString(product.price) %></span>
+                      <span class="price-currency">RSD</span>
                     </div>
                   </div>
                 <% } %>
@@ -157,26 +157,26 @@
 
             <!-- Description -->
             <div class="product-description reveal delay-300">
-              <h3 class="description-title">Description:</h3>
+              <h3 class="description-title">Opis:</h3>
               <p class="description-text">
                 <%= product.description %>
               </p>
             </div>
           <% } else { %>
             <div class="product-header">
-              <h1 class="product-title reveal delay-100">Product Not Found</h1>
+              <h1 class="product-title reveal delay-100">Proizvod nije pronađen</h1>
               <div class="product-price-wrapper reveal delay-200">
                 <div class="price-container">
                   <div class="current-price">
                     <span class="price-amount">0</span>
-                    <span class="price-currency">$</span>
+                    <span class="price-currency">RSD</span>
                   </div>
                 </div>
               </div>
             </div>
             <div class="product-description reveal delay-300">
-              <h3 class="description-title">Description:</h3>
-              <p class="description-text">The requested product could not be found.</p>
+              <h3 class="description-title">Opis:</h3>
+              <p class="description-text">Traženi proizvod nije pronađen.</p>
             </div>
           <% } %>
 
@@ -184,13 +184,13 @@
           <div class="product-actions reveal delay-400">
             <button class="btn-buy-now">
               <span class="material-symbols-outlined">shopping_cart</span>
-              Buy Now
+              Kupi sada
             </button>
             <button class="btn-add-cart" <% if (product && product.id) { %>data-product-id="<%= product.id %>"<% } %>>
               <span class="material-symbols-outlined">add_shopping_cart</span>
-              Add to Cart
+              Dodaj u korpu
             </button>
-            <button class="btn-favorite" <% if (product && product.id) { %>data-product-id="<%= product.id %>"<% } %> aria-label="Add to favorites">
+            <button class="btn-favorite" <% if (product && product.id) { %>data-product-id="<%= product.id %>"<% } %> aria-label="Dodaj u omiljene">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                 <path class="heart-outline" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#009900" stroke-width="2"/>
                 <path class="heart-filled" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#009900" opacity="0"/>
@@ -202,13 +202,13 @@
 
       <!-- Specifications Section -->
       <section class="specifications-section">
-        <h2 class="specifications-title reveal">Specifications</h2>
+        <h2 class="specifications-title reveal">Specifikacije</h2>
         <div class="specifications-content">
           <% if (product) { %>
             <% if (product.brand) { %>
               <div class="spec-item reveal delay-100">
                 <div class="spec-label-wrapper">
-                  <span class="spec-label">Brand:</span>
+                  <span class="spec-label">Brend:</span>
                 </div>
                 <div class="spec-value-wrapper">
                   <span class="spec-value"><%= product.brand %></span>
@@ -230,7 +230,7 @@
               <% if (product.category) { %>
                 <div class="spec-item reveal delay-100">
                   <div class="spec-label-wrapper">
-                    <span class="spec-label">Category:</span>
+                    <span class="spec-label">Kategorija:</span>
                   </div>
                   <div class="spec-value-wrapper">
                     <span class="spec-value"><%= product.category %></span>
@@ -240,7 +240,7 @@
               <% if (product.subcategory) { %>
                 <div class="spec-item reveal delay-200">
                   <div class="spec-label-wrapper">
-                    <span class="spec-label">Subcategory:</span>
+                    <span class="spec-label">Potkategorija:</span>
                   </div>
                   <div class="spec-value-wrapper">
                     <span class="spec-value"><%= product.subcategory %></span>
@@ -250,7 +250,7 @@
               <% if (product.type) { %>
                 <div class="spec-item reveal delay-200">
                   <div class="spec-label-wrapper">
-                    <span class="spec-label">Type:</span>
+                    <span class="spec-label">Tip:</span>
                   </div>
                   <div class="spec-value-wrapper">
                     <span class="spec-value"><%= product.type %></span>
@@ -264,7 +264,7 @@
                 <span class="spec-label">Status:</span>
               </div>
               <div class="spec-value-wrapper">
-                <span class="spec-value">Product not found</span>
+                <span class="spec-value">Proizvod nije pronađen</span>
               </div>
             </div>
           <% } %>
@@ -273,7 +273,7 @@
 
       <!-- Recommended Products Section -->
       <section class="recommended-section">
-        <h3 class="recommended-title reveal">Recommended Products</h3>
+        <h3 class="recommended-title reveal">Preporučeni Proizvodi</h3>
         
         <div class="recommended-flex-container">
           <div class="recommended-arrow-l">

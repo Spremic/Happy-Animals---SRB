@@ -540,6 +540,24 @@ textarea ~ .floating-label {
   display: block;
 }
 
+/* COD form - button aligned to left */
+#cod-form .payment-btn {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* COD notice styling */
+.cod-notice {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.cod-notice p {
+  margin: 0;
+}
+
 .payment-btn:hover {
   background-color: #007700;
 }

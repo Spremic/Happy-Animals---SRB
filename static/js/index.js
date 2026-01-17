@@ -140,11 +140,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="image-error" style="display: none;">
               <div class="recommended-error-content">
                 <span class="material-symbols-outlined recommended-error-icon">image_not_supported</span>
-                <h4 class="recommended-error-title">Image Failed to Load</h4>
-                <p class="recommended-error-message">We're having trouble loading this image. Please try again later.</p>
+                <h4 class="recommended-error-title">Slika se nije učitala</h4>
+                <p class="recommended-error-message">Imamo problema sa učitavanjem ove slike. Molimo pokušajte ponovo kasnije.</p>
                 <button class="recommended-error-retry">
                   <span class="material-symbols-outlined">refresh</span>
-                  Try Again
+                  Pokušaj ponovo
                 </button>
               </div>
             </div>
@@ -167,11 +167,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <span class="product-brand">${product.brand}</span>
             <h4>${product.title}</h4>
             <div class="price-container">
-              ${oldPriceValue ? `<div class="price-old">${oldPriceValue} $</div>` : ''}
-              <div class="price">${price} $</div>
+              ${oldPriceValue ? `<div class="price-old">${formatPriceString(oldPriceValue)} RSD</div>` : ''}
+              <div class="price">${formatPriceString(price)} RSD</div>
             </div>
             <div class="btns-flex">
-              <button class="buy-now">Buy now</button>
+              <button class="buy-now">Kupi sada</button>
               <button class="add-to-cart" data-product-id="${product.id}">
                 <span class="material-symbols-outlined cart-icon">add_shopping_cart</span>
               </button>
@@ -273,11 +273,11 @@ document.addEventListener("DOMContentLoaded", function () {
         errorFallback.innerHTML = `
           <div class="recommended-error-content">
             <span class="material-symbols-outlined recommended-error-icon">image_not_supported</span>
-            <h4 class="recommended-error-title">Image Failed to Load</h4>
-            <p class="recommended-error-message">We're having trouble loading this image. Please try again later.</p>
+            <h4 class="recommended-error-title">Slika se nije učitala</h4>
+            <p class="recommended-error-message">Imamo problema sa učitavanjem ove slike. Molimo pokušajte ponovo kasnije.</p>
             <button class="recommended-error-retry">
               <span class="material-symbols-outlined">refresh</span>
-              Try Again
+              Pokušaj ponovo
             </button>
           </div>
         `;

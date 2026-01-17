@@ -1762,17 +1762,17 @@
 }
 
 .recommended-discount-badge {
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  background: #009900;
-  color: white;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 6px 12px;
-  border-radius: 20px;
-  z-index: 10;
-  letter-spacing: 0.5px;
+  position: absolute !important;
+  top: 18px !important;
+  left: 18px !important;
+  background: #009900 !important;
+  color: white !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  padding: 12px 12px !important;
+  border-radius: 20px !important;
+  z-index: 10 !important;
+  letter-spacing: 0.5px !important;
 }
 
 .recommended-card img {

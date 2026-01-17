@@ -196,6 +196,22 @@ function formatPrice(product) {
   return price;
 }
 
+// Format price number with commas as thousand separator
+function formatPriceNumber(num) {
+  const numStr = num.toFixed(2);
+  const parts = numStr.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join('.');
+}
+
+// Format price string/number with commas as thousand separator (for simple prices without decimals)
+function formatPriceString(price) {
+  if (price === null || price === undefined || price === '/' || price === '') return price;
+  const num = typeof price === 'string' ? parseFloat(price.replace(/[^\d]/g, '')) : parseFloat(price);
+  if (isNaN(num)) return price;
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 // Render cart drawer
 async function renderCartDrawer() {
   const cartItems = getCartItems();
@@ -220,16 +236,16 @@ async function renderCartDrawer() {
         <div class="empty-icon">
           <span class="material-symbols-outlined">shopping_cart</span>
         </div>
-        <h3>Your cart is empty</h3>
-        <p>Looks like you haven't added anything to your cart yet.</p>
+        <h3>Vaša korpa je prazna</h3>
+        <p>Izgleda da još niste dodali ništa u korpu.</p>
         <a href="/all-products" class="empty-cta-btn">
           <span class="material-symbols-outlined">shopping_bag</span>
-          Shop
+          Katalog
         </a>
       </div>
     `;
     if (cartCount) cartCount.textContent = '(0)';
-    if (totalPriceEl) totalPriceEl.textContent = '$0.00';
+    if (totalPriceEl) totalPriceEl.textContent = '0,00 RSD';
     // Hide cart footer when empty
     const cartFooter = document.querySelector('.cart-footer');
     if (cartFooter) cartFooter.style.display = 'none';
@@ -265,7 +281,7 @@ async function renderCartDrawer() {
           <h4>${product.title}</h4>
           <p class="item-variant">${product.brand || ''}</p>
           <div class="price-row">
-            <span class="item-price">$${itemTotal.toFixed(2)}</span>
+            <span class="item-price">${formatPriceNumber(itemTotal)} RSD</span>
             <div class="qty-control">
               <button class="qty-btn minus" data-product-id="${product.id}">-</button>
               <input type="number" value="${quantity}" min="1" readonly data-product-id="${product.id}">
@@ -282,7 +298,7 @@ async function renderCartDrawer() {
   
   cartItemsContainer.innerHTML = html;
   if (cartCount) cartCount.textContent = `(${totalItems})`;
-  if (totalPriceEl) totalPriceEl.textContent = `$${total.toFixed(2)}`;
+  if (totalPriceEl) totalPriceEl.textContent = `${formatPriceNumber(total)} RSD`;
   
   // Fetch images from Cloudinary and update
   if (validCartItems.length > 0) {
@@ -369,7 +385,7 @@ function showCartNotification(productName) {
   }
   
   // Update message with product name
-  toastMessage.textContent = `${productName} has been added to your cart!`;
+  toastMessage.textContent = `${productName} je dodato u vašu korpu!`;
   
   // Initialize and show Bootstrap toast
   const toast = new bootstrap.Toast(toastElement, {
@@ -458,7 +474,7 @@ async function updateCartTotalsOnly() {
   const totalPriceEl = document.querySelector('.total-price');
   
   if (cartCount) cartCount.textContent = `(${totalItems})`;
-  if (totalPriceEl) totalPriceEl.textContent = `$${total.toFixed(2)}`;
+  if (totalPriceEl) totalPriceEl.textContent = `${formatPriceNumber(total)} RSD`;
 }
 
 // Update saved count without full re-render
@@ -492,11 +508,11 @@ async function renderSavedDrawer() {
         <div class="empty-icon">
           <span class="material-symbols-outlined">favorite</span>
         </div>
-        <h3>Your wishlist is empty</h3>
-        <p>Save your favorite products for later by clicking the heart icon.</p>
+        <h3>Vaša lista želja je prazna</h3>
+        <p>Sačuvajte svoje omiljene proizvode za kasnije klikom na ikonu srca.</p>
         <a href="/all-products" class="empty-cta-btn">
           <span class="material-symbols-outlined">explore</span>
-          Browse
+          Pregledaj
         </a>
       </div>
     `;
@@ -532,7 +548,7 @@ async function renderSavedDrawer() {
           <h4>${product.title}</h4>
           <p class="saved-variant">${product.brand || ''}</p>
           <div class="saved-bottom">
-            <span class="saved-price">$${price.toFixed(2)}</span>
+            <span class="saved-price">${formatPriceNumber(price)} RSD</span>
             <button class="move-to-cart-btn" data-product-id="${product.id}">
               <span class="material-symbols-outlined">shopping_cart</span>
             </button>
@@ -887,20 +903,20 @@ function slugify(value) {
 function parseCategories(products) {
   const categoryMap = {};
 
-  // Mapiranje category na ikonice (na osnovu postojećeg koda)
+  // Mapiranje category na ikonice (koriste se srpski nazivi kategorija)
   const categoryIcons = {
-    "Pet Food": "restaurant",
-    "Pet Toys": "toys",
-    "Pet Supplies": "pets",
-    "Pet Grooming": "soap"
+    "Hrana za kućne ljubimce": "restaurant",
+    "Igračke za kućne ljubimce": "toys",
+    "Nega kućnih ljubimaca": "spa",
+    "Oprema za kućne ljubimce": "pets"
   };
 
   // Mapiranje category na data-category atribute
   const categoryDataAttrs = {
-    "Pet Food": "hrana",
-    "Pet Toys": "igracke",
-    "Pet Supplies": "oprema",
-    "Pet Grooming": "higijena"
+    "Hrana za kućne ljubimce": "hrana",
+    "Igračke za kućne ljubimce": "igracke",
+    "Nega kućnih ljubimaca": "higijena",
+    "Oprema za kućne ljubimce": "oprema"
   };
 
   products.forEach(product => {
@@ -1014,11 +1030,11 @@ document.addEventListener("DOMContentLoaded", async function () {
           <!-- Desktop Navigation (hidden on mobile) -->
           <nav class="desktop-nav">
             <ul>
-              <a href="/"><li>Home</li></a>
-              <a href="/about"><li>About</li></a>
-              <a href="/gallery"><li>Gallery</li></a>
+              <a href="/"><li>Početna</li></a>
+              <a href="/about"><li>O Nama</li></a>
+              <a href="/gallery"><li>Galerija</li></a>
               <li class="dropdown">
-                <a href="/products">Products</a>
+                <a href="/products">Proizvodi</a>
                 <div class="mega-dropdown">
                   <div class="mega-dropdown-wrapper">
                     <!-- Left Sidebar: Categories List -->
@@ -1042,7 +1058,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               <img src="/img/happy animal.png" alt="Happy Animals logo" />
               <div class="mobile-menu-logo-text">Happy Animals</div>
             </div>
-            <button class="mobile-menu-close" aria-label="Close">
+            <button class="mobile-menu-close" aria-label="Zatvori">
               <span class="material-symbols-outlined">close</span>
             </button>
           </div>
@@ -1052,25 +1068,25 @@ document.addEventListener("DOMContentLoaded", async function () {
               <a href="/" class="active">
                 <li>
                   <span class="material-symbols-outlined">home</span>
-                  <span>Home</span>
+                  <span>Početna</span>
                 </li>
               </a>
               <a href="/about">
                 <li>
                   <span class="material-symbols-outlined">info</span>
-                  <span>About</span>
+                  <span>O Nama</span>
                 </li>
               </a>
               <a href="/gallery">
                 <li>
                   <span class="material-symbols-outlined">photo_library</span>
-                  <span>Gallery</span>
+                  <span>Galerija</span>
                 </li>
               </a>
               <li class="dropdown">
                 <a href="/products" class="mobile-menu-products-link">
                   <span class="material-symbols-outlined">shopping_bag</span>
-                  <span>Products</span>
+                  <span>Proizvodi</span>
                   <span class="material-symbols-outlined dropdown-arrow">chevron_right</span>
                 </a>
                 <div class="mega-dropdown">
@@ -1096,7 +1112,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <button class="mobile-menu-categories-back">
                   <span class="material-symbols-outlined">arrow_back_ios</span>
                 </button>
-                <span class="mobile-menu-categories-back-text">Back to Navigation</span>
+                <span class="mobile-menu-categories-back-text">Nazad na navigaciju</span>
               </div>
               <ul class="mobile-menu-products-categories">
                 ${Object.entries(categoryMap).map(([categoryName, categoryData]) => {
@@ -1132,7 +1148,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                   <span class="material-symbols-outlined">arrow_back_ios</span>
                 </button>
                 <span class="mobile-menu-products-current-category-title"></span>
-                <a href="#" class="mobile-menu-products-view-all-link">View All</a>
+                <a href="#" class="mobile-menu-products-view-all-link">Prikaži sve</a>
               </div>
               <div class="mobile-menu-products-subcategories-content"></div>
             </div>
@@ -1140,7 +1156,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           <div class="mobile-menu-footer">
             <a href="/all-products" class="mobile-menu-view-all-btn">
               <span class="material-symbols-outlined">shopping_bag</span>
-              <span>View All Products</span>
+              <span>Prikaži sve proizvode</span>
             </a>
           </div>
         </div>
@@ -1161,7 +1177,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               />
             </svg>
 
-            <span class="btn-text">My cart</span>
+            <span class="btn-text">Moja korpa</span>
           </button>
 
           <button id="savedProduct">
@@ -1176,7 +1192,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               />
             </svg>
 
-            <span class="btn-text">Saved items</span>
+            <span class="btn-text">Sačuvano</span>
           </button>
         </div>
 
@@ -1196,7 +1212,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           <img src="/img/happy animal.png" alt="Happy Animals logo" />
           <span class="products-modal-logo-text">Happy Animals</span>
         </div>
-        <button class="products-modal-close" aria-label="Close">
+        <button class="products-modal-close" aria-label="Zatvori">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
@@ -1234,7 +1250,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         <div class="products-modal-view products-modal-subcategories-view">
           <button class="products-modal-back">
             <span class="material-symbols-outlined">arrow_back</span>
-            <span class="products-modal-back-text">Back</span>
+            <span class="products-modal-back-text">Nazad</span>
           </button>
           <div class="products-modal-subcategories-content"></div>
         </div>
@@ -1247,7 +1263,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const footerHTML = `
     <footer>
       <div class="footerTopContent">
-        <h4>Follow us:</h4>
+        <h4>Pratite nas:</h4>
         <div class="footerTopIcons">
           <a href="https://www.facebook.com/profile.php?id=100017595854060">
             <i class="fab fa-facebook ig" aria-hidden="true"></i>
@@ -1257,15 +1273,15 @@ document.addEventListener("DOMContentLoaded", async function () {
           </a>
         </div>
         <a href="#body" id="scrollToTop"
-          >Scroll to top <i class="fa fa-arrow-up" aria-hidden="true"></i
+          >Povratak na vrh <i class="fa fa-arrow-up" aria-hidden="true"></i
         ></a>
       </div>
 
       <div class="footerBottomContent">
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/gallery">Gallery</a>
-      <a href="/legal">Legal</a>
+      <a href="/">Početna</a>
+      <a href="/about">O Nama</a>
+      <a href="/gallery">Galerija</a>
+      <a href="/legal">Pravne informacije</a>
       </div>
     </footer>
   `;
@@ -2055,7 +2071,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     <div class="cart-overlay-bg"></div>
     <div class="cart-drawer">
       <div class="cart-header">
-        <h3>Your Cart <span class="cart-count">(0)</span></h3>
+        <h3>Vaša Korpa <span class="cart-count">(0)</span></h3>
         <button class="close-cart">
           <span class="material-symbols-outlined">close</span>
         </button>
@@ -2067,11 +2083,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       <div class="cart-footer">
         <div class="subtotal-row">
-          <span>Subtotal</span>
-          <span class="total-price">$0.00</span>
+          <span>Ukupno</span>
+          <span class="total-price">0.00 RSD</span>
         </div>
-        <p class="shipping-note">Shipping & taxes calculated at checkout</p>
-        <button class="checkout-btn">Proceed to Checkout</button>
+        <p class="shipping-note">Dostava i takse se izračunavaju pri plaćanju</p>
+        <button class="checkout-btn">Nastavi na plaćanje</button>
       </div>
     </div>
   `;
@@ -2082,7 +2098,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const savedDrawerHTML = `
     <div class="saved-drawer">
       <div class="saved-header">
-        <h3><span class="material-symbols-outlined">favorite</span> Wishlist <span class="saved-count">0</span></h3>
+        <h3><span class="material-symbols-outlined">favorite</span> Lista želja <span class="saved-count">0</span></h3>
         <button class="close-saved">
           <span class="material-symbols-outlined">close</span>
         </button>
@@ -2093,7 +2109,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       </div>
 
       <div class="saved-footer">
-        <button class="move-all-btn">Move All to Cart</button>
+        <button class="move-all-btn">Premesti sve u korpu</button>
       </div>
     </div>
   `;
@@ -2106,11 +2122,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="background-color: #000; color: #fff;">
         <div class="toast-header" style="background-color: #009900; color: #fff; border-bottom: 1px solid #333;">
           <span class="material-symbols-outlined me-2" style="color: #fff;">check_circle</span>
-          <span class="me-auto" style="color: #fff;">Success</span>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+          <span class="me-auto" style="color: #fff;">Uspeh</span>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Zatvori"></button>
         </div>
         <div class="toast-body" style="background-color: #000; color: #fff;">
-          <span id="toastMessage">Product added to cart!</span>
+          <span id="toastMessage">Proizvod je dodat u korpu!</span>
         </div>
       </div>
     </div>

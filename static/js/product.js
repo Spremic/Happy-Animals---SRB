@@ -120,11 +120,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             errorFallback.innerHTML = `
               <div class="recommended-error-content">
                 <span class="material-symbols-outlined recommended-error-icon">image_not_supported</span>
-                <h4 class="recommended-error-title">Image Failed to Load</h4>
-                <p class="recommended-error-message">We're having trouble loading this image. Please try again later.</p>
+                <h4 class="recommended-error-title">Slika se nije učitala</h4>
+                <p class="recommended-error-message">Imamo problema sa učitavanjem ove slike. Molimo pokušajte ponovo kasnije.</p>
                 <button class="recommended-error-retry">
                   <span class="material-symbols-outlined">refresh</span>
-                  Try Again
+                  Pokušaj ponovo
                 </button>
               </div>
             `;
@@ -707,7 +707,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                   <span class="material-symbols-outlined recommended-error-icon">image_not_supported</span>
                   <h4 class="recommended-error-title">Image Failed to Load</h4>
                   <p class="recommended-error-message">We're having trouble loading this image. Please try again later.</p>
-                  <button class="recommended-error-retry compact" aria-label="Try again">
+                  <button class="recommended-error-retry compact" aria-label="Pokušaj ponovo">
                     <span class="material-symbols-outlined">refresh</span>
                   </button>
                 </div>
@@ -753,11 +753,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             errorFallback.innerHTML = `
               <div class="recommended-error-content">
                 <span class="material-symbols-outlined recommended-error-icon">image_not_supported</span>
-                <h4 class="recommended-error-title">Image Failed to Load</h4>
-                <p class="recommended-error-message">We're having trouble loading this image. Please try again later.</p>
+                <h4 class="recommended-error-title">Slika se nije učitala</h4>
+                <p class="recommended-error-message">Imamo problema sa učitavanjem ove slike. Molimo pokušajte ponovo kasnije.</p>
                 <button class="recommended-error-retry">
                   <span class="material-symbols-outlined">refresh</span>
-                  Try Again
+                  Pokušaj ponovo
                 </button>
               </div>
             `;
@@ -1686,7 +1686,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       
       // Show error message to user
       if (container) {
-        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;"><p>Unable to load recommended products. Please try refreshing the page.</p></div>';
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;"><p>Nije moguće učitati preporučene proizvode. Molimo osvežite stranicu.</p></div>';
       }
     }
   }
@@ -1808,11 +1808,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             <div class="recommended-image-error" style="display: none;">
               <div class="recommended-error-content">
                 <span class="material-symbols-outlined recommended-error-icon">image_not_supported</span>
-                <h4 class="recommended-error-title">Image Failed to Load</h4>
-                <p class="recommended-error-message">We're having trouble loading this image. Please try again later.</p>
+                <h4 class="recommended-error-title">Slika se nije učitala</h4>
+                <p class="recommended-error-message">Imamo problema sa učitavanjem ove slike. Molimo pokušajte ponovo kasnije.</p>
                 <button class="recommended-error-retry">
                   <span class="material-symbols-outlined">refresh</span>
-                  Try Again
+                  Pokušaj ponovo
                 </button>
               </div>
             </div>
@@ -1826,15 +1826,15 @@ document.addEventListener("DOMContentLoaded", async function () {
             <img src="" alt="${product.title}" loading="lazy" data-product-id="${product.id}" style="display: none;" />
           </div>
           <div class="recommended-content-c">
-            <span class="product-brand">${product.brand || 'Brand'}</span>
+            <span class="product-brand">${product.brand || 'Brend'}</span>
             <h4>${product.title}</h4>
             <div class="recommended-price-container">
-              ${oldPriceValue ? `<div class="recommended-old-price">${oldPriceValue} $</div>` : ''}
-              <div class="recommended-price">${price} $</div>
+              ${oldPriceValue ? `<div class="recommended-old-price">${formatPriceString(oldPriceValue)} RSD</div>` : ''}
+              <div class="recommended-price">${formatPriceString(price)} RSD</div>
             </div>
             <div class="recommended-btns-flex">
               <button class="recommended-buy-now" data-product-url="/${slugify(product.title)}">
-                Buy now
+                Kupi sada
               </button>
               <button class="recommended-add-to-cart" data-product-id="${product.id}">
                 <span class="material-symbols-outlined cart-icon">add_shopping_cart</span>
