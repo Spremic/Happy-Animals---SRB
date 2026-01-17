@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html id="html" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery - Happy Animals</title>
+    
+    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://code.jquery.com" />
+    
+    <!-- Critical CSS -->
+    <link rel="preload" href="/css/clone.css" as="style" />
+    <link rel="preload" href="/css/galery.css" as="style" />
+    <link rel="stylesheet" href="/css/clone.css" />
+    <link rel="stylesheet" href="/css/galery.css" />
+    <link rel="stylesheet" href="/css/loader.css" />
+    
+    <!-- External CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
+  </head>
+  <body id="body">
+    <!-- Page Loader -->
+    <div id="page-loader">
+      <div class="loader-content">
+        <div class="loader-logo">
+          <svg class="loader-paw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+            <path d="M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5s.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3S-2.7 179.3 21.8 165.3s59.7 .9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5v1.6c0 25.8-20.9 46.7-46.7 46.7c-11.5 0-22.9-1.4-34-4.2l-88-22c-15.3-3.8-31.3-3.8-46.6 0l-88 22c-11.1 2.8-22.5 4.2-34 4.2C84.9 480 64 459.1 64 433.3v-1.6c0-10.4 1.6-20.8 5.2-30.5zM421.8 282.7c-24.5-14-29.1-51.7-10.2-84.1s54-47.3 78.5-33.3s29.1 51.7 10.2 84.1s-54 47.3-78.5 33.3zM310.1 189.7c-32.3-10.6-46.9-53.9-32.6-96.8s52.1-69.1 84.4-58.5s46.9 53.9 32.6 96.8s-52.1 69.1-84.4 58.5z"/>
+          </svg>
+        </div>
+        <div class="loader-text">Happy Animals</div>
+        <div class="loader-progress">
+          <div class="loader-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header ce biti dinamicki ucitan iz clone.js -->
+
+    <main class="gallery-container">
+      <div class="gallery-header">
+        <h1 class="gallery-title animate__animated animate__fadeInDown">Our shop</h1>
+        <p class="gallery-subtitle animate__animated animate__fadeInUp">Explore the space where we care for your pets</p>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-item animate__animated animate__fadeIn" data-index="0">
+          <div class="gallery-image-wrapper">
+            <img src="/galerija/lokal1.jpg" alt="Happy Animals - Interior 1" loading="lazy" />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item animate__animated animate__fadeIn" data-index="1">
+          <div class="gallery-image-wrapper">
+            <img src="/galerija/lokal2.jpg" alt="Happy Animals - Interior 2" loading="lazy" />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item animate__animated animate__fadeIn" data-index="2">
+          <div class="gallery-image-wrapper">
+            <img src="/galerija/lokal3.jpg" alt="Happy Animals - Interior 3" loading="lazy" />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item animate__animated animate__fadeIn" data-index="3">
+          <div class="gallery-image-wrapper">
+            <img src="/galerija/lokal4.jpg" alt="Happy Animals - Interior 4" loading="lazy" />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item animate__animated animate__fadeIn" data-index="4">
+          <div class="gallery-image-wrapper">
+            <img src="/galerija/lokal5.jpg" alt="Happy Animals - Interior 5" loading="lazy" />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item animate__animated animate__fadeIn" data-index="5">
+          <div class="gallery-image-wrapper">
+            <img src="/galerija/lokal6.jpg" alt="Happy Animals - Interior 6" loading="lazy" />
+            <div class="gallery-overlay">
+              <i class="fas fa-search-plus"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightboxModal" class="lightbox-modal">
+      <span class="lightbox-close">&times;</span>
+      <span class="lightbox-prev">&#10094;</span>
+      <span class="lightbox-next">&#10095;</span>
+      <img class="lightbox-content" id="lightboxImage" alt="Gallery Image">
+      <div class="lightbox-counter"></div>
+    </div>
+
+    <script>
+      // Gallery Lightbox functionality
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const lightboxModal = document.getElementById('lightboxModal');
+      const lightboxImage = document.getElementById('lightboxImage');
+      const lightboxClose = document.querySelector('.lightbox-close');
+      const lightboxPrev = document.querySelector('.lightbox-prev');
+      const lightboxNext = document.querySelector('.lightbox-next');
+      const lightboxCounter = document.querySelector('.lightbox-counter');
+      let currentImageIndex = 0;
+
+      const images = [
+        { src: '/galerija/lokal1.jpg', alt: 'Happy Animals - Interior 1' },
+        { src: '/galerija/lokal2.jpg', alt: 'Happy Animals - Interior 2' },
+        { src: '/galerija/lokal3.jpg', alt: 'Happy Animals - Interior 3' },
+        { src: '/galerija/lokal4.jpg', alt: 'Happy Animals - Interior 4' },
+        { src: '/galerija/lokal5.jpg', alt: 'Happy Animals - Interior 5' },
+        { src: '/galerija/lokal6.jpg', alt: 'Happy Animals - Interior 6' }
+      ];
+
+      function openLightbox(index) {
+        currentImageIndex = index;
+        updateLightboxImage();
+        lightboxModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightboxModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+
+      function updateLightboxImage() {
+        lightboxImage.src = images[currentImageIndex].src;
+        lightboxImage.alt = images[currentImageIndex].alt;
+        lightboxCounter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+      }
+
+      function showNextImage() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        updateLightboxImage();
+      }
+
+      function showPrevImage() {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        updateLightboxImage();
+      }
+
+      // Event listeners
+      galleryItems.forEach((item) => {
+        item.addEventListener('click', () => {
+          const index = parseInt(item.getAttribute('data-index'));
+          openLightbox(index);
+        });
+      });
+
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightboxNext.addEventListener('click', showNextImage);
+      lightboxPrev.addEventListener('click', showPrevImage);
+
+      lightboxModal.addEventListener('click', (e) => {
+        if (e.target === lightboxModal) {
+          closeLightbox();
+        }
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (lightboxModal.style.display === 'flex') {
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowRight') showNextImage();
+          if (e.key === 'ArrowLeft') showPrevImage();
+        }
+      });
+
+      // Staggered animation for gallery items
+      galleryItems.forEach((item, index) => {
+        item.style.animationDelay = `${index * 0.1}s`;
+      });
+    </script>
+    <script src="/js/clone.js" defer></script>
+    <script src="/js/loader.js" defer></script>
+  </body>
+</html>

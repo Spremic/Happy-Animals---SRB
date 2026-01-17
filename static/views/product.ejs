@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= product ? product.title + ' - Happy Animals' : 'Product - Happy Animals' %></title>
+    
+    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://code.jquery.com" />
+    
+    <!-- Critical CSS -->
+    <link rel="preload" href="/css/clone.css" as="style" />
+    <link rel="preload" href="/css/index.css" as="style" />
+    <link rel="preload" href="/css/product.css" as="style" />
+    <link rel="stylesheet" href="/css/clone.css" />
+    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="/css/product.css" />
+    <link rel="stylesheet" href="/css/loader.css" />
+    
+    <!-- External CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
+  </head>
+  <body id="body">
+    <!-- Page Loader -->
+    <div id="page-loader">
+      <div class="loader-content">
+        <div class="loader-logo">
+          <svg class="loader-paw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+            <path d="M226.5 92.9c14.3 42.9-.3 86.2-32.6 96.8s-70.1-15.6-84.4-58.5s.3-86.2 32.6-96.8s70.1 15.6 84.4 58.5zM100.4 198.6c18.9 32.4 14.3 70.1-10.2 84.1s-59.7-.9-78.5-33.3S-2.7 179.3 21.8 165.3s59.7 .9 78.5 33.3zM69.2 401.2C121.6 259.9 214.7 224 256 224s134.4 35.9 186.8 177.2c3.6 9.7 5.2 20.1 5.2 30.5v1.6c0 25.8-20.9 46.7-46.7 46.7c-11.5 0-22.9-1.4-34-4.2l-88-22c-15.3-3.8-31.3-3.8-46.6 0l-88 22c-11.1 2.8-22.5 4.2-34 4.2C84.9 480 64 459.1 64 433.3v-1.6c0-10.4 1.6-20.8 5.2-30.5zM421.8 282.7c-24.5-14-29.1-51.7-10.2-84.1s54-47.3 78.5-33.3s29.1 51.7 10.2 84.1s-54 47.3-78.5 33.3zM310.1 189.7c-32.3-10.6-46.9-53.9-32.6-96.8s52.1-69.1 84.4-58.5s46.9 53.9 32.6 96.8s-52.1 69.1-84.4 58.5z"/>
+          </svg>
+        </div>
+        <div class="loader-text">Happy Animals</div>
+        <div class="loader-progress">
+          <div class="loader-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header ce biti dinamicki ucitan iz clone.js -->
+
+    <main class="product-page">
+      <div class="product-container" <% if (product && product.id) { %>data-product-id="<%= product.id %>"<% } %>>
+        <!-- Left Column: Product Images -->
+        <div class="product-images reveal-left">
+          <div class="images-wrapper">
+            <div class="thumbnail-container">
+              <!-- Skeleton loaders will be created dynamically based on number of images from Cloudinary -->
+            </div>
+            
+            <div class="main-image-container">
+              <div class="main-image-skeleton"></div>
+              <div class="main-image-error" style="display: none;">
+                <div class="recommended-error-content">
+                  <span class="material-symbols-outlined recommended-error-icon">image_not_supported</span>
+                  <h4 class="recommended-error-title">Image Failed to Load</h4>
+                  <p class="recommended-error-message">We're having trouble loading this image. Please try again later.</p>
+                  <button class="recommended-error-retry">
+                    <span class="material-symbols-outlined">refresh</span>
+                    Try Again
+                  </button>
+                </div>
+              </div>
+              <img id="mainProductImage" src="" alt="<%= product ? product.title : 'Product Image' %>" class="main-image" />
+              <button class="image-zoom-btn" aria-label="Zoom image">
+                <span class="material-symbols-outlined">zoom_in</span>
+              </button>
+              <button class="image-arrow-left" aria-label="Previous image">
+                <span class="material-symbols-outlined">arrow_back_ios</span>
+              </button>
+              <button class="image-arrow-right" aria-label="Next image">
+                <span class="material-symbols-outlined">arrow_forward_ios</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Seller Information Card -->
+          <div class="seller-card reveal-left delay-200">
+            <div class="seller-info">
+              <div class="seller-logo">
+                <img src="/img/happy animal.png" alt="Happy Animals" loading="lazy" />
+                <span class="verified-badge">
+                  <span class="material-symbols-outlined">verified</span>
+                </span>
+              </div>
+              <div class="seller-details">
+                <h4>Happy Animals</h4>
+                <div class="seller-rating">
+                  <span class="satisfied-customers">1000+ Satisfied Customers</span>
+                </div>
+                <div class="seller-location">
+                  <span class="material-symbols-outlined">location_on</span>
+                  <span>New York, USA</span>
+                </div>
+              </div>
+            </div>
+            <button class="view-more-btn">View More</button>
+          </div>
+        </div>
+
+        <!-- Right Column: Product Details -->
+        <div class="product-details reveal-right">
+          <% if (product) { %>
+            <div class="product-header">
+              <% if (product.percentage && product.percentage !== '/' && product.salePrice && product.salePrice !== '/') { %>
+                <div class="discount-label reveal delay-100">-<%= product.percentage %></div>
+              <% } %>
+              
+              <h1 class="product-title reveal delay-100"><%= product.title %></h1>
+              
+              <div class="product-price-wrapper reveal delay-200">
+                <% if (product.salePrice && product.salePrice !== '/') { %>
+                  <div class="price-container">
+                    <% if (product.price && product.price !== '/') { %>
+                      <div class="original-price">
+                        <span class="original-amount"><%= product.price %></span>
+                        <span class="original-currency">$</span>
+                      </div>
+                    <% } %>
+                    <div class="current-price">
+                      <span class="price-amount"><%= product.salePrice %></span>
+                      <span class="price-currency">$</span>
+                    </div>
+                  </div>
+                <% } else { %>
+                  <div class="price-container">
+                    <div class="current-price">
+                      <span class="price-amount"><%= product.price %></span>
+                      <span class="price-currency">$</span>
+                    </div>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="product-description reveal delay-300">
+              <h3 class="description-title">Description:</h3>
+              <p class="description-text">
+                <%= product.description %>
+              </p>
+            </div>
+          <% } else { %>
+            <div class="product-header">
+              <h1 class="product-title reveal delay-100">Product Not Found</h1>
+              <div class="product-price-wrapper reveal delay-200">
+                <div class="price-container">
+                  <div class="current-price">
+                    <span class="price-amount">0</span>
+                    <span class="price-currency">$</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="product-description reveal delay-300">
+              <h3 class="description-title">Description:</h3>
+              <p class="description-text">The requested product could not be found.</p>
+            </div>
+          <% } %>
+
+          <!-- Action Buttons -->
+          <div class="product-actions reveal delay-400">
+            <button class="btn-buy-now">
+              <span class="material-symbols-outlined">shopping_cart</span>
+              Buy Now
+            </button>
+            <button class="btn-add-cart" <% if (product && product.id) { %>data-product-id="<%= product.id %>"<% } %>>
+              <span class="material-symbols-outlined">add_shopping_cart</span>
+              Add to Cart
+            </button>
+            <button class="btn-favorite" <% if (product && product.id) { %>data-product-id="<%= product.id %>"<% } %> aria-label="Add to favorites">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                <path class="heart-outline" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="none" stroke="#009900" stroke-width="2"/>
+                <path class="heart-filled" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#009900" opacity="0"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Specifications Section -->
+      <section class="specifications-section">
+        <h2 class="specifications-title reveal">Specifications</h2>
+        <div class="specifications-content">
+          <% if (product) { %>
+            <% if (product.brand) { %>
+              <div class="spec-item reveal delay-100">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Brand:</span>
+                </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= product.brand %></span>
+                </div>
+              </div>
+            <% } %>
+            <% if (product.technicalData && product.technicalData.labels) { %>
+              <% product.technicalData.labels.forEach((label, index) => { %>
+                <div class="spec-item reveal delay-<%= Math.floor(index / 3) + 1 %>00">
+                  <div class="spec-label-wrapper">
+                    <span class="spec-label"><%= label %></span>
+                  </div>
+                  <div class="spec-value-wrapper">
+                    <span class="spec-value"><%= product.technicalData.features[index] || 'N/A' %></span>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <% if (product.category) { %>
+                <div class="spec-item reveal delay-100">
+                  <div class="spec-label-wrapper">
+                    <span class="spec-label">Category:</span>
+                  </div>
+                  <div class="spec-value-wrapper">
+                    <span class="spec-value"><%= product.category %></span>
+                  </div>
+                </div>
+              <% } %>
+              <% if (product.subcategory) { %>
+                <div class="spec-item reveal delay-200">
+                  <div class="spec-label-wrapper">
+                    <span class="spec-label">Subcategory:</span>
+                  </div>
+                  <div class="spec-value-wrapper">
+                    <span class="spec-value"><%= product.subcategory %></span>
+                  </div>
+                </div>
+              <% } %>
+              <% if (product.type) { %>
+                <div class="spec-item reveal delay-200">
+                  <div class="spec-label-wrapper">
+                    <span class="spec-label">Type:</span>
+                  </div>
+                  <div class="spec-value-wrapper">
+                    <span class="spec-value"><%= product.type %></span>
+                  </div>
+                </div>
+              <% } %>
+            <% } %>
+          <% } else { %>
+            <div class="spec-item reveal delay-100">
+              <div class="spec-label-wrapper">
+                <span class="spec-label">Status:</span>
+              </div>
+              <div class="spec-value-wrapper">
+                <span class="spec-value">Product not found</span>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </section>
+
+      <!-- Recommended Products Section -->
+      <section class="recommended-section">
+        <h3 class="recommended-title reveal">Recommended Products</h3>
+        
+        <div class="recommended-flex-container">
+          <div class="recommended-arrow-l">
+            <span class="material-symbols-outlined">arrow_back_ios_new</span>
+          </div>
+
+          <div class="recommended-mid-wrapper">
+            <div class="recommended-mid" id="recommendedProducts">
+              <!-- Skeleton loaders - shown initially, match exact card structure -->
+              <div class="recommended-card recommended-skeleton-card">
+                <div class="recommended-image-c">
+                  <div class="recommended-image-skeleton"></div>
+                </div>
+                <div class="recommended-content-c">
+                  <div class="recommended-skeleton-brand"></div>
+                  <div class="recommended-skeleton-text"></div>
+                  <div class="recommended-skeleton-text short"></div>
+                  <div class="recommended-skeleton-price-container">
+                    <div class="recommended-skeleton-price"></div>
+                  </div>
+                  <div class="recommended-skeleton-btns">
+                    <div class="recommended-skeleton-btn"></div>
+                    <div class="recommended-skeleton-btn-icon"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="recommended-card recommended-skeleton-card">
+                <div class="recommended-image-c">
+                  <div class="recommended-image-skeleton"></div>
+                </div>
+                <div class="recommended-content-c">
+                  <div class="recommended-skeleton-brand"></div>
+                  <div class="recommended-skeleton-text"></div>
+                  <div class="recommended-skeleton-text short"></div>
+                  <div class="recommended-skeleton-price-container">
+                    <div class="recommended-skeleton-price"></div>
+                  </div>
+                  <div class="recommended-skeleton-btns">
+                    <div class="recommended-skeleton-btn"></div>
+                    <div class="recommended-skeleton-btn-icon"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="recommended-card recommended-skeleton-card">
+                <div class="recommended-image-c">
+                  <div class="recommended-image-skeleton"></div>
+                </div>
+                <div class="recommended-content-c">
+                  <div class="recommended-skeleton-brand"></div>
+                  <div class="recommended-skeleton-text"></div>
+                  <div class="recommended-skeleton-text short"></div>
+                  <div class="recommended-skeleton-price-container">
+                    <div class="recommended-skeleton-price"></div>
+                  </div>
+                  <div class="recommended-skeleton-btns">
+                    <div class="recommended-skeleton-btn"></div>
+                    <div class="recommended-skeleton-btn-icon"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="recommended-card recommended-skeleton-card">
+                <div class="recommended-image-c">
+                  <div class="recommended-image-skeleton"></div>
+                </div>
+                <div class="recommended-content-c">
+                  <div class="recommended-skeleton-brand"></div>
+                  <div class="recommended-skeleton-text"></div>
+                  <div class="recommended-skeleton-text short"></div>
+                  <div class="recommended-skeleton-price-container">
+                    <div class="recommended-skeleton-price"></div>
+                  </div>
+                  <div class="recommended-skeleton-btns">
+                    <div class="recommended-skeleton-btn"></div>
+                    <div class="recommended-skeleton-btn-icon"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="recommended-arrow-r">
+            <span class="material-symbols-outlined">arrow_forward_ios</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer ce biti dinamicki ucitan iz clone.js -->
+
+    <script src="/js/clone.js" defer></script>
+    <script src="/js/index.js" defer></script>
+    <script src="/js/product.js" defer></script>
+    <script src="/js/loader.js" defer></script>
+  </body>
+</html>
