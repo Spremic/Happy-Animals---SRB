@@ -1,11 +1,11 @@
 [
   {
     "id": "1001",
-    "category": "Pet Food",
-    "subcategory": "Dog Food",
-    "type": "Dry Food",
-    "title": "Royal Canin Medium Adult - Dry Food for Medium Dogs",
-    "description": "Royal Canin Medium Adult is a complete and balanced food for adult dogs of medium size (11-25 kg). It contains all the necessary nutrients to maintain optimal health of your pet. The formulation is specially adapted for medium-sized dogs with specific nutritional needs.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za pse",
+    "type": "Suva hrana",
+    "title": "Royal Canin Medium Adult - Suva hrana za srednje pse",
+    "description": "Royal Canin Medium Adult je potpuna i balansirana hrana za odrasle pse srednje veličine (11-25 kg). Sadrži sve potrebne nutrijente za održavanje optimalnog zdravlja vašeg ljubimca. Formulacija je posebno prilagođena za srednje pse sa specifičnim nutritivnim potrebama.",
     "brand": "Royal Canin",
     "code": "1001",
     "price": "40.00",
@@ -14,32 +14,32 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Age group:",
-        "Dog size:",
-        "Food type:",
-        "Composition:",
-        "Analytical composition:",
-        "Additives per kg:"
+        "Težina pakovanja (kg):",
+        "Starosna grupa:",
+        "Veličina psa:",
+        "Tip hrane:",
+        "Sastav:",
+        "Analitički sastav:",
+        "Dodaci po kg:"
       ],
       "features": [
         "12",
-        "Adult (1-7 years)",
-        "Medium (11-25 kg)",
-        "Dry food",
-        "Cereals, meat and meat derivatives, vegetable derivatives, oils and fats",
-        "Proteins: 25%, Fats: 16%, Fibers: 1.3%, Ash: 5.5%",
-        "Vitamin A: 15500 IU, Vitamin D3: 1000 IU, Iron: 42 mg"
+        "Odrasli (1-7 godina)",
+        "Srednji (11-25 kg)",
+        "Suva hrana",
+        "Žitarice, meso i mesni derivati, biljni derivati, ulja i masti",
+        "Proteini: 25%, Masti: 16%, Vlakna: 1.3%, Pepeo: 5.5%",
+        "Vitamin A: 15500 IU, Vitamin D3: 1000 IU, Gvožđe: 42 mg"
       ]
     }
   },
   {
     "id": "1002",
-    "category": "Pet Food",
-    "subcategory": "Cat Food",
-    "type": "Wet Food",
-    "title": "Whiskas Tuna - Canned Food for Cats",
-    "description": "Whiskas Tuna is a delicious canned food for cats with tuna in jelly. It contains high-quality proteins from tuna, vitamins and minerals that support your pet's health. Ideal for daily nutrition or as a treat.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za mačke",
+    "type": "Mokra hrana",
+    "title": "Whiskas Tuna - Konzervirana hrana za mačke",
+    "description": "Whiskas Tuna je ukusna konzervirana hrana za mačke sa tunom u želeu. Sadrži visokokvalitetne proteine iz tune, vitamine i minerale koji podržavaju zdravlje vašeg ljubimca. Idealna za svakodnevnu ishranu ili kao poslastica.",
     "brand": "Whiskas",
     "code": "1002",
     "price": "1.57",
@@ -48,30 +48,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Can weight (g):",
-        "Meat type:",
-        "Age group:",
-        "Composition:",
-        "Analytical composition:",
-        "Additives:"
+        "Težina konzerve (g):",
+        "Tip mesa:",
+        "Starosna grupa:",
+        "Sastav:",
+        "Analitički sastav:",
+        "Dodaci:"
       ],
       "features": [
         "85",
         "Tuna",
-        "All age groups",
-        "Meat and meat derivatives (tuna 4%), cereals, minerals",
-        "Proteins: 9%, Fats: 4%, Fibers: 0.5%, Ash: 2.5%",
-        "Vitamin D3: 200 IU, Iron: 9.6 mg, Copper: 1 mg"
+        "Sve starosne grupe",
+        "Meso i mesni derivati (tuna 4%), žitarice, minerali",
+        "Proteini: 9%, Masti: 4%, Vlakna: 0.5%, Pepeo: 2.5%",
+        "Vitamin D3: 200 IU, Gvožđe: 9.6 mg, Bakar: 1 mg"
       ]
     }
   },
   {
     "id": "1003",
-    "category": "Pet Toys",
-    "subcategory": "Dog Toys",
-    "type": "Chew Toys",
-    "title": "Kong Classic - Rubber Chew Toy for Dogs",
-    "description": "Kong Classic is a classic rubber toy for dogs that provides hours of fun and healthy chewing. Made from natural rubber that is safe for dogs and helps clean teeth. Can be filled with food or treats for extra fun.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za pse",
+    "type": "Igračke za žvakanje",
+    "title": "Kong Classic - Gumenna igračka za žvakanje za pse",
+    "description": "Kong Classic je klasična gumena igračka za pse koja pruža satima zabave i zdravog žvakanja. Napravljena od prirodne gume koja je bezbedna za pse i pomaže u čišćenju zuba. Može se puniti hranom ili poslasticama za dodatnu zabavu.",
     "brand": "Kong",
     "code": "1003",
     "price": "11.22",
@@ -80,32 +80,32 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Material:",
-        "Diameter (cm):",
-        "Height (cm):",
-        "Weight (g):",
-        "Recommended dog size:",
-        "Color:",
-        "Usage:"
+        "Materijal:",
+        "Prečnik (cm):",
+        "Visina (cm):",
+        "Težina (g):",
+        "Preporučena veličina psa:",
+        "Boja:",
+        "Upotreba:"
       ],
       "features": [
-        "Natural rubber",
+        "Prirodna guma",
         "7",
         "7",
         "85",
-        "All sizes",
-        "Red",
-        "Chewing, play, training"
+        "Sve veličine",
+        "Crvena",
+        "Žvakanje, igra, trening"
       ]
     }
   },
   {
     "id": "1004",
-    "category": "Pet Grooming",
-    "subcategory": "Shampoos",
-    "type": "Dog Shampoos",
-    "title": "Bio-Groom Protein Lanolin Shampoo for Dogs",
-    "description": "Bio-Groom Protein Lanolin Shampoo is a professional shampoo for dogs that deeply cleans and hydrates skin and fur. Contains lanolin that helps maintain natural skin moisture, while proteins strengthen the fur. Suitable for all coat types.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Šamponi",
+    "type": "Šamponi za pse",
+    "title": "Bio-Groom Protein Lanolin Šampon za pse",
+    "description": "Bio-Groom Protein Lanolin Šampon je profesionalni šampon za pse koji duboko čisti i hidrira kožu i dlaku. Sadrži lanolin koji pomaže održavanje prirodne vlažnosti kože, dok proteini jačaju dlaku. Pogodan za sve tipove dlake.",
     "brand": "Bio-Groom",
     "code": "1004",
     "price": "10.00",
@@ -114,32 +114,32 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Animal type:",
-        "Skin/coat type:",
-        "Composition:",
-        "pH value:",
-        "Usage:",
-        "Scent:"
+        "Zapremina (ml):",
+        "Tip životinje:",
+        "Tip kože/dlake:",
+        "Sastav:",
+        "pH vrednost:",
+        "Upotreba:",
+        "Miris:"
       ],
       "features": [
         "355",
-        "Dogs",
-        "All types",
-        "Water, surfactants, lanolin, proteins, fragrances",
+        "Psi",
+        "Svi tipovi",
+        "Voda, surfaktanti, lanolin, proteini, mirisi",
         "6.5-7.5",
-        "External use",
-        "Neutral"
+        "Spoljna upotreba",
+        "Neutralan"
       ]
     }
   },
   {
     "id": "1005",
-    "category": "Pet Supplies",
-    "subcategory": "Beds and Blankets",
-    "type": "Dog Beds",
-    "title": "Ferplast Comfort Bed - Bed for Medium Dogs",
-    "description": "Ferplast Comfort Bed is a comfortable bed for medium-sized dogs with a soft cushion and waterproof base. Made from quality materials that are easy to clean. Provides your pet with a comfortable resting space.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Ležaji i ćebad",
+    "type": "Ležaji za pse",
+    "title": "Ferplast Comfort Bed - Ležaj za srednje pse",
+    "description": "Ferplast Comfort Bed je udoban ležaj za srednje pse sa mekim jastukom i vodootpornom bazom. Napravljen od kvalitetnih materijala koji se lako čiste. Pruža vašem ljubimcu udoban prostor za odmor.",
     "brand": "Ferplast",
     "code": "1005",
     "price": "34.35",
@@ -148,30 +148,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Recommended dog weight:",
-        "Material:",
-        "Color:",
-        "Product weight (kg):",
-        "Washable:"
+        "Dimenzije (cm):",
+        "Preporučena težina psa:",
+        "Materijal:",
+        "Boja:",
+        "Težina proizvoda (kg):",
+        "Može se prati:"
       ],
       "features": [
         "70 x 50 x 15",
         "10-20 kg",
-        "Polyester, polypropylene",
-        "Gray",
+        "Poliester, polipropilen",
+        "Siva",
         "2.5",
-        "Yes, at 30°C"
+        "Da, na 30°C"
       ]
     }
   },
   {
     "id": "1006",
-    "category": "Pet Food",
-    "subcategory": "Bird Food",
-    "type": "Bird Seeds",
-    "title": "Vitakraft Menu Vital - Seeds for Parrots",
-    "description": "Vitakraft Menu Vital is a complete seed mix for parrots containing sunflower seeds, various grains and nuts. Enriched with vitamins and minerals for your parrot's health. Ideal for daily nutrition.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ptice",
+    "type": "Seme za ptice",
+    "title": "Vitakraft Menu Vital - Seme za papagaje",
+    "description": "Vitakraft Menu Vital je potpuna smeša semena za papagaje koja sadrži semenke suncokreta, različite žitarice i orahe. Obogaćena vitaminima i mineralima za zdravlje vašeg papagaja. Idealna za svakodnevnu ishranu.",
     "brand": "Vitakraft",
     "code": "1006",
     "price": "6.26",
@@ -180,30 +180,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Bird type:",
-        "Composition:",
-        "Additives:",
-        "Storage method:",
-        "Shelf life:"
+        "Težina pakovanja (g):",
+        "Tip ptice:",
+        "Sastav:",
+        "Dodaci:",
+        "Način čuvanja:",
+        "Rok trajanja:"
       ],
       "features": [
         "750",
-        "Parrots",
-        "Sunflower, millet, oat groats, flax seeds",
-        "Vitamins, minerals, amino acids",
-        "Dry and cool place",
-        "12 months"
+        "Papagaji",
+        "Suncokret, proso, ovsene pahuljice, laneno seme",
+        "Vitamini, minerali, amino kiseline",
+        "Suvom i hladnom mestu",
+        "12 meseci"
       ]
     }
   },
   {
     "id": "1007",
-    "category": "Pet Supplies",
-    "subcategory": "Boxes and Toilets",
-    "type": "Cat Litter Boxes",
-    "title": "Catit Design Sifting Cat Pan - Litter Box for Cats",
-    "description": "Catit Design Sifting Cat Pan is a modern litter box for cats with a sifting system. Maintenance is easier because you can separate only the dirty litter and leave the clean one. Made from quality plastic that is scratch resistant.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Kutije i toaleti",
+    "type": "Kutije za pesak za mačke",
+    "title": "Catit Design Sifting Cat Pan - Kutija za pesak za mačke",
+    "description": "Catit Design Sifting Cat Pan je moderna kutija za pesak za mačke sa sistemom za prosejavanje. Održavanje je lakše jer možete odvojiti samo prljavi pesak i ostaviti čist. Napravljena od kvalitetne plastike koja je otporna na ogrebanja.",
     "brand": "Catit",
     "code": "1007",
     "price": "25.13",
@@ -212,30 +212,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Litter capacity (l):",
-        "Entrance height (cm):",
-        "Weight (kg):",
-        "Color:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Kapacitet peska (l):",
+        "Visina ulaza (cm):",
+        "Težina (kg):",
+        "Boja:"
       ],
       "features": [
         "39 x 49 x 46",
-        "Plastic",
+        "Plastika",
         "7",
         "14",
         "1.8",
-        "White"
+        "Bela"
       ]
     }
   },
   {
     "id": "1008",
-    "category": "Pet Food",
-    "subcategory": "Fish Food",
-    "type": "Food for Freshwater Fish",
-    "title": "TetraMin - Granular Food for Tropical Fish",
-    "description": "TetraMin is a high-quality granular food for tropical freshwater fish. Contains all necessary nutrients, vitamins and minerals for healthy growth and fish coloration. Granules sink slowly allowing all fish to eat.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ribe",
+    "type": "Hrana za slatkovodne ribe",
+    "title": "TetraMin - Granularna hrana za tropske ribe",
+    "description": "TetraMin je visokokvalitetna granularna hrana za tropske slatkovodne ribe. Sadrži sve potrebne nutrijente, vitamine i minerale za zdrav rast i bojenje riba. Granule sporo tonu omogućavajući svim ribama da jedu.",
     "brand": "Tetra",
     "code": "1008",
     "price": "7.74",
@@ -244,19 +244,19 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Fish type:",
-        "Food shape:",
-        "Composition:",
-        "Proteins (%):",
-        "Fats (%):",
-        "Fibers (%):"
+        "Težina pakovanja (g):",
+        "Tip ribe:",
+        "Oblik hrane:",
+        "Sastav:",
+        "Proteini (%):",
+        "Masti (%):",
+        "Vlakna (%):"
       ],
       "features": [
         "250",
-        "Tropical freshwater",
-        "Granules",
-        "Fish and fish derivatives, cereals, plant extracts",
+        "Tropske slatkovodne",
+        "Granule",
+        "Riba i riblji derivati, žitarice, biljni ekstrakti",
         "47",
         "8",
         "2"
@@ -265,12 +265,12 @@
   },
   {
     "id": "1009",
-    "category": "Pet Toys",
-    "subcategory": "Cat Toys",
-    "type": "Laser Toys",
-    "title": "Cat Laser Pointer - Laser Toy for Cats",
-    "description": "Cat Laser Pointer is a fun laser toy that will provide your cat with hours of activity. The red laser stimulates the natural hunting instinct in cats. Comes with a safety switch and on/off button.",
-    "brand": "Generic",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za mačke",
+    "type": "Laser igračke",
+    "title": "Cat Laser Pointer - Laser igračka za mačke",
+    "description": "Cat Laser Pointer je zabavna laser igračka koja će vašoj mački pružiti satima aktivnosti. Crveni laser stimuliše prirodni lovački instinkt kod mačaka. Dolazi sa sigurnosnim prekidačem i dugmetom za uključivanje/isključivanje.",
+    "brand": "Generički",
     "code": "1009",
     "price": "10.00",
     "salePrice": "/",
@@ -278,30 +278,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Battery type:",
-        "Laser power:",
-        "Laser color:",
-        "Dimensions (cm):",
-        "Weight (g):",
-        "Safety features:"
+        "Tip baterije:",
+        "Snaga lasera:",
+        "Boja lasera:",
+        "Dimenzije (cm):",
+        "Težina (g):",
+        "Sigurnosne karakteristike:"
       ],
       "features": [
         "2x AAA",
-        "Class 2 (<1mW)",
-        "Red",
+        "Klasa 2 (<1mW)",
+        "Crvena",
         "15 x 1.5 x 1.5",
         "25",
-        "Safety switch, auto shut-off"
+        "Sigurnosni prekidač, automatsko isključivanje"
       ]
     }
   },
   {
     "id": "1010",
-    "category": "Pet Supplies",
-    "subcategory": "Bowls and Feeders",
-    "type": "Automatic Feeders",
-    "title": "PetSafe Drinkwell Platinum - Automatic Feeder for Dogs",
-    "description": "PetSafe Drinkwell Platinum is an automatic feeder that can dispense food at programmed times. It has a large food reservoir and can be programmed for multiple meals per day. Ideal for dogs that eat at regular times or when you're not at home.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Posude i hranilice",
+    "type": "Automatske hranilice",
+    "title": "PetSafe Drinkwell Platinum - Automatska hranilica za pse",
+    "description": "PetSafe Drinkwell Platinum je automatska hranilica koja može da deli hranu u programiranim vremenima. Ima veliki rezervoar za hranu i može se programirati za više obroka dnevno. Idealna za pse koji jedu u redovnim vremenima ili kada niste kod kuće.",
     "brand": "PetSafe",
     "code": "1010",
     "price": "100.00",
@@ -310,32 +310,32 @@
     "percentage": "2%",
     "technicalData": {
       "labels": [
-        "Food capacity (l):",
-        "Number of meals:",
-        "Meal time:",
-        "Material:",
-        "Dimensions (cm):",
-        "Weight (kg):",
-        "Portion adjustment:"
+        "Kapacitet hrane (l):",
+        "Broj obroka:",
+        "Vreme obroka:",
+        "Materijal:",
+        "Dimenzije (cm):",
+        "Težina (kg):",
+        "Podešavanje porcije:"
       ],
       "features": [
         "6",
-        "4 meals per day",
-        "Programmable",
-        "Plastic, metal",
+        "4 obroka dnevno",
+        "Programabilno",
+        "Plastika, metal",
         "30 x 25 x 40",
         "3.5",
-        "Yes, portion size adjustment"
+        "Da, podešavanje veličine porcije"
       ]
     }
   },
   {
     "id": "1011",
-    "category": "Pet Food",
-    "subcategory": "Dog Food",
-    "type": "Wet Food",
-    "title": "Pedigree Pouch Beef - Canned Food for Dogs",
-    "description": "Pedigree Pouch Beef is a delicious canned food for dogs with beef meat. Contains high-quality proteins, vitamins and minerals that support your dog's health. Suitable for all breeds and age groups.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za pse",
+    "type": "Mokra hrana",
+    "title": "Pedigree Pouch Beef - Konzervirana hrana za pse",
+    "description": "Pedigree Pouch Beef je ukusna konzervirana hrana za pse sa govedim mesom. Sadrži visokokvalitetne proteine, vitamine i minerale koji podržavaju zdravlje vašeg psa. Pogodna za sve rase i starosne grupe.",
     "brand": "Pedigree",
     "code": "1011",
     "price": "1.04",
@@ -344,30 +344,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Can weight (g):",
-        "Meat type:",
-        "Age group:",
-        "Composition:",
-        "Analytical composition:",
-        "Additives:"
+        "Težina konzerve (g):",
+        "Tip mesa:",
+        "Starosna grupa:",
+        "Sastav:",
+        "Analitički sastav:",
+        "Dodaci:"
       ],
       "features": [
         "100",
-        "Beef meat",
-        "All age groups",
-        "Meat and meat derivatives, cereals, minerals",
-        "Proteins: 8%, Fats: 5%, Fibers: 0.5%, Ash: 2%",
-        "Vitamin A: 1500 IU, Iron: 7 mg"
+        "Govede meso",
+        "Sve starosne grupe",
+        "Meso i mesni derivati, žitarice, minerali",
+        "Proteini: 8%, Masti: 5%, Vlakna: 0.5%, Pepeo: 2%",
+        "Vitamin A: 1500 IU, Gvožđe: 7 mg"
       ]
     }
   },
   {
     "id": "1012",
-    "category": "Pet Grooming",
-    "subcategory": "Brushes and Combs",
-    "type": "Dog Combs",
-    "title": "Andis Steel Comb - Steel Comb for Dogs",
-    "description": "Andis Steel Comb is a professional steel comb for dogs with fine and sparse teeth. Used for precise brushing and removing knots from fur. It is durable and long-lasting quality.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Četke i češljevi",
+    "type": "Češljevi za pse",
+    "title": "Andis Steel Comb - Čelični češalj za pse",
+    "description": "Andis Steel Comb je profesionalni čelični češalj za pse sa finim i retkim zubima. Koristi se za precizno češljanje i uklanjanje čvorova iz dlake. Trajne je i dugotrajne kvalitete.",
     "brand": "Andis",
     "code": "1012",
     "price": "5.91",
@@ -376,30 +376,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Material:",
-        "Tooth length (mm):",
-        "Tooth spacing (mm):",
-        "Comb length (cm):",
-        "Weight (g):",
-        "Usage:"
+        "Materijal:",
+        "Dužina zuba (mm):",
+        "Razmak između zuba (mm):",
+        "Dužina češlja (cm):",
+        "Težina (g):",
+        "Upotreba:"
       ],
       "features": [
-        "Stainless steel",
+        "Nerđajući čelik",
         "15",
         "3",
         "18",
         "45",
-        "Brushing, knot removal"
+        "Češljanje, uklanjanje čvorova"
       ]
     }
   },
   {
     "id": "1013",
-    "category": "Pet Supplies",
-    "subcategory": "Collars and Leashes",
-    "type": "Dog Collars",
-    "title": "Flexi New Classic - Automatic Leash for Dogs",
-    "description": "Flexi New Classic is an automatic leash that self-rewinds and gives your dog freedom of movement. It has an ergonomic handle and quick-stop system. Suitable for dogs weighing up to 15 kg.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Ogrlice i povodci",
+    "type": "Ogrlice za pse",
+    "title": "Flexi New Classic - Automatski povodac za pse",
+    "description": "Flexi New Classic je automatski povodac koji se sam namotava i daje vašem psu slobodu kretanja. Ima ergonomsku dršku i sistem za brzo zaustavljanje. Pogodan za pse težine do 15 kg.",
     "brand": "Flexi",
     "code": "1013",
     "price": "24.78",
@@ -408,30 +408,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Leash length (m):",
-        "Recommended dog weight (kg):",
-        "Material:",
-        "Weight (g):",
-        "Color:",
-        "Functions:"
+        "Dužina povodca (m):",
+        "Preporučena težina psa (kg):",
+        "Materijal:",
+        "Težina (g):",
+        "Boja:",
+        "Funkcije:"
       ],
       "features": [
         "5",
-        "up to 15",
-        "Nylon, plastic",
+        "do 15",
+        "Najlon, plastika",
         "220",
-        "Black",
-        "Automatic rewinding, quick stop"
+        "Crna",
+        "Automatsko namotavanje, brzo zaustavljanje"
       ]
     }
   },
   {
     "id": "1014",
-    "category": "Pet Food",
-    "subcategory": "Cat Food",
-    "type": "Dry Food",
-    "title": "Purina ONE Adult Chicken - Dry Food for Cats",
-    "description": "Purina ONE Adult Chicken is a complete and balanced dry food for adult cats with chicken flavor. Contains high-quality proteins, omega-3 fatty acids and probiotics for digestive health.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za mačke",
+    "type": "Suva hrana",
+    "title": "Purina ONE Adult Chicken - Suva hrana za odrasle mačke",
+    "description": "Purina ONE Adult Chicken je potpuna i balansirana suva hrana za odrasle mačke sa ukusom piletine. Sadrži visokokvalitetne proteine, omega-3 masne kiseline i probiotike za zdravlje digestivnog sistema.",
     "brand": "Purina",
     "code": "1014",
     "price": "40.00",
@@ -440,28 +440,28 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Age group:",
-        "Composition:",
-        "Analytical composition:",
-        "Additives per kg:"
+        "Težina pakovanja (kg):",
+        "Starosna grupa:",
+        "Sastav:",
+        "Analitički sastav:",
+        "Dodaci po kg:"
       ],
       "features": [
         "3",
-        "Adult cats",
-        "Chicken meat, cereals, fish oil",
-        "Proteins: 34%, Fats: 14%, Fibers: 3%, Ash: 7%",
+        "Odrasle mačke",
+        "Pileće meso, žitarice, riblje ulje",
+        "Proteini: 34%, Masti: 14%, Vlakna: 3%, Pepeo: 7%",
         "Vitamin A: 10000 IU, Omega-3: 0.2%"
       ]
     }
   },
   {
     "id": "1015",
-    "category": "Pet Toys",
-    "subcategory": "Dog Toys",
-    "type": "Balls and Frisbees",
-    "title": "Chuckit! Ultra Ball - Hard Ball for Dogs",
-    "description": "Chuckit! Ultra Ball is an ultra-hard ball made from natural rubber that is resistant to chewing. Designed for long-term use and provides maximum fun for your dog. It bounces well and is easy to throw.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za pse",
+    "type": "Lopte i frisbi",
+    "title": "Chuckit! Ultra Ball - Čvrsta lopta za pse",
+    "description": "Chuckit! Ultra Ball je ultra-čvrsta lopta napravljena od prirodne gume koja je otporna na žvakanje. Dizajnirana za dugotrajnu upotrebu i pruža maksimalnu zabavu vašem psu. Dobro se odbija i lako se baca.",
     "brand": "Chuckit",
     "code": "1015",
     "price": "7.74",
@@ -470,30 +470,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Color:",
-        "Chew resistance:",
-        "Usage:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Boja:",
+        "Otpornost na žvakanje:",
+        "Upotreba:"
       ],
       "features": [
         "6.5",
-        "Natural rubber",
+        "Prirodna guma",
         "70",
-        "Orange",
-        "High",
-        "Throwing, chewing, play"
+        "Narandžasta",
+        "Visoka",
+        "Bacanje, žvakanje, igra"
       ]
     }
   },
   {
     "id": "1016",
-    "category": "Pet Supplies",
-    "subcategory": "Cages and Carriers",
-    "type": "Cat Carriers",
-    "title": "Petmate Aspen - Cat Carrier",
-    "description": "Petmate Aspen is a spacious cat carrier with mesh panels for ventilation and safety locks. It has a soft padded bottom for your pet's comfort. Perfect for travel and veterinary visits.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Kavezi i transporteri",
+    "type": "Transporteri za mačke",
+    "title": "Petmate Aspen - Transporter za mačke",
+    "description": "Petmate Aspen je prostran transporter za mačke sa mrežastim panelima za ventilaciju i sigurnosnim bravama. Ima meko posteljano dno za udobnost vašeg ljubimca. Savršen za putovanja i posete veterinaru.",
     "brand": "Petmate",
     "code": "1016",
     "price": "50.00",
@@ -502,30 +502,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Interior dimensions (cm):",
-        "Material:",
-        "Weight (kg):",
-        "Number of doors:",
-        "Ventilation:",
-        "Washable:"
+        "Unutrašnje dimenzije (cm):",
+        "Materijal:",
+        "Težina (kg):",
+        "Broj vrata:",
+        "Ventilacija:",
+        "Može se prati:"
       ],
       "features": [
         "48 x 30 x 33",
-        "Plastic, metal",
+        "Plastika, metal",
         "2.8",
         "2",
-        "Mesh panels",
-        "Yes, at 30°C"
+        "Mrežasti paneli",
+        "Da, na 30°C"
       ]
     }
   },
   {
     "id": "1017",
-    "category": "Pet Food",
-    "subcategory": "Bird Food",
-    "type": "Seed Mixes",
-    "title": "Versele-Laga Prestige - Premium Food for Parrots",
-    "description": "Versele-Laga Prestige is a premium mix of seeds and pelletized food for parrots. Contains more than 50 ingredients including seeds, nuts and vitamin pellets. Provides complete and balanced nutrition.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ptice",
+    "type": "Smeše semena",
+    "title": "Versele-Laga Prestige - Premium hrana za papagaje",
+    "description": "Versele-Laga Prestige je premium mešavina semena i peletirane hrane za papagaje. Sadrži više od 50 sastojaka uključujući semenke, orahe i vitaminske pelete. Pruža potpunu i balansiranu ishranu.",
     "brand": "Versele-Laga",
     "code": "1017",
     "price": "12.61",
@@ -534,30 +534,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Bird type:",
-        "Composition:",
-        "Proteins (%):",
-        "Fats (%):",
-        "Additives:"
+        "Težina pakovanja (kg):",
+        "Tip ptice:",
+        "Sastav:",
+        "Proteini (%):",
+        "Masti (%):",
+        "Dodaci:"
       ],
       "features": [
         "1",
-        "Large parrots",
-        "Seeds, pellets, nuts",
+        "Veliki papagaji",
+        "Semenke, peleti, orahe",
         "16",
         "12",
-        "Vitamins, minerals, amino acids"
+        "Vitamini, minerali, amino kiseline"
       ]
     }
   },
   {
     "id": "1018",
-    "category": "Pet Grooming",
-    "subcategory": "Shampoos",
-    "type": "Cat Shampoos",
-    "title": "Beaphar Anti-Parasite Shampoo for Cats",
-    "description": "Beaphar Anti-Parasite Shampoo is a shampoo against fleas and ticks for cats. Contains natural ingredients such as pyrethrum and neem oil. Effective against external parasites and leaves fur soft and shiny.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Šamponi",
+    "type": "Šamponi za mačke",
+    "title": "Beaphar Anti-Parasite Shampoo - Šampon protiv parazita za mačke",
+    "description": "Beaphar Anti-Parasite Shampoo je šampon protiv buva i krpelja za mačke. Sadrži prirodne sastojke kao što su piretrum i neem ulje. Efikasan protiv spoljašnjih parazita i ostavlja dlaku mekom i sjajnom.",
     "brand": "Beaphar",
     "code": "1018",
     "price": "10.00",
@@ -566,30 +566,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Animal type:",
-        "Active ingredients:",
-        "pH value:",
-        "Scent:",
-        "Usage:"
+        "Zapremina (ml):",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "pH vrednost:",
+        "Miris:",
+        "Upotreba:"
       ],
       "features": [
         "250",
-        "Cats",
-        "Pyrethrum, neem oil",
+        "Mačke",
+        "Piretrum, neem ulje",
         "7.0",
-        "Mild herbal scent",
-        "Apply to wet hair, massage and rinse"
+        "Blagi biljni miris",
+        "Nanesite na vlažnu dlaku, masirajte i isperite"
       ]
     }
   },
   {
     "id": "1019",
-    "category": "Pet Supplies",
-    "subcategory": "Bowls and Feeders",
-    "type": "Dog Feeders",
-    "title": "Ferplast Dog Bowl - Ceramic Dog Feeder",
-    "description": "Ferplast Dog Bowl is an elegant ceramic dog feeder with anti-slip bottom. Made from high-quality ceramic that is easy to clean and scratch resistant. Available in various sizes and colors.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Posude i hranilice",
+    "type": "Hranilice za pse",
+    "title": "Ferplast Dog Bowl - Keramička hranilica za pse",
+    "description": "Ferplast Dog Bowl je elegantna keramička hranilica za pse sa protivklizajućim dnom. Napravljena od visokokvalitetne keramike koja se lako čisti i otporna je na ogrebotine. Dostupna u različitim veličinama i bojama.",
     "brand": "Ferplast",
     "code": "1019",
     "price": "10.00",
@@ -598,30 +598,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Capacity (ml):",
-        "Weight (g):",
-        "Color:",
-        "Anti-slip bottom:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Kapacitet (ml):",
+        "Težina (g):",
+        "Boja:",
+        "Protivklizajuće dno:"
       ],
       "features": [
         "18",
-        "Ceramic",
+        "Keramika",
         "550",
         "320",
-        "White",
-        "Yes"
+        "Bela",
+        "Da"
       ]
     }
   },
   {
     "id": "1020",
-    "category": "Pet Toys",
-    "subcategory": "Cat Toys",
-    "type": "Mice and Feather Toys",
-    "title": "Yeowww! Catnip Toy - Catnip Toy",
-    "description": "Yeowww! Catnip Toy is a soft toy filled with catnip that stimulates your cat's natural instincts. Made from quality materials and has a rattle inside for additional fun. Perfect for play and training.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za mačke",
+    "type": "Igračke miševi i perje",
+    "title": "Yeowww! Catnip Toy - Igračka sa mačjom nana za mačke",
+    "description": "Yeowww! Catnip Toy je meka igračka punjena mačjom nanom koja stimuliše prirodne instinkte vaše mačke. Napravljena od kvalitetnih materijala i ima zvečku unutra za dodatnu zabavu. Savršena za igru i trening.",
     "brand": "Yeowww",
     "code": "1020",
     "price": "10.00",
@@ -630,30 +630,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Filling:",
-        "Weight (g):",
-        "Color:",
-        "Sound:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Punjenje:",
+        "Težina (g):",
+        "Boja:",
+        "Zvuk:"
       ],
       "features": [
         "10 x 5 x 5",
-        "Plush material",
-        "Catnip",
+        "Plišani materijal",
+        "Mačja nana",
         "25",
-        "Gray",
-        "Rattle inside"
+        "Siva",
+        "Zvečka unutra"
       ]
     }
   },
   {
     "id": "1021",
-    "category": "Pet Food",
-    "subcategory": "Hamster Food",
-    "type": "Seed Mixes",
-    "title": "Vitakraft Hamster Nature - Hamster Food",
-    "description": "Vitakraft Hamster Nature is a natural mix of seeds and cereals for hamsters. Contains more than 10 types of seeds, cereals and vegetables. Enriched with vitamins and minerals for your hamster's health.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za hrčke",
+    "type": "Smeše semena",
+    "title": "Vitakraft Hamster Nature - Hrana za hrčke",
+    "description": "Vitakraft Hamster Nature je prirodna mešavina semena i žitarica za hrčke. Sadrži više od 10 vrsta semena, žitarica i povrća. Obogaćena vitaminima i mineralima za zdravlje vašeg hrčka.",
     "brand": "Vitakraft",
     "code": "1021",
     "price": "5.04",
@@ -662,30 +662,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Animal type:",
-        "Composition:",
-        "Additives:",
-        "Shelf life:",
-        "Storage method:"
+        "Težina pakovanja (g):",
+        "Tip životinje:",
+        "Sastav:",
+        "Dodaci:",
+        "Rok trajanja:",
+        "Način čuvanja:"
       ],
       "features": [
         "500",
-        "Hamsters",
-        "Sunflower seeds, millet, oat groats",
-        "Vitamins, minerals",
-        "12 months",
-        "Dry and cool place"
+        "Hrčci",
+        "Semenke suncokreta, proso, ovseni grozd",
+        "Vitamini, minerali",
+        "12 meseci",
+        "Suvom i hladnom mestu"
       ]
     }
   },
   {
     "id": "1022",
-    "category": "Pet Supplies",
-    "subcategory": "Cages and Houses",
-    "type": "Hamster Cages",
-    "title": "Savic Hamster Cage - Hamster Cage",
-    "description": "Savic Hamster Cage is a spacious hamster cage with multiple levels and plenty of space for play. It has secure locks, feeder and water bottle. Made from quality plastic that is easy to clean.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Kavezi i kućice",
+    "type": "Kavezi za hrčke",
+    "title": "Savic Hamster Cage - Kavez za hrčke",
+    "description": "Savic Hamster Cage je prostran kavez za hrčke sa više nivoa i dovoljno prostora za igru. Ima sigurne brave, hranilicu i bocu za vodu. Napravljen od kvalitetne plastike koja se lako čisti.",
     "brand": "Savic",
     "code": "1022",
     "price": "36.52",
@@ -694,30 +694,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Number of levels:",
-        "Material:",
-        "Weight (kg):",
-        "Additional equipment:",
-        "Washable:"
+        "Dimenzije (cm):",
+        "Broj nivoa:",
+        "Materijal:",
+        "Težina (kg):",
+        "Dodatna oprema:",
+        "Može se prati:"
       ],
       "features": [
         "80 x 50 x 80",
         "2",
-        "Plastic, metal",
+        "Plastika, metal",
         "3.2",
-        "Feeder, water bottle, wheel",
-        "Yes, at 40°C"
+        "Hranilica, boca za vodu, točak",
+        "Da, na 40°C"
       ]
     }
   },
   {
     "id": "1023",
-    "category": "Pet Food",
-    "subcategory": "Fish Food",
-    "type": "Food for Goldfish",
-    "title": "JBL Novo Gold - Food for Goldfish",
-    "description": "JBL Novo Gold is a special food for goldfish with optimal ratio of proteins and carbohydrates. Contains spirulina for intense color and healthy scales. The food is easily digestible and does not pollute the water.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ribe",
+    "type": "Hrana za zlatne ribice",
+    "title": "JBL Novo Gold - Hrana za zlatne ribice",
+    "description": "JBL Novo Gold je specijalna hrana za zlatne ribice sa optimalnim odnosom proteina i ugljenih hidrata. Sadrži spirulinu za intenzivnu boju i zdrave ljuske. Hrana je lako probavljiva i ne zagadjuje vodu.",
     "brand": "JBL",
     "code": "1023",
     "price": "6.52",
@@ -726,18 +726,18 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Fish type:",
-        "Food shape:",
-        "Composition:",
-        "Proteins (%):",
-        "Fats (%):"
+        "Težina pakovanja (g):",
+        "Tip ribe:",
+        "Oblik hrane:",
+        "Sastav:",
+        "Proteini (%):",
+        "Masti (%):"
       ],
       "features": [
         "100",
-        "Goldfish",
-        "Pellets",
-        "Fish meal, spirulina, cereals",
+        "Zlatne ribice",
+        "Peleti",
+        "Riblje brašno, spirulina, žitarice",
         "36",
         "6"
       ]
@@ -745,11 +745,11 @@
   },
   {
     "id": "1024",
-    "category": "Pet Grooming",
-    "subcategory": "Nail Care",
-    "type": "Nail Clippers",
-    "title": "Millers Forge - Nail Clippers for Dogs and Cats",
-    "description": "Millers Forge clippers are professional clippers for trimming nails of dogs and cats. Has a safety stopper that prevents excessive trimming. Ergonomic handle provides comfortable grip and precise control.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Nega noktiju",
+    "type": "Makaze za nokte",
+    "title": "Millers Forge - Makaze za nokte za pse i mačke",
+    "description": "Millers Forge makaze su profesionalne makaze za sečenje noktiju pasa i mačaka. Ima sigurnosni zaštitnik koji sprečava prekomerno sečenje. Ergonomska drška pruža udoban zahvat i preciznu kontrolu.",
     "brand": "Millers Forge",
     "code": "1024",
     "price": "10.87",
@@ -758,30 +758,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Material:",
-        "Length (cm):",
-        "Weight (g):",
-        "Safety stopper:",
-        "Ergonomic handle:",
-        "Usage:"
+        "Materijal:",
+        "Dužina (cm):",
+        "Težina (g):",
+        "Sigurnosni zaštitnik:",
+        "Ergonomska drška:",
+        "Upotreba:"
       ],
       "features": [
-        "Stainless steel",
+        "Nerđajući čelik",
         "15",
         "85",
-        "Yes",
-        "Yes",
-        "Nail trimming for dogs and cats"
+        "Da",
+        "Da",
+        "Sečenje noktiju za pse i mačke"
       ]
     }
   },
   {
     "id": "1025",
-    "category": "Pet Toys",
-    "subcategory": "Bird Toys",
-    "type": "Bells and Chimes",
-    "title": "Prevue Pet Products Bell - Bell for Birds",
-    "description": "Prevue Pet Products Bell is a fun bell for birds that stimulates your pet's natural instincts. Made from safe materials and has a bright color that attracts birds' attention. Perfect for cage enrichment.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za ptice",
+    "type": "Zvončići i činela",
+    "title": "Prevue Pet Products Bell - Zvončić za ptice",
+    "description": "Prevue Pet Products Bell je zabavni zvončić za ptice koji stimuliše prirodne instinkte vašeg ljubimca. Napravljen od bezbednih materijala i ima svetlu boju koja privlači pažnju ptica. Savršen za obogaćivanje kaveza.",
     "brand": "Prevue Pet Products",
     "code": "1025",
     "price": "10.00",
@@ -790,30 +790,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Color:",
-        "Weight (g):",
-        "Safe attachment:",
-        "Usage:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Boja:",
+        "Težina (g):",
+        "Sigurno pričvršćivanje:",
+        "Upotreba:"
       ],
       "features": [
         "8",
-        "Plastic, metal",
-        "Yellow",
+        "Plastika, metal",
+        "Žuta",
         "30",
-        "Yes",
-        "Play, stimulation"
+        "Da",
+        "Igra, stimulacija"
       ]
     }
   },
   {
     "id": "1026",
-    "category": "Pet Supplies",
-    "subcategory": "Aquariums",
-    "type": "Freshwater Aquariums",
-    "title": "Tetra AquaArt - 60 Liter Aquarium",
-    "description": "Tetra AquaArt is a complete 60-liter aquarium with filter, lighting and lid. Made from quality glass and has a modern design. Ideal solution for beginners in aquaristics.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Akvarijumi",
+    "type": "Akvarijumi za slatkovodne ribe",
+    "title": "Tetra AquaArt - Akvarijum od 60 litara",
+    "description": "Tetra AquaArt je kompletan akvarijum od 60 litara sa filterom, osvetljenjem i poklopcem. Napravljen od kvalitetnog stakla i ima moderan dizajn. Idealno rešenje za početnike u akvaristici.",
     "brand": "Tetra",
     "code": "1026",
     "price": "77.39",
@@ -822,30 +822,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Volume (l):",
-        "Dimensions (cm):",
-        "Material:",
+        "Zapremina (l):",
+        "Dimenzije (cm):",
+        "Materijal:",
         "Filter:",
-        "Lighting:",
-        "Lid:"
+        "Osvetljenje:",
+        "Poklopac:"
       ],
       "features": [
         "60",
         "60 x 30 x 40",
-        "Glass",
-        "Internal filter",
-        "LED lights",
-        "With lid"
+        "Staklo",
+        "Unutrašnji filter",
+        "LED svetla",
+        "Sa poklopcem"
       ]
     }
   },
   {
     "id": "1027",
-    "category": "Pet Food",
-    "subcategory": "Rabbit Food",
-    "type": "Pelleted Food",
-    "title": "Burgess Excel - Rabbit Food",
-    "description": "Burgess Excel is a complete pelleted food for rabbits that contains all necessary nutrients. Enriched with vitamins, minerals and fiber for digestive health. Helps maintain healthy teeth and good digestion.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za zečeve",
+    "type": "Pelletirana hrana",
+    "title": "Burgess Excel - Hrana za zečeve",
+    "description": "Burgess Excel je potpuna peletirana hrana za zečeve koja sadrži sve potrebne nutrijente. Obogaćena vitaminima, mineralima i vlaknima za zdravlje digestivnog sistema. Pomaže održavanju zdravih zuba i dobre probave.",
     "brand": "Burgess",
     "code": "1027",
     "price": "16.43",
@@ -854,30 +854,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Animal type:",
-        "Composition:",
-        "Proteins (%):",
-        "Fiber (%):",
-        "Additives:"
+        "Težina pakovanja (kg):",
+        "Tip životinje:",
+        "Sastav:",
+        "Proteini (%):",
+        "Vlakna (%):",
+        "Dodaci:"
       ],
       "features": [
         "2.5",
-        "Rabbits",
-        "Cereals, plant extracts, vitamins",
+        "Zečevi",
+        "Žitarice, biljni ekstrakti, vitamini",
         "14",
         "18",
-        "Vitamins, minerals, probiotics"
+        "Vitamini, minerali, probiotici"
       ]
     }
   },
   {
     "id": "1028",
-    "category": "Pet Grooming",
-    "subcategory": "Lip Balms",
-    "type": "Paw Balms",
-    "title": "Pet Head Paw Balm - Paw Balm for Dogs",
-    "description": "Pet Head Paw Balm is a moisturizing balm for dog paws that protects from salt, ice and other irritants. Contains natural ingredients such as shea butter and beeswax. Absorbs quickly and leaves paws soft and protected.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Balzami za usne",
+    "type": "Balzami za šape",
+    "title": "Pet Head Paw Balm - Balzam za šape za pse",
+    "description": "Pet Head Paw Balm je hidrirajući balzam za šape pasa koji štiti od soli, leda i drugih nadražujućih supstanci. Sadrži prirodne sastojke kao što su šea puter i pčelinji vosak. Brzo se upija i ostavlja šape meke i zaštićene.",
     "brand": "Pet Head",
     "code": "1028",
     "price": "8.26",
@@ -886,30 +886,30 @@
     "percentage": "3%",
     "technicalData": {
       "labels": [
-        "Volume (g):",
-        "Animal type:",
-        "Active ingredients:",
-        "Scent:",
-        "Usage:",
-        "Safety:"
+        "Zapremina (g):",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "Miris:",
+        "Upotreba:",
+        "Sigurnost:"
       ],
       "features": [
         "50",
-        "Dogs",
-        "Shea butter, beeswax, vitamin E",
-        "Unscented",
-        "Apply to paws",
-        "Safe for licking"
+        "Psi",
+        "Šea puter, pčelinji vosak, vitamin E",
+        "Bez mirisa",
+        "Nanesite na šape",
+        "Bezbedno za lizanje"
       ]
     }
   },
   {
     "id": "1029",
-    "category": "Pet Supplies",
-    "subcategory": "Beds and Loungers",
-    "type": "Cat Beds",
-    "title": "MidWest Cat Scratch Box - Bed with Scratcher for Cats",
-    "description": "MidWest Cat Scratch Box is a combination bed and scratcher for cats. Has soft lining for sleeping and sisal rope for scratching. Helps maintain your cat's claws and provides comfortable resting space.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Ležaji i ležaljke",
+    "type": "Ležaji za mačke",
+    "title": "MidWest Cat Scratch Box - Ležaj sa grebalicom za mačke",
+    "description": "MidWest Cat Scratch Box je kombinacija ležaja i grebalice za mačke. Ima meku posteljinu za spavanje i sisal užad za grebanje. Pomaže održavanju kandži vaše mačke i pruža udoban prostor za odmor.",
     "brand": "MidWest",
     "code": "1029",
     "price": "30.00",
@@ -918,30 +918,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (kg):",
-        "Color:",
-        "Washable:",
-        "Dual function:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (kg):",
+        "Boja:",
+        "Može se prati:",
+        "Dvostruka funkcija:"
       ],
       "features": [
         "45 x 30 x 10",
-        "Sisal rope, fabric",
+        "Sisal užad, tkanina",
         "1.5",
-        "Beige",
-        "Yes",
-        "Bed and scratcher"
+        "Bež",
+        "Da",
+        "Ležaj i grebalica"
       ]
     }
   },
   {
     "id": "1030",
-    "category": "Pet Toys",
-    "subcategory": "Hamster Toys",
-    "type": "Running Wheels",
-    "title": "Savic Hamster Wheel - Silent Wheel for Hamsters",
-    "description": "Savic Hamster Wheel is a silent running wheel for hamsters with safe stopping mechanism. Made from plastic and metal, with non-slip surface. Provides your hamster opportunity for daily exercise.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za hrčke",
+    "type": "Trčanje točkovi",
+    "title": "Savic Hamster Wheel - Tihi točak za hrčke",
+    "description": "Savic Hamster Wheel je tihi trčaći točak za hrčke sa sigurnim mehanizmom za zaustavljanje. Napravljen od plastike i metala, sa protivklizajućom površinom. Pruža vašem hrčku mogućnost za svakodnevno vežbanje.",
     "brand": "Savic",
     "code": "1030",
     "price": "10.00",
@@ -950,30 +950,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Safety mechanism:",
-        "Noise level:",
-        "Mounting:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Sigurnosni mehanizam:",
+        "Nivo buke:",
+        "Montaža:"
       ],
       "features": [
         "20",
-        "Plastic, metal",
+        "Plastika, metal",
         "180",
-        "Yes",
-        "Silent",
-        "On cage bars"
+        "Da",
+        "Tih",
+        "Na šipkama kaveza"
       ]
     }
   },
   {
     "id": "1031",
-    "category": "Pet Food",
-    "subcategory": "Turtle Food",
-    "type": "Dry Food",
-    "title": "Tetra ReptoMin - Food for Aquatic Turtles",
-    "description": "Tetra ReptoMin is a complete food for aquatic turtles in the form of floating sticks. Contains high-quality proteins, vitamins and minerals. Helps maintain healthy shell and good health.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za kornjače",
+    "type": "Suva hrana",
+    "title": "Tetra ReptoMin - Hrana za vodenjače",
+    "description": "Tetra ReptoMin je potpuna hrana za vodenjače u obliku lebdećih štapića. Sadrži visokokvalitetne proteine, vitamine i minerale. Pomaže održavanju zdravog oklopa i dobrog zdravlja.",
     "brand": "Tetra",
     "code": "1031",
     "price": "40.00",
@@ -982,30 +982,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Animal type:",
-        "Food shape:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:"
+        "Težina pakovanja (g):",
+        "Tip životinje:",
+        "Oblik hrane:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:"
       ],
       "features": [
         "85",
-        "Aquatic turtles",
-        "Sticks",
-        "Fish meal, cereals, spirulina",
+        "Vodenjače",
+        "Štapići",
+        "Riblje brašno, žitarice, spirulina",
         "45",
-        "Vitamins, minerals"
+        "Vitamini, minerali"
       ]
     }
   },
   {
     "id": "1032",
-    "category": "Pet Supplies",
-    "subcategory": "Terrariums",
-    "type": "Turtle Terrariums",
-    "title": "Exo Terra Terrarium - Turtle Terrarium",
-    "description": "Exo Terra Terrarium is a fully equipped terrarium for land turtles with lid, substrate and lighting. Made from quality plastic and has ventilation holes. Provides ideal conditions for your pet.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Terrarijumi",
+    "type": "Terrarijumi za kornjače",
+    "title": "Exo Terra Terrarium - Terarijum za kornjače",
+    "description": "Exo Terra Terrarium je potpuno opremljen terarijum za kopnene kornjače sa poklopcem, supstratom i osvetljenjem. Napravljen od kvalitetne plastike i ima ventilacione otvore. Pruža idealne uslove za vašeg ljubimca.",
     "brand": "Exo Terra",
     "code": "1032",
     "price": "80.00",
@@ -1014,30 +1014,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (l):",
-        "Dimensions (cm):",
-        "Material:",
-        "Ventilation:",
-        "Lighting:",
-        "Substrate:"
+        "Zapremina (l):",
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Ventilacija:",
+        "Osvetljenje:",
+        "Supstrat:"
       ],
       "features": [
         "40",
         "60 x 30 x 30",
-        "Plastic",
-        "Ventilation holes",
-        "UV lights included",
-        "Substrate included"
+        "Plastika",
+        "Ventilacioni otvori",
+        "UV svetla uključena",
+        "Supstrat uključen"
       ]
     }
   },
   {
     "id": "1033",
-    "category": "Pet Grooming",
-    "subcategory": "Lotions and Sprays",
-    "type": "Flea Sprays",
-    "title": "Frontline Spray - Flea and Tick Spray",
-    "description": "Frontline Spray is an effective spray against fleas and ticks for dogs and cats. Contains fipronil that kills parasites and prevents their reappearance. Works for up to 3 months and is safe to use.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Kreme i sprejevi",
+    "type": "Sprejevi protiv buva",
+    "title": "Frontline Spray - Sprej protiv buva i krpelja",
+    "description": "Frontline Spray je efikasan sprej protiv buva i krpelja za pse i mačke. Sadrži fipronil koji ubija parazite i sprečava njihovu ponovnu pojavu. Deluje do 3 meseca i bezbedan je za upotrebu.",
     "brand": "Frontline",
     "code": "1033",
     "price": "18.26",
@@ -1046,30 +1046,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Active ingredient:",
-        "Animal type:",
-        "Protection duration:",
-        "Usage:",
-        "Safety:"
+        "Zapremina (ml):",
+        "Aktivan sastojak:",
+        "Tip životinje:",
+        "Trajanje zaštite:",
+        "Upotreba:",
+        "Sigurnost:"
       ],
       "features": [
         "250",
         "Fipronil",
-        "Dogs and cats",
-        "3 months",
-        "Spray on fur",
-        "Safe for pets"
+        "Psi i mačke",
+        "3 meseca",
+        "Sprej na dlaku",
+        "Bezbedno za ljubimce"
       ]
     }
   },
   {
     "id": "1034",
-    "category": "Pet Toys",
-    "subcategory": "Rabbit Toys",
-    "type": "Tunnels and Houses",
-    "title": "Savic Rabbit Tunnel - Tunnel for Rabbits",
-    "description": "Savic Rabbit Tunnel is a fun tunnel for rabbits made from quality plastic. Has different entrances and exits which stimulates your rabbit's natural instincts. Easy to clean and can be combined with other toys.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za zečeve",
+    "type": "Tuneli i kućice",
+    "title": "Savic Rabbit Tunnel - Tunel za zečeve",
+    "description": "Savic Rabbit Tunnel je zabavni tunel za zečeve napravljen od kvalitetne plastike. Ima različite ulaze i izlaze što stimuliše prirodne instinkte vašeg zeca. Lako se čisti i može se kombinovati sa drugim igračkama.",
     "brand": "Savic",
     "code": "1034",
     "price": "10.00",
@@ -1078,30 +1078,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Length (cm):",
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Color:",
-        "Usage:"
+        "Dužina (cm):",
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Boja:",
+        "Upotreba:"
       ],
       "features": [
         "45",
         "15",
-        "Plastic",
+        "Plastika",
         "250",
-        "Green",
-        "Play, hiding"
+        "Zelena",
+        "Igra, skrivanje"
       ]
     }
   },
   {
     "id": "1035",
-    "category": "Pet Supplies",
-    "subcategory": "Bowls and Feeders",
-    "type": "Water Bottles",
-    "title": "Ferplast Drinking Bottle - Plastic Water Bottle",
-    "description": "Ferplast Drinking Bottle is a practical plastic water bottle for small animals such as hamsters, rabbits and turtles. Has safety mechanism that prevents leaking and is easy to fill. Mounts on cage bars.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Posude i hranilice",
+    "type": "Boce za vodu",
+    "title": "Ferplast Drinking Bottle - Plastična boca za vodu",
+    "description": "Ferplast Drinking Bottle je praktična plastična boca za vodu za male životinje kao što su hrčci, zečevi i kornjače. Ima sigurnosni mehanizam koji sprečava curenje i lako se puni. Montira se na šipke kaveza.",
     "brand": "Ferplast",
     "code": "1035",
     "price": "20.00",
@@ -1110,30 +1110,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Material:",
-        "Weight (g):",
-        "Safety valve:",
-        "Mounting:",
-        "Usage:"
+        "Zapremina (ml):",
+        "Materijal:",
+        "Težina (g):",
+        "Sigurnosni ventil:",
+        "Montaža:",
+        "Upotreba:"
       ],
       "features": [
         "250",
-        "Plastic",
+        "Plastika",
         "45",
-        "Yes",
-        "On bars",
-        "For small animals"
+        "Da",
+        "Na šipkama",
+        "Za male životinje"
       ]
     }
   },
   {
     "id": "1036",
-    "category": "Pet Food",
-    "subcategory": "Small Animal Food",
-    "type": "Mouse Food",
-    "title": "Vitakraft Mouse Menu - Mouse Food",
-    "description": "Vitakraft Mouse Menu is a complete food for mice that contains more than 40 ingredients. Includes seeds, cereals, vegetables and fruits. Enriched with vitamins and minerals for your mice's health.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za male životinje",
+    "type": "Hrana za miševe",
+    "title": "Vitakraft Mouse Menu - Hrana za miševe",
+    "description": "Vitakraft Mouse Menu je potpuna hrana za miševe koja sadrži više od 40 sastojaka. Uključuje semenke, žitarice, povrće i voće. Obogaćena vitaminima i mineralima za zdravlje vaših miševa.",
     "brand": "Vitakraft",
     "code": "1036",
     "price": "3.91",
@@ -1142,30 +1142,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Animal type:",
-        "Composition:",
-        "Additives:",
-        "Shelf life:",
-        "Storage method:"
+        "Težina pakovanja (g):",
+        "Tip životinje:",
+        "Sastav:",
+        "Dodaci:",
+        "Rok trajanja:",
+        "Način čuvanja:"
       ],
       "features": [
         "350",
-        "Mice",
-        "Seeds, cereals, vegetables",
-        "Vitamins, minerals",
-        "12 months",
-        "Dry and cool place"
+        "Miševi",
+        "Semenke, žitarice, povrće",
+        "Vitamini, minerali",
+        "12 meseci",
+        "Suvom i hladnom mestu"
       ]
     }
   },
   {
     "id": "1037",
-    "category": "Pet Grooming",
-    "subcategory": "Dietary Supplements",
-    "type": "Dog Vitamins",
-    "title": "Beaphar Duo Tabs - Vitamins for Dogs",
-    "description": "Beaphar Duo Tabs are vitamin and mineral supplements for dogs of all sizes. Contain calcium, phosphorus and vitamin D3 for bone and teeth health. Help prevent nutritional deficiencies.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Dijetetski suplementi",
+    "type": "Vitamini za pse",
+    "title": "Beaphar Duo Tabs - Vitamini za pse",
+    "description": "Beaphar Duo Tabs su vitaminski i mineralni suplementi za pse svih veličina. Sadrže kalcijum, fosfor i vitamin D3 za zdravlje kostiju i zuba. Pomažu u sprečavanju nutritivnih nedostataka.",
     "brand": "Beaphar",
     "code": "1037",
     "price": "10.43",
@@ -1174,30 +1174,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Number of tablets:",
-        "Animal type:",
-        "Active ingredients:",
-        "Dosage:",
-        "Usage:",
-        "Safety:"
+        "Broj tableta:",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "Doza:",
+        "Upotreba:",
+        "Sigurnost:"
       ],
       "features": [
         "100",
-        "Dogs",
-        "Calcium, phosphorus, vitamin D3",
-        "1 tablet daily per 10kg weight",
-        "Add to food",
-        "Safe for all dogs"
+        "Psi",
+        "Kalcijum, fosfor, vitamin D3",
+        "1 tableta dnevno na 10kg težine",
+        "Dodati u hranu",
+        "Bezbedno za sve pse"
       ]
     }
   },
   {
     "id": "1038",
-    "category": "Pet Supplies",
-    "subcategory": "Cages and Carriers",
-    "type": "Bird Cages",
-    "title": "Ferplast Bird Cage - Bird Cage",
-    "description": "Ferplast Bird Cage is a spacious bird cage with multiple levels and plenty of space for flight. Has feeder, water bottle and toys. Made from quality plastic and metal, easy to clean.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Kavezi i transporteri",
+    "type": "Kavezi za ptice",
+    "title": "Ferplast Bird Cage - Kavez za ptice",
+    "description": "Ferplast Bird Cage je prostran kavez za ptice sa više nivoa i dovoljno prostora za let. Ima hranilicu, bocu za vodu i igračke. Napravljen od kvalitetne plastike i metala, lako se čisti.",
     "brand": "Ferplast",
     "code": "1038",
     "price": "59.13",
@@ -1206,30 +1206,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (kg):",
-        "Number of levels:",
-        "Additional equipment:",
-        "Washable:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (kg):",
+        "Broj nivoa:",
+        "Dodatna oprema:",
+        "Može se prati:"
       ],
       "features": [
         "50 x 40 x 120",
-        "Plastic, metal",
+        "Plastika, metal",
         "4.5",
         "3",
-        "Feeder, water bottle, toys",
-        "Yes"
+        "Hranilica, boca za vodu, igračke",
+        "Da"
       ]
     }
   },
   {
     "id": "1039",
-    "category": "Pet Toys",
-    "subcategory": "Fish Toys",
-    "type": "Aquarium Decorations",
-    "title": "Tetra Decor - Artificial Plant for Aquarium",
-    "description": "Tetra Decor is an artificial plant for aquarium that provides natural environment for your fish. Made from safe materials that do not affect water quality. Helps reduce stress in fish.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za ribe",
+    "type": "Dekoracije za akvarijum",
+    "title": "Tetra Decor - Veštačka biljka za akvarijum",
+    "description": "Tetra Decor je veštačka biljka za akvarijum koja pruža prirodno okruženje za vaše ribe. Napravljena od bezbednih materijala koji ne utiču na kvalitet vode. Pomaže smanjenju stresa kod riba.",
     "brand": "Tetra",
     "code": "1039",
     "price": "10.00",
@@ -1238,30 +1238,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Height (cm):",
-        "Material:",
-        "Color:",
-        "Weight (g):",
-        "Safety:",
-        "Usage:"
+        "Visina (cm):",
+        "Materijal:",
+        "Boja:",
+        "Težina (g):",
+        "Sigurnost:",
+        "Upotreba:"
       ],
       "features": [
         "25",
-        "Plastic",
-        "Green",
+        "Plastika",
+        "Zelena",
         "40",
-        "Safe for fish",
-        "Aquarium decoration"
+        "Bezbedno za ribe",
+        "Dekoracija za akvarijum"
       ]
     }
   },
   {
     "id": "1040",
-    "category": "Pet Supplies",
-    "subcategory": "Cleaners and Maintenance",
-    "type": "Cleaning Products",
-    "title": "Beaphar Litter Deodorant - Sand Deodorant",
-    "description": "Beaphar Litter Deodorant is a deodorant for cat litter that neutralizes unpleasant odors. Contains natural ingredients and enzymes that break down bacteria. Easy to use and long-lasting effect.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Sredstva za čišćenje i održavanje",
+    "type": "Proizvodi za čišćenje",
+    "title": "Beaphar Litter Deodorant - Dezodorans za pesak",
+    "description": "Beaphar Litter Deodorant je dezodorans za mačji pesak koji neutrališe neprijatne mirise. Sadrži prirodne sastojke i enzime koji razgrađuju bakterije. Lako se koristi i dugotrajan efekat.",
     "brand": "Beaphar",
     "code": "1040",
     "price": "20.00",
@@ -1270,30 +1270,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Animal type:",
-        "Active ingredients:",
-        "Scent:",
-        "Usage:",
-        "Duration:"
+        "Zapremina (ml):",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "Miris:",
+        "Upotreba:",
+        "Trajanje:"
       ],
       "features": [
         "500",
-        "Cats",
-        "Enzymes, natural extracts",
-        "Fresh scent",
-        "Add to litter",
-        "4 weeks"
+        "Mačke",
+        "Enzimi, prirodni ekstrakti",
+        "Svež miris",
+        "Dodati u pesak",
+        "4 nedelje"
       ]
     }
   },
   {
     "id": "1041",
-    "category": "Pet Food",
-    "subcategory": "Dog Food",
-    "type": "Dry Food",
-    "title": "Eukanuba Adult Large Breed - Dry Food for Large Dogs",
-    "description": "Eukanuba Adult Large Breed is specialized food for adult large breed dogs (over 25 kg). Contains optimal ratio of calcium and phosphorus for bone and joint health. Enriched with omega-3 fatty acids for healthy skin and coat.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za pse",
+    "type": "Suva hrana",
+    "title": "Eukanuba Adult Large Breed - Suva hrana za velike pse",
+    "description": "Eukanuba Adult Large Breed je specijalizovana hrana za odrasle pse velikih rasa (preko 25 kg). Sadrži optimalan odnos kalcijuma i fosfora za zdravlje kostiju i zglobova. Obogaćena omega-3 masnim kiselinama za zdravu kožu i dlaku.",
     "brand": "Eukanuba",
     "code": "1041",
     "price": "56.52",
@@ -1302,30 +1302,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Age group:",
-        "Dog size:",
-        "Composition:",
-        "Analytical composition:",
-        "Additives per kg:"
+        "Težina pakovanja (kg):",
+        "Starosna grupa:",
+        "Veličina psa:",
+        "Sastav:",
+        "Analitički sastav:",
+        "Dodaci po kg:"
       ],
       "features": [
         "15",
-        "Adult (1-5 years)",
-        "Large (25+ kg)",
-        "Chicken meat, cereals, fish oil",
-        "Proteins: 24%, Fats: 13%, Fibers: 2.2%, Ash: 6.5%",
+        "Odrasli (1-5 godina)",
+        "Veliki (25+ kg)",
+        "Pileće meso, žitarice, riblje ulje",
+        "Proteini: 24%, Masti: 13%, Vlakna: 2.2%, Pepeo: 6.5%",
         "Vitamin A: 17500 IU, Omega-3: 0.35%"
       ]
     }
   },
   {
     "id": "1042",
-    "category": "Pet Grooming",
-    "subcategory": "Shampoos",
-    "type": "Dog Shampoos",
-    "title": "Iv San Bernard - Shampoo for White Dog Hair",
-    "description": "Iv San Bernard is a professional shampoo for dogs with white hair that removes yellow stains and restores natural whiteness. Contains optical brighteners and UV protection. Suitable for poodles, Maltese and other white breeds.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Šamponi",
+    "type": "Šamponi za pse",
+    "title": "Iv San Bernard - Šampon za belu dlaku pasa",
+    "description": "Iv San Bernard je profesionalni šampon za pse sa belom dlakom koji uklanja žute fleke i vraća prirodnu belinu. Sadrži optičke izbjeljivače i UV zaštitu. Pogodan za pudle, maltezere i druge bele rase.",
     "brand": "Iv San Bernard",
     "code": "1042",
     "price": "12.61",
@@ -1334,30 +1334,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Animal type:",
-        "Hair type:",
-        "Active ingredients:",
-        "pH value:",
-        "Scent:"
+        "Zapremina (ml):",
+        "Tip životinje:",
+        "Tip dlake:",
+        "Aktivni sastojci:",
+        "pH vrednost:",
+        "Miris:"
       ],
       "features": [
         "250",
-        "Dogs",
-        "White hair",
-        "Optical brighteners, UV filter",
+        "Psi",
+        "Bela dlaka",
+        "Optički izbjeljivači, UV filter",
         "7.0",
-        "Neutral"
+        "Neutralan"
       ]
     }
   },
   {
     "id": "1043",
-    "category": "Pet Toys",
-    "subcategory": "Dog Toys",
-    "type": "Plush Toys",
-    "title": "Kong Teddy Bear - Plush Toy for Dogs",
-    "description": "Kong Teddy Bear is a soft plush toy in the shape of a teddy bear filled with fabric pieces. Designed for chewing and throwing, with seams that withstand dog attacks. Helps clean teeth.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za pse",
+    "type": "Plišane igračke",
+    "title": "Kong Teddy Bear - Plišana igračka za pse",
+    "description": "Kong Teddy Bear je meka plišana igračka u obliku medveda punjena tkaninom. Dizajnirana za žvakanje i bacanje, sa šavovima koji podnose napade pasa. Pomaže čišćenju zuba.",
     "brand": "Kong",
     "code": "1043",
     "price": "8.26",
@@ -1366,30 +1366,30 @@
     "percentage": "3%",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Filling:",
-        "Weight (g):",
-        "Recommended dog size:",
-        "Usage:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Punjenje:",
+        "Težina (g):",
+        "Preporučena veličina psa:",
+        "Upotreba:"
       ],
       "features": [
         "20 x 10 x 10",
-        "Plush, fabric",
-        "Fabric pieces",
+        "Pliš, tkanina",
+        "Komadi tkanine",
         "120",
-        "All sizes",
-        "Chewing, play"
+        "Sve veličine",
+        "Žvakanje, igra"
       ]
     }
   },
   {
     "id": "1044",
-    "category": "Pet Supplies",
-    "subcategory": "Collars and Leashes",
-    "type": "Dog Collars",
-    "title": "Halt! Anti-Bark Collar - Anti-Bark Collar",
-    "description": "Halt! Anti-Bark Collar is an electronic collar that helps control excessive barking in dogs. Uses ultrasonic tones and vibrations instead of electric impulses. Easy to adjust and safe to use.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Ogrlice i povodci",
+    "type": "Ogrlice za pse",
+    "title": "Halt! Anti-Bark Collar - Ogrlica protiv lajanja",
+    "description": "Halt! Anti-Bark Collar je elektronska ogrlica koja pomaže kontroli prekomernog lajanja kod pasa. Koristi ultrazvučne tonove i vibracije umesto električnih impulsa. Lako se podešava i bezbedna je za upotrebu.",
     "brand": "Halt",
     "code": "1044",
     "price": "27.83",
@@ -1398,30 +1398,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Mode of operation:",
-        "Battery:",
-        "Safety:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Način rada:",
+        "Baterija:",
+        "Sigurnost:"
       ],
       "features": [
         "15-55",
-        "Plastic, metal",
+        "Plastika, metal",
         "65",
-        "Ultrasound, vibrations",
+        "Ultrazvuk, vibracije",
         "2x AAA",
-        "No electric impulses"
+        "Bez električnih impulsa"
       ]
     }
   },
   {
     "id": "1045",
-    "category": "Pet Food",
-    "subcategory": "Cat Food",
-    "type": "Dry Food",
-    "title": "Hill's Science Plan Adult - Dry Food for Adult Cats",
-    "description": "Hill's Science Plan Adult is veterinary food for adult cats that supports urinary system health. Contains optimal balance of nutrients, antioxidants and omega-3 fatty acids for healthy skin and coat.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za mačke",
+    "type": "Suva hrana",
+    "title": "Hill's Science Plan Adult - Suva hrana za odrasle mačke",
+    "description": "Hill's Science Plan Adult je veterinarska hrana za odrasle mačke koja podržava zdravlje urinarnog sistema. Sadrži optimalnu ravnotežu nutrijenata, antioksidanata i omega-3 masnih kiselina za zdravu kožu i dlaku.",
     "brand": "Hill's",
     "code": "1045",
     "price": "40.00",
@@ -1430,28 +1430,28 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Age group:",
-        "Composition:",
-        "Analytical composition:",
-        "Additives per kg:"
+        "Težina pakovanja (kg):",
+        "Starosna grupa:",
+        "Sastav:",
+        "Analitički sastav:",
+        "Dodaci po kg:"
       ],
       "features": [
         "2",
-        "Adult cats (1-6 years)",
-        "Chicken meat, cereals, fish oil",
-        "Proteins: 32%, Fats: 21%, Fibers: 1%, Ash: 5.5%",
+        "Odrasle mačke (1-6 godina)",
+        "Pileće meso, žitarice, riblje ulje",
+        "Proteini: 32%, Masti: 21%, Vlakna: 1%, Pepeo: 5.5%",
         "Vitamin E: 600 IU, Omega-3: 0.4%"
       ]
     }
   },
   {
     "id": "1046",
-    "category": "Pet Grooming",
-    "subcategory": "Conditioners",
-    "type": "Dog Conditioners",
-    "title": "Bio-Groom Silk Conditioner - Silky Conditioner for Dogs",
-    "description": "Bio-Groom Silk Conditioner is a professional conditioner that restores shine and softness to your dog's coat. Contains silk and vitamin E for deep hydration. Leaves coat soft, shiny and easy to brush.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Kondicioneri",
+    "type": "Kondicioneri za pse",
+    "title": "Bio-Groom Silk Conditioner - Svileni kondicioner za pse",
+    "description": "Bio-Groom Silk Conditioner je profesionalni kondicioner koji vraća sjaj i mekoću dlake vašeg psa. Sadrži svilu i vitamin E za duboku hidraciju. Ostavlja dlaku mekom, sjajnom i lako češljivom.",
     "brand": "Bio-Groom",
     "code": "1046",
     "price": "10.00",
@@ -1460,30 +1460,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Animal type:",
-        "Active ingredients:",
-        "Scent:",
-        "Usage:",
-        "Results:"
+        "Zapremina (ml):",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "Miris:",
+        "Upotreba:",
+        "Rezultati:"
       ],
       "features": [
         "355",
-        "Dogs",
-        "Silk, vitamin E, proteins",
-        "Mild floral",
-        "Apply after shampoo",
-        "Shiny, soft coat"
+        "Psi",
+        "Svila, vitamin E, proteini",
+        "Blagi cvetni",
+        "Nanesite posle šampona",
+        "Sjajna, meka dlaka"
       ]
     }
   },
   {
     "id": "1047",
-    "category": "Pet Toys",
-    "subcategory": "Cat Toys",
-    "type": "Interactive Toys",
-    "title": "Petstages Tower of Tracks - Interactive Toy for Cats",
-    "description": "Petstages Tower of Tracks is an interactive toy with balls that roll through a maze. Stimulates natural hunting instincts in cats and provides hours of fun. Can be filled with treats for extra motivation.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za mačke",
+    "type": "Interaktivne igračke",
+    "title": "Petstages Tower of Tracks - Interaktivna igračka za mačke",
+    "description": "Petstages Tower of Tracks je interaktivna igračka sa lopticama koje se kotrljaju kroz lavirint. Stimuliše prirodne lovačke instinkte kod mačaka i pruža satima zabave. Može se puniti poslasticama za dodatnu motivaciju.",
     "brand": "Petstages",
     "code": "1047",
     "price": "15.65",
@@ -1492,30 +1492,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Number of balls:",
-        "Weight (g):",
-        "Safety:",
-        "Usage:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Broj loptica:",
+        "Težina (g):",
+        "Sigurnost:",
+        "Upotreba:"
       ],
       "features": [
         "25 x 15 x 15",
-        "Plastic, metal",
+        "Plastika, metal",
         "3",
         "450",
-        "No sharp edges",
-        "Interactive play"
+        "Bez oštrih ivica",
+        "Interaktivna igra"
       ]
     }
   },
   {
     "id": "1048",
-    "category": "Pet Supplies",
-    "subcategory": "Beds and Loungers",
-    "type": "Dog Beds",
-    "title": "Armarkat Luxury Dog Bed - Luxury Dog Bed",
-    "description": "Armarkat Luxury Dog Bed is a luxury dog bed with memory foam and waterproof fabric. Has high edges for support and removable pillow for washing. Provides maximum comfort for your pet.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Ležaji i ležaljke",
+    "type": "Ležaji za pse",
+    "title": "Armarkat Luxury Dog Bed - Luksuzni ležaj za pse",
+    "description": "Armarkat Luxury Dog Bed je luksuzni ležaj za pse sa memorijskom pjenom i vodootpornom tkaninom. Ima visoke ivice za potporu i uklonjiv jastuk za pranje. Pruža maksimalnu udobnost za vašeg ljubimca.",
     "brand": "Armarkat",
     "code": "1048",
     "price": "100.00",
@@ -1524,30 +1524,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (kg):",
-        "Color:",
-        "Washable:",
-        "Comfort:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (kg):",
+        "Boja:",
+        "Može se prati:",
+        "Udobnost:"
       ],
       "features": [
         "120 x 80 x 25",
-        "Memory foam, fabric",
+        "Memorijska pena, tkanina",
         "8.5",
-        "Gray",
-        "Yes",
-        "High comfort"
+        "Siva",
+        "Da",
+        "Visoka udobnost"
       ]
     }
   },
   {
     "id": "1049",
-    "category": "Pet Food",
-    "subcategory": "Bird Food",
-    "type": "Canary Seeds",
-    "title": "Versele-Laga Canary - Premium Food for Canaries",
-    "description": "Versele-Laga Canary is a specialized seed mix for canaries that contains more than 10 types of seeds and cereals. Enriched with vitamins and minerals for feather health and color. Helps maintain optimal condition.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ptice",
+    "type": "Seme za kanarince",
+    "title": "Versele-Laga Canary - Premium hrana za kanarince",
+    "description": "Versele-Laga Canary je specijalizovana mešavina semena za kanarince koja sadrži više od 10 vrsta semena i žitarica. Obogaćena vitaminima i mineralima za zdravlje perja i boju. Pomaže održavanju optimalnog stanja.",
     "brand": "Versele-Laga",
     "code": "1049",
     "price": "8.26",
@@ -1556,30 +1556,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Bird type:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:",
-        "Storage method:"
+        "Težina pakovanja (kg):",
+        "Tip ptice:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:",
+        "Način čuvanja:"
       ],
       "features": [
         "1",
-        "Canaries",
-        "Sunflower, millet, flax seeds",
+        "Kanarinci",
+        "Suncokret, proso, laneno seme",
         "15",
-        "Vitamins, minerals",
-        "Dry and cool place"
+        "Vitamini, minerali",
+        "Na suvom i hladnom mestu"
       ]
     }
   },
   {
     "id": "1050",
-    "category": "Pet Grooming",
-    "subcategory": "Brushes and Combs",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Četke i češljevi",
     "type": "Furminators",
-    "title": "Furminator Undercoat Rake - Comb for Undercoat Removal",
-    "description": "Furminator Undercoat Rake is a special comb for removing dead undercoat in dogs and cats. Reduces shedding by up to 90% and prevents knot formation. Suitable for all coat types with undercoat.",
+    "title": "Furminator Undercoat Rake - Češalj za uklanjanje poddlake",
+    "description": "Furminator Undercoat Rake je specijalan češalj za uklanjanje mrtve poddlake kod pasa i mačaka. Smanjuje linjanje do 90% i sprečava stvaranje čvorova. Pogodan za sve tipove dlake sa poddlakom.",
     "brand": "Furminator",
     "code": "1050",
     "price": "19.13",
@@ -1588,30 +1588,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Tooth length (cm):",
-        "Material:",
-        "Weight (g):",
-        "Recommended size:",
-        "Effect:",
-        "Usage:"
+        "Dužina zuba (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Preporučena veličina:",
+        "Efekt:",
+        "Upotreba:"
       ],
       "features": [
         "7",
-        "Stainless steel",
+        "Nerđajući čelik",
         "85",
-        "Medium size",
-        "90% less shedding",
-        "Regular brushing"
+        "Srednja veličina",
+        "90% manje linjanja",
+        "Redovno češljanje"
       ]
     }
   },
   {
     "id": "1051",
-    "category": "Pet Toys",
-    "subcategory": "Dog Toys",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za pse",
     "type": "Kong Toys",
-    "title": "Kong Extreme - Extreme Chew Toy",
-    "description": "Kong Extreme is an ultra-hard toy made from natural rubber for the most aggressive chewers. Designed to withstand intense chewing and provides maximum fun. Can be filled with food or treats.",
+    "title": "Kong Extreme - Ekstremna igračka za žvakanje",
+    "description": "Kong Extreme je ultra-čvrsta igračka napravljena od prirodne gume za najagresivnije žvačiće. Dizajnirana da podnese intenzivno žvakanje i pruža maksimalnu zabavu. Može se puniti hranom ili poslasticama.",
     "brand": "Kong",
     "code": "1051",
     "price": "12.61",
@@ -1620,30 +1620,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Resistance:",
-        "Usage:",
-        "Filling:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Otpornost:",
+        "Upotreba:",
+        "Punjenje:"
       ],
       "features": [
         "9",
-        "Natural rubber",
+        "Prirodna guma",
         "200",
-        "Extreme",
-        "Chewing, play",
-        "Possible with treats"
+        "Ekstremna",
+        "Žvakanje, igra",
+        "Moguće sa poslasticama"
       ]
     }
   },
   {
     "id": "1052",
-    "category": "Pet Supplies",
-    "subcategory": "Boxes and Toilets",
-    "type": "Cat Litter Boxes",
-    "title": "Litter Robot 3 - Automatic Cat Litter Box",
-    "description": "Litter Robot 3 is a revolutionary automatic litter box that cleans litter by itself. Uses sensor to detect when cat enters, then automatically separates dirty litter. Reduces unpleasant odors and maintains hygiene.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Kutije i toaleti",
+    "type": "Kutije za pesak za mačke",
+    "title": "Litter Robot 3 - Automatska kutija za pesak za mačke",
+    "description": "Litter Robot 3 je revolucionarna automatska kutija za pesak koja sama čisti pesak. Koristi senzor da detektuje kada mačka uđe, zatim automatski odvaja prljavi pesak. Smanjuje neprijatne mirise i održava higijenu.",
     "brand": "Litter Robot",
     "code": "1052",
     "price": "80.00",
@@ -1652,30 +1652,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Litter capacity (l):",
-        "Weight (kg):",
-        "Dimensions (cm):",
-        "Mode of operation:",
-        "Battery:",
-        "Cleaning:"
+        "Kapacitet peska (l):",
+        "Težina (kg):",
+        "Dimenzije (cm):",
+        "Način rada:",
+        "Baterija:",
+        "Čišćenje:"
       ],
       "features": [
         "8",
         "10.5",
         "61 x 61 x 58",
-        "Automatic",
-        "220V adapter",
-        "Only waste emptying"
+        "Automatski",
+        "Priključak 220V",
+        "Samo pražnjenje otpada"
       ]
     }
   },
   {
     "id": "1053",
-    "category": "Pet Food",
-    "subcategory": "Hamster Food",
-    "type": "Pelleted Food",
-    "title": "Burgess Hamster Excel - Complete Food for Hamsters",
-    "description": "Burgess Hamster Excel is a complete pelleted food for hamsters that contains all necessary nutrients. Includes cereals, seeds, vegetables and fruits. Enriched with vitamins for your hamster's health and energy.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za hrčke",
+    "type": "Pelletirana hrana",
+    "title": "Burgess Hamster Excel - Potpuna hrana za hrčke",
+    "description": "Burgess Hamster Excel je potpuna peletirana hrana za hrčke koja sadrži sve potrebne nutrijente. Uključuje žitarice, semenke, povrće i voće. Obogaćena vitaminima za zdravlje i energiju vašeg hrčka.",
     "brand": "Burgess",
     "code": "1053",
     "price": "6.26",
@@ -1684,30 +1684,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Animal type:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:",
-        "Shelf life:"
+        "Težina pakovanja (g):",
+        "Tip životinje:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:",
+        "Rok trajanja:"
       ],
       "features": [
         "500",
-        "Hamsters",
-        "Cereals, seeds, vegetables",
+        "Hrčci",
+        "Žitarice, semenke, povrće",
         "16",
-        "Vitamins, minerals",
-        "12 months"
+        "Vitamini, minerali",
+        "12 meseci"
       ]
     }
   },
   {
     "id": "1054",
-    "category": "Pet Grooming",
-    "subcategory": "Lotions and Sprays",
-    "type": "Coat Sprays",
-    "title": "Show Tech Plus - Coat Shine Spray for Dogs",
-    "description": "Show Tech Plus is a professional coat shine spray for dogs that enhances natural color and hair texture. Contains natural ingredients and UV protection. Used before shows or for daily grooming.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Kreme i sprejevi",
+    "type": "Sprejevi za dlaku",
+    "title": "Show Tech Plus - Sprej za sjaj dlake za pse",
+    "description": "Show Tech Plus je profesionalni sprej za sjaj dlake za pse koji poboljšava prirodnu boju i teksturu dlake. Sadrži prirodne sastojke i UV zaštitu. Koristi se pre izložbi ili za svakodnevnu negu.",
     "brand": "Show Tech",
     "code": "1054",
     "price": "14.35",
@@ -1716,30 +1716,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Animal type:",
-        "Active ingredients:",
-        "Effect:",
-        "Usage:",
-        "Results:"
+        "Zapremina (ml):",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "Efekt:",
+        "Upotreba:",
+        "Rezultati:"
       ],
       "features": [
         "500",
-        "Dogs",
-        "Natural extracts, UV filter",
-        "Shine and volume",
-        "Spray on brushed coat",
-        "Shiny coat, UV protection"
+        "Psi",
+        "Prirodni ekstrakti, UV filter",
+        "Sjaj i zapremnina",
+        "Sprej na očešljanu dlaku",
+        "Sjajna dlaka, UV zaštita"
       ]
     }
   },
   {
     "id": "1055",
-    "category": "Pet Toys",
-    "subcategory": "Bird Toys",
-    "type": "Mirrors and Bells",
-    "title": "Prevue Pet Products Bird Mirror - Mirror for Birds",
-    "description": "Prevue Pet Products Bird Mirror is a fun mirror for birds that stimulates their curiosity and helps prevent loneliness. Made from safe materials with reflective surface. Perfect for cage enrichment.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za ptice",
+    "type": "Ogledala i zvončići",
+    "title": "Prevue Pet Products Bird Mirror - Ogledalo za ptice",
+    "description": "Prevue Pet Products Bird Mirror je zabavno ogledalo za ptice koje stimuliše njihovu radoznalost i pomaže sprečavanju usamljenosti. Napravljeno od bezbednih materijala sa reflektujućom površinom. Savršeno za obogaćivanje kaveza.",
     "brand": "Prevue Pet Products",
     "code": "1055",
     "price": "10.00",
@@ -1748,30 +1748,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Safe attachment:",
-        "Usage:",
-        "Color:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Sigurno pričvršćivanje:",
+        "Upotreba:",
+        "Boja:"
       ],
       "features": [
         "10",
-        "Plastic, glass",
+        "Plastika, staklo",
         "50",
-        "Yes",
-        "Stimulation, entertainment",
-        "Silver mirror"
+        "Da",
+        "Stimulacija, zabava",
+        "Srebrni ogledalo"
       ]
     }
   },
   {
     "id": "1056",
-    "category": "Pet Supplies",
-    "subcategory": "Aquariums",
-    "type": "Marine Fish Aquariums",
-    "title": "Juwel Rio 125 - 125 Liter Aquarium",
-    "description": "Juwel Rio 125 is a modern aquarium for freshwater fish with integrated filter and lighting. Has safety glass and is easy to maintain. Comes with lid and background foil for complete equipment.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Akvarijumi",
+    "type": "Akvarijumi za morske ribe",
+    "title": "Juwel Rio 125 - Akvarijum od 125 litara",
+    "description": "Juwel Rio 125 je moderan akvarijum za slatkovodne ribe sa integrisanim filterom i osvetljenjem. Ima sigurnosno staklo i lako se održava. Dolazi sa poklopcem i pozadinskom folijom za kompletnu opremu.",
     "brand": "Juwel",
     "code": "1056",
     "price": "80.00",
@@ -1780,30 +1780,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (l):",
-        "Dimensions (cm):",
-        "Material:",
+        "Zapremina (l):",
+        "Dimenzije (cm):",
+        "Materijal:",
         "Filter:",
-        "Lighting:",
-        "Safety:"
+        "Osvetljenje:",
+        "Sigurnost:"
       ],
       "features": [
         "125",
         "81 x 36 x 51",
-        "Glass",
-        "Internal filter",
-        "LED lights",
-        "Safety glass"
+        "Staklo",
+        "Unutrašnji filter",
+        "LED svetla",
+        "Sigurnosno staklo"
       ]
     }
   },
   {
     "id": "1057",
-    "category": "Pet Food",
-    "subcategory": "Rabbit Food",
-    "type": "Hay and Grass",
-    "title": "Burgess Timothy Hay - Hay for Rabbits",
-    "description": "Burgess Timothy Hay is high-quality Timothy hay for rabbits that helps maintain dental and digestive health. Naturally dried and rich in fiber. Ideal for daily feeding of small animals.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za zečeve",
+    "type": "Sena i trave",
+    "title": "Burgess Timothy Hay - Sena za zečeve",
+    "description": "Burgess Timothy Hay je visokokvalitetna Timotijeva sena za zečeve koja pomaže održavanju zdravlja zuba i digestivnog sistema. Prirodno sušena i bogata vlaknima. Idealna za svakodnevno hranjenje malih životinja.",
     "brand": "Burgess",
     "code": "1057",
     "price": "5.65",
@@ -1812,30 +1812,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Animal type:",
-        "Composition:",
-        "Fiber (%):",
-        "Storage method:",
-        "Shelf life:"
+        "Težina pakovanja (kg):",
+        "Tip životinje:",
+        "Sastav:",
+        "Vlakna (%):",
+        "Način čuvanja:",
+        "Rok trajanja:"
       ],
       "features": [
         "0.5",
-        "Rabbits, hamsters",
-        "Timothy hay",
+        "Zečevi, hrčci",
+        "Timotijevo sena",
         "30+",
-        "Dry and cool place",
-        "24 months"
+        "Na suvom i hladnom mestu",
+        "24 meseca"
       ]
     }
   },
   {
     "id": "1058",
-    "category": "Pet Grooming",
-    "subcategory": "Nail Care",
-    "type": "Nail Files",
-    "title": "Dremel Rotary Tool Kit - Electronic Nail File",
-    "description": "Dremel Rotary Tool Kit is a professional set for filing nails of dogs and cats. Includes rotating tool with different attachments and speeds. Enables precise and painless nail filing without stress for the animal.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Nega noktiju",
+    "type": "Pile za nokte",
+    "title": "Dremel Rotary Tool Kit - Elektronska pila za nokte",
+    "description": "Dremel Rotary Tool Kit je profesionalni set za piljenje noktiju pasa i mačaka. Uključuje rotirajući alat sa različitim nastavcima i brzinama. Omogućava precizno i bezbolno piljenje noktiju bez stresa za životinju.",
     "brand": "Dremel",
     "code": "1058",
     "price": "30.00",
@@ -1844,30 +1844,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Speed (RPM):",
-        "Power supply:",
-        "Attachments:",
-        "Weight (g):",
-        "Usage:",
-        "Safety:"
+        "Brzina (obr/min):",
+        "Napajanje:",
+        "Prilozi:",
+        "Težina (g):",
+        "Upotreba:",
+        "Sigurnost:"
       ],
       "features": [
         "5000-35000",
-        "Battery",
-        "File, grinding stone",
+        "Baterija",
+        "Pila, brusni kamen",
         "550",
-        "Dog and cat nails",
-        "Safe filing"
+        "Nokti pasa i mačaka",
+        "Bezbedno piljenje"
       ]
     }
   },
   {
     "id": "1059",
-    "category": "Pet Toys",
-    "subcategory": "Hamster Toys",
-    "type": "Balls and Spheres",
-    "title": "Savic Hamster Ball - Exercise Ball for Hamsters",
-    "description": "Savic Hamster Ball is a transparent ball that allows your hamster to move around the house without escaping. Has ventilation holes and safety lock. Provides fun and exercise under supervision.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za hrčke",
+    "type": "Lopte i kugle",
+    "title": "Savic Hamster Ball - Lopta za vežbanje za hrčke",
+    "description": "Savic Hamster Ball je transparentna lopta koja omogućava vašem hrčku da se kreće po kući bez bekstva. Ima ventilacione otvore i sigurnosnu bravu. Pruža zabavu i vežbanje pod nadzorom.",
     "brand": "Savic",
     "code": "1059",
     "price": "7.39",
@@ -1876,30 +1876,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Ventilation:",
-        "Safety:",
-        "Usage:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Ventilacija:",
+        "Sigurnost:",
+        "Upotreba:"
       ],
       "features": [
         "20",
-        "Plastic",
+        "Plastika",
         "180",
-        "Ventilation holes",
-        "Safety lock",
-        "House walking"
+        "Ventilacioni otvori",
+        "Sigurnosna brava",
+        "Šetanje po kući"
       ]
     }
   },
   {
     "id": "1060",
-    "category": "Pet Supplies",
-    "subcategory": "Terrariums",
-    "type": "Snake Terrariums",
-    "title": "Exo Terra Snake Cave - Cave for Snakes",
-    "description": "Exo Terra Snake Cave is an artificial cave for snakes that provides safe shelter and helps regulate humidity. Made from safe materials that retain heat. Perfect for terrariums with snakes.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Terrarijumi",
+    "type": "Terarijumi za zmije",
+    "title": "Exo Terra Snake Cave - Pećina za zmije",
+    "description": "Exo Terra Snake Cave je veštačka pećina za zmije koja pruža bezbedno sklonište i pomaže regulisanju vlažnosti. Napravljena od bezbednih materijala koji zadržavaju toplotu. Savršena za terarijume sa zmijama.",
     "brand": "Exo Terra",
     "code": "1060",
     "price": "20.00",
@@ -1908,30 +1908,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (g):",
-        "Usage:",
-        "Safety:",
-        "Maintenance:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Upotreba:",
+        "Sigurnost:",
+        "Održavanje:"
       ],
       "features": [
         "20 x 15 x 10",
-        "Plastic",
+        "Plastika",
         "250",
-        "Shelter for snakes",
-        "No sharp edges",
-        "Easy cleaning"
+        "Sklonište za zmije",
+        "Bez oštrih ivica",
+        "Lako čišćenje"
       ]
     }
   },
   {
     "id": "1061",
-    "category": "Pet Food",
-    "subcategory": "Turtle Food",
-    "type": "Pelleted Food",
-    "title": "Zoo Med Aquatic Turtle Food - Food for Aquatic Turtles",
-    "description": "Zoo Med Aquatic Turtle Food is complete pelleted food for aquatic turtles that sinks and stimulates natural feeding. Contains spirulina for color and vitamin C for health. Ideal for all types of aquatic turtles.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za kornjače",
+    "type": "Pelletirana hrana",
+    "title": "Zoo Med Aquatic Turtle Food - Hrana za vodenjače",
+    "description": "Zoo Med Aquatic Turtle Food je potpuna peletirana hrana za vodenjače koja tone i stimuliše prirodno hranjenje. Sadrži spirulinu za boju i vitamin C za zdravlje. Idealna za sve tipove vodenjača.",
     "brand": "Zoo Med",
     "code": "1061",
     "price": "9.13",
@@ -1940,30 +1940,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Animal type:",
-        "Food shape:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:"
+        "Težina pakovanja (g):",
+        "Tip životinje:",
+        "Oblik hrane:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:"
       ],
       "features": [
         "85",
-        "Aquatic turtles",
-        "Pellets",
-        "Fish, spirulina, vegetables",
+        "Vodenjače",
+        "Peleti",
+        "Riba, spirulina, povrće",
         "40",
-        "Vitamin C, minerals"
+        "Vitamin C, minerali"
       ]
     }
   },
   {
     "id": "1062",
-    "category": "Pet Grooming",
-    "subcategory": "Dietary Supplements",
-    "type": "Cat Vitamins",
-    "title": "Beaphar Duo Tabs Cat - Vitamins for Cats",
-    "description": "Beaphar Duo Tabs Cat are vitamin and mineral supplements for cats of all ages. Contains taurine, vitamin A and calcium for eye, bone and immune system health. Helps prevent nutritional deficiencies.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Dijetetski suplementi",
+    "type": "Vitamini za mačke",
+    "title": "Beaphar Duo Tabs Cat - Vitamini za mačke",
+    "description": "Beaphar Duo Tabs Cat su vitaminski i mineralni suplementi za mačke svih starosti. Sadrže taurin, vitamin A i kalcijum za zdravlje očiju, kostiju i imuniteta. Pomažu sprečavanju nutritivnih nedostataka.",
     "brand": "Beaphar",
     "code": "1062",
     "price": "11.74",
@@ -1972,30 +1972,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Number of tablets:",
-        "Animal type:",
-        "Active ingredients:",
-        "Dosage:",
-        "Usage:",
-        "Benefits:"
+        "Broj tableta:",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "Doza:",
+        "Upotreba:",
+        "Prednosti:"
       ],
       "features": [
         "100",
-        "Cats",
-        "Taurine, vitamin A, calcium",
-        "1 tablet daily",
-        "Add to food",
-        "Eye and bone health"
+        "Mačke",
+        "Taurin, vitamin A, kalcijum",
+        "1 tableta dnevno",
+        "Dodati u hranu",
+        "Zdravlje očiju i kostiju"
       ]
     }
   },
   {
     "id": "1063",
-    "category": "Pet Toys",
-    "subcategory": "Rabbit Toys",
-    "type": "Chew Toys",
-    "title": "Savic Rabbit Chew Toys - Chew Toys for Rabbits",
-    "description": "Savic Rabbit Chew Toys are a set of chew toys for rabbits made from natural materials. Help maintain healthy teeth and provide fun. Include different textures for different chewing needs.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za zečeve",
+    "type": "Igračke za žvakanje",
+    "title": "Savic Rabbit Chew Toys - Igračke za žvakanje za zečeve",
+    "description": "Savic Rabbit Chew Toys su set igračaka za žvakanje za zečeve napravljene od prirodnih materijala. Pomažu održavanju zdravih zuba i pružaju zabavu. Uključuju različite teksture za različite potrebe žvakanja.",
     "brand": "Savic",
     "code": "1063",
     "price": "10.00",
@@ -2004,30 +2004,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Number of pieces:",
-        "Material:",
-        "Weight (g):",
-        "Safety:",
-        "Usage:",
-        "Benefits:"
+        "Broj komada:",
+        "Materijal:",
+        "Težina (g):",
+        "Sigurnost:",
+        "Upotreba:",
+        "Prednosti:"
       ],
       "features": [
         "3",
-        "Natural wood, sisal",
+        "Prirodno drvo, sisal",
         "150",
-        "No chemicals",
-        "Chewing, play",
-        "Healthy teeth"
+        "Bez hemikalija",
+        "Žvakanje, igra",
+        "Zdravi zubi"
       ]
     }
   },
   {
     "id": "1064",
-    "category": "Pet Supplies",
-    "subcategory": "Bowls and Feeders",
-    "type": "Automatic Feeders",
-    "title": "PetSafe Slim Cat Feeder - Automatic Cat Feeder",
-    "description": "PetSafe Slim Cat Feeder is an automatic cat feeder with large food reservoir and programmable timer. Can be programmed for multiple meals per day. Ideal for cats that eat at regular times.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Posude i hranilice",
+    "type": "Automatske hranilice",
+    "title": "PetSafe Slim Cat Feeder - Automatska hranilica za mačke",
+    "description": "PetSafe Slim Cat Feeder je automatska hranilica za mačke sa velikim rezervoarom za hranu i programabilnim tajmerom. Može se programirati za više obroka dnevno. Idealna za mačke koje jedu u redovnim vremenima.",
     "brand": "PetSafe",
     "code": "1064",
     "price": "73.91",
@@ -2036,30 +2036,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Food capacity (l):",
-        "Number of meals:",
-        "Dimensions (cm):",
-        "Power supply:",
-        "Weight (kg):",
-        "LCD screen:"
+        "Kapacitet hrane (l):",
+        "Broj obroka:",
+        "Dimenzije (cm):",
+        "Napajanje:",
+        "Težina (kg):",
+        "LCD ekran:"
       ],
       "features": [
         "5",
-        "4 meals per day",
+        "4 obroka dnevno",
         "40 x 20 x 35",
-        "Batteries + adapter",
+        "Baterije + priključak",
         "2.8",
-        "Yes"
+        "Da"
       ]
     }
   },
   {
     "id": "1065",
-    "category": "Pet Food",
-    "subcategory": "Fish Food",
-    "type": "Food for Discus Fish",
-    "title": "Tetra Discus - Special Food for Discus Fish",
-    "description": "Tetra Discus is specialized food for discus fish in the form of flakes that slowly sink. Contains spirulina for intense color and vitamin C for health. Helps maintain optimal condition of discus fish.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ribe",
+    "type": "Hrana za diskus ribe",
+    "title": "Tetra Discus - Specijalna hrana za diskus ribe",
+    "description": "Tetra Discus je specijalizovana hrana za diskus ribe u obliku pahuljica koje sporo tonu. Sadrži spirulinu za intenzivnu boju i vitamin C za zdravlje. Pomaže održavanju optimalnog stanja diskus riba.",
     "brand": "Tetra",
     "code": "1065",
     "price": "10.43",
@@ -2068,30 +2068,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Fish type:",
-        "Food shape:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:"
+        "Težina pakovanja (g):",
+        "Tip ribe:",
+        "Oblik hrane:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:"
       ],
       "features": [
         "50",
-        "Discus fish",
-        "Flakes",
-        "Fish meal, spirulina",
+        "Diskus ribe",
+        "Pahuljice",
+        "Riblje brašno, spirulina",
         "45",
-        "Vitamin C, carotenoids"
+        "Vitamin C, karotenoidi"
       ]
     }
   },
   {
     "id": "1066",
-    "category": "Pet Grooming",
-    "subcategory": "Lip Balms",
-    "type": "Nose Balms",
-    "title": "Pet Head Nose Balm - Nose Balm for Dogs",
-    "description": "Pet Head Nose Balm is a moisturizing balm for dog nose and paw pads that prevents cracking and irritation. Contains natural ingredients such as beeswax and vitamin E. Especially useful in winter when air is dry.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Balzami za usne",
+    "type": "Balzami za nos",
+    "title": "Pet Head Nose Balm - Balzam za nos za pse",
+    "description": "Pet Head Nose Balm je hidrirajući balzam za nos i jastučiće šapa pasa koji sprečava pucanje i iritaciju. Sadrži prirodne sastojke kao što su pčelinji vosak i vitamin E. Posebno koristan zimi kada je vazduh suv.",
     "brand": "Pet Head",
     "code": "1066",
     "price": "8.00",
@@ -2100,30 +2100,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (g):",
-        "Animal type:",
-        "Active ingredients:",
-        "Scent:",
-        "Usage:",
-        "Safety:"
+        "Zapremina (g):",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "Miris:",
+        "Upotreba:",
+        "Sigurnost:"
       ],
       "features": [
         "50",
-        "Dogs",
-        "Beeswax, vitamin E",
-        "Unscented",
-        "Apply to nose and paws",
-        "Safe for licking"
+        "Psi",
+        "Pčelinji vosak, vitamin E",
+        "Bez mirisa",
+        "Nanesite na nos i šape",
+        "Bezbedno za lizanje"
       ]
     }
   },
   {
     "id": "1067",
-    "category": "Pet Toys",
-    "subcategory": "Mouse Toys",
-    "type": "Wheels and Tunnels",
-    "title": "Savic Mouse Wheel - Wheel for Mice",
-    "description": "Savic Mouse Wheel is a silent running wheel for mice with safety stopping mechanism. Made from plastic and has non-slip surface. Provides mice opportunity for daily exercise in cage.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za miševe",
+    "type": "Točkovi i tuneli",
+    "title": "Savic Mouse Wheel - Točak za miševe",
+    "description": "Savic Mouse Wheel je tihi trčaći točak za miševe sa sigurnosnim mehanizmom za zaustavljanje. Napravljen od plastike i ima protivklizajuću površinu. Pruža miševima mogućnost za svakodnevno vežbanje u kavezu.",
     "brand": "Savic",
     "code": "1067",
     "price": "10.00",
@@ -2132,30 +2132,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Safety mechanism:",
-        "Noise level:",
-        "Mounting:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Sigurnosni mehanizam:",
+        "Nivo buke:",
+        "Montaža:"
       ],
       "features": [
         "12",
-        "Plastic",
+        "Plastika",
         "80",
-        "Yes",
-        "Silent",
-        "On cage bars"
+        "Da",
+        "Tih",
+        "Na šipkama kaveza"
       ]
     }
   },
   {
     "id": "1068",
-    "category": "Pet Supplies",
-    "subcategory": "Cages and Houses",
-    "type": "Rabbit Houses",
-    "title": "Savic Rabbit Hutch - Rabbit Hutch",
-    "description": "Savic Rabbit Hutch is a spacious rabbit hutch with multiple levels and open area for play. Has safety locks and removable base. Provides comfortable living space for your rabbit.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Kavezi i kućice",
+    "type": "Kućice za zečeve",
+    "title": "Savic Rabbit Hutch - Kućica za zečeve",
+    "description": "Savic Rabbit Hutch je prostrana kućica za zečeve sa više nivoa i otvorenim prostorom za igru. Ima sigurne brave i uklonjivo dno. Pruža udoban životni prostor za vašeg zeca.",
     "brand": "Savic",
     "code": "1068",
     "price": "80.00",
@@ -2164,30 +2164,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Number of levels:",
-        "Material:",
-        "Weight (kg):",
-        "Safety:",
-        "Maintenance:"
+        "Dimenzije (cm):",
+        "Broj nivoa:",
+        "Materijal:",
+        "Težina (kg):",
+        "Sigurnost:",
+        "Održavanje:"
       ],
       "features": [
         "120 x 60 x 100",
         "2",
-        "Wood, metal",
+        "Drvo, metal",
         "25",
-        "Safety locks",
-        "Easy cleaning"
+        "Sigurne brave",
+        "Lako čišćenje"
       ]
     }
   },
   {
     "id": "1069",
-    "category": "Pet Food",
-    "subcategory": "Small Animal Food",
-    "type": "Rabbit Food",
-    "title": "Burgess Rabbit Excel - Complete Food for Rabbits",
-    "description": "Burgess Rabbit Excel is complete food for rabbits that contains pellets, hay and vegetables. Enriched with probiotics for digestive health and vitamins for stronger immune system. Helps maintain optimal weight and health.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za male životinje",
+    "type": "Hrana za zečeve",
+    "title": "Burgess Rabbit Excel - Potpuna hrana za zečeve",
+    "description": "Burgess Rabbit Excel je potpuna hrana za zečeve koja sadrži pelete, sena i povrće. Obogaćena probiotsima za zdravlje digestivnog sistema i vitaminima za jači imunitet. Pomaže održavanju optimalne težine i zdravlja.",
     "brand": "Burgess",
     "code": "1069",
     "price": "18.26",
@@ -2196,30 +2196,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Animal type:",
-        "Composition:",
-        "Proteins (%):",
-        "Fiber (%):",
-        "Additives:"
+        "Težina pakovanja (kg):",
+        "Tip životinje:",
+        "Sastav:",
+        "Proteini (%):",
+        "Vlakna (%):",
+        "Dodaci:"
       ],
       "features": [
         "2.5",
-        "Rabbits",
-        "Pellets, hay, vegetables",
+        "Zečevi",
+        "Peleti, sena, povrće",
         "14",
         "20",
-        "Probiotics, vitamins"
+        "Probiotici, vitamini"
       ]
     }
   },
   {
     "id": "1070",
-    "category": "Pet Supplies",
-    "subcategory": "Cleaners and Maintenance",
-    "type": "Aquarium Filters",
-    "title": "Tetra EasyCrystal - Aquarium Filter",
-    "description": "Tetra EasyCrystal is an efficient internal filter for aquariums up to 60 liters. Has multi-stage filtration system with activated carbon and biological filter. Simple to install and maintain.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Sredstva za čišćenje i održavanje",
+    "type": "Filteri za akvarijum",
+    "title": "Tetra EasyCrystal - Filter za akvarijum",
+    "description": "Tetra EasyCrystal je efikasan interni filter za akvarijume do 60 litara. Ima višestepeni sistem filtriranja sa aktivnim ugljem i biološkim filterom. Jednostavan za instalaciju i održavanje.",
     "brand": "Tetra",
     "code": "1070",
     "price": "24.35",
@@ -2228,30 +2228,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Capacity (l/h):",
-        "For aquariums up to (l):",
-        "Filtration method:",
-        "Weight (g):",
-        "Power supply:",
-        "Maintenance:"
+        "Kapacitet (l/h):",
+        "Za akvarijume do (l):",
+        "Metoda filtriranja:",
+        "Težina (g):",
+        "Napajanje:",
+        "Održavanje:"
       ],
       "features": [
         "500",
         "60",
-        "Mechanical, chemical, biological",
+        "Mehanički, hemijski, biološki",
         "450",
-        "Adapter",
-        "Monthly cleaning"
+        "Priključak",
+        "Mesečno čišćenje"
       ]
     }
   },
   {
     "id": "1071",
-    "category": "Pet Food",
-    "subcategory": "Dog Food",
-    "type": "Dry Food",
-    "title": "Acana Heritage - Dry Food for Dogs",
-    "description": "Acana Heritage is food with high content of fresh meat for dogs of all sizes. Contains 60% meat and fish, grain-free, with vegetables and fruits. Provides optimal nutrition close to natural diet of dog ancestors.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za pse",
+    "type": "Suva hrana",
+    "title": "Acana Heritage - Suva hrana za pse",
+    "description": "Acana Heritage je hrana sa visokim sadržajem svežeg mesa za pse svih veličina. Sadrži 60% mesa i ribe, bez žitarica, sa povrćem i voćem. Pruža optimalnu ishranu blisku prirodnoj ishrani predaka pasa.",
     "brand": "Acana",
     "code": "1071",
     "price": "62.61",
@@ -2260,17 +2260,17 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Age group:",
-        "Composition:",
-        "Proteins (%):",
-        "Fats (%):",
-        "Additives per kg:"
+        "Težina pakovanja (kg):",
+        "Starosna grupa:",
+        "Sastav:",
+        "Proteini (%):",
+        "Masti (%):",
+        "Dodaci po kg:"
       ],
       "features": [
         "11.4",
-        "All age groups",
-        "Chicken meat, turkey, fish",
+        "Sve starosne grupe",
+        "Pileće meso, ćurka, riba",
         "29",
         "17",
         "Vitamin A: 18000 IU, Omega-3: 0.8%"
@@ -2279,11 +2279,11 @@
   },
   {
     "id": "1072",
-    "category": "Pet Grooming",
-    "subcategory": "Shampoos",
-    "type": "Cat Shampoos",
-    "title": "Anju Beau - Cat Shampoo with Lavender",
-    "description": "Anju Beau is a natural cat shampoo with lavender scent that gently cleans and moisturizes coat. Contains natural ingredients without sulfates and parabens. Leaves coat soft and shiny with pleasant scent.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Šamponi",
+    "type": "Šamponi za mačke",
+    "title": "Anju Beau - Šampon za mačke sa lavandom",
+    "description": "Anju Beau je prirodni šampon za mačke sa mirisom lavande koji nježno čisti i hidrira dlaku. Sadrži prirodne sastojke bez sulfata i parabena. Ostavlja dlaku mekom i sjajnom sa prijatnim mirisom.",
     "brand": "Anju Beau",
     "code": "1072",
     "price": "10.43",
@@ -2292,30 +2292,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Animal type:",
-        "Active ingredients:",
-        "pH value:",
-        "Scent:",
-        "Safety:"
+        "Zapremina (ml):",
+        "Tip životinje:",
+        "Aktivni sastojci:",
+        "pH vrednost:",
+        "Miris:",
+        "Sigurnost:"
       ],
       "features": [
         "250",
-        "Cats",
-        "Lavender, aloe vera",
+        "Mačke",
+        "Lavanda, aloe vera",
         "6.5",
-        "Lavender",
-        "No sulfates, parabens"
+        "Lavanda",
+        "Bez sulfata, paraben"
       ]
     }
   },
   {
     "id": "1073",
-    "category": "Pet Toys",
-    "subcategory": "Dog Toys",
-    "type": "Interactive Toys",
-    "title": "Nina Ottosson Dog Brick - Interactive Toy",
-    "description": "Nina Ottosson Dog Brick is an interactive toy for dogs that stimulates brain and rewards intelligence. Has multiple difficulty levels with hidden treats. Helps prevent boredom and destructive behavior.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za pse",
+    "type": "Interaktivne igračke",
+    "title": "Nina Ottosson Dog Brick - Interaktivna igračka",
+    "description": "Nina Ottosson Dog Brick je interaktivna igračka za pse koja stimuliše mozak i nagrađuje inteligenciju. Ima više nivoa težine sa skrivenim poslasticama. Pomaže sprečavanju dosade i destruktivnog ponašanja.",
     "brand": "Nina Ottosson",
     "code": "1073",
     "price": "20.00",
@@ -2324,30 +2324,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (g):",
-        "Difficulty levels:",
-        "Usage:",
-        "Benefits:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Nivoi težine:",
+        "Upotreba:",
+        "Prednosti:"
       ],
       "features": [
         "25 x 20 x 5",
-        "Plastic",
+        "Plastika",
         "800",
-        "3 levels",
-        "Mental stimulation",
-        "Boredom prevention"
+        "3 nivoa",
+        "Mentalna stimulacija",
+        "Sprečavanje dosade"
       ]
     }
   },
   {
     "id": "1074",
-    "category": "Pet Supplies",
-    "subcategory": "Collars and Leashes",
-    "type": "LED Collars",
-    "title": "Petzl LED Collar - LED Collar for Dogs",
-    "description": "Petzl LED Collar is an LED collar with LED lights for dog safety in the dark. Has multiple light modes and long-lasting battery. Visible from great distance and increases safety during night walks.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Ogrlice i povodci",
+    "type": "LED ogrlice",
+    "title": "Petzl LED Collar - LED ogrlica za pse",
+    "description": "Petzl LED Collar je LED ogrlica sa LED svetlima za bezbednost pasa u mraku. Ima više svetlosnih modova i dugotrajnu bateriju. Vidljiva sa velike udaljenosti i povećava bezbednost tokom noćnih šetnji.",
     "brand": "Petzl",
     "code": "1074",
     "price": "25.22",
@@ -2356,30 +2356,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Length (cm):",
-        "Material:",
-        "Weight (g):",
-        "Battery life (h):",
-        "Light modes:",
-        "Visibility (m):"
+        "Dužina (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Trajanje baterije (h):",
+        "Modovi osvetljenja:",
+        "Vidljivost (m):"
       ],
       "features": [
         "30-55",
-        "Nylon, LED",
+        "Najlon, LED",
         "120",
         "100",
-        "Constant, blink, auto",
+        "Konstantno, treptanje, auto",
         "200"
       ]
     }
   },
   {
     "id": "1075",
-    "category": "Pet Food",
-    "subcategory": "Cat Food",
-    "type": "Wet Food",
-    "title": "Gourmet Gold - Canned Food for Cats",
-    "description": "Gourmet Gold is premium canned food for cats with tuna flavor in jelly. Contains high-quality proteins and omega-3 fatty acids for healthy skin and coat. No artificial colors and flavors.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za mačke",
+    "type": "Mokra hrana",
+    "title": "Gourmet Gold - Konzervirana hrana za mačke",
+    "description": "Gourmet Gold je premium konzervirana hrana za mačke sa ukusom tune u želeu. Sadrži visokokvalitetne proteine i omega-3 masne kiseline za zdravu kožu i dlaku. Bez veštačkih boja i arome.",
     "brand": "Gourmet",
     "code": "1075",
     "price": "2.17",
@@ -2388,30 +2388,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Can weight (g):",
-        "Meat type:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:",
-        "No preservatives:"
+        "Težina konzerve (g):",
+        "Tip mesa:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:",
+        "Bez konzervansa:"
       ],
       "features": [
         "85",
         "Tuna",
-        "Tuna, water, jelly",
+        "Tuna, voda, žele",
         "11",
-        "Omega-3, vitamins",
-        "Yes"
+        "Omega-3, vitamini",
+        "Da"
       ]
     }
   },
   {
     "id": "1076",
-    "category": "Pet Grooming",
-    "subcategory": "Brushes and Combs",
-    "type": "Dog Brushes",
-    "title": "Chris Christensen Spectrum Brush - Professional Brush",
-    "description": "Chris Christensen Spectrum Brush is a professional dog brush with natural boar bristles. Designed for removing dead hair and skin massage. Perfect for all coat types, especially long and wavy.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Četke i češljevi",
+    "type": "Četke za pse",
+    "title": "Chris Christensen Spectrum Brush - Profesionalna četka",
+    "description": "Chris Christensen Spectrum Brush je profesionalna četka za pse sa prirodnim čekinjama divljeg praseta. Dizajnirana za uklanjanje mrtve dlake i masažu kože. Savršena za sve tipove dlake, posebno dugu i talasastu.",
     "brand": "Chris Christensen",
     "code": "1076",
     "price": "20.00",
@@ -2420,31 +2420,31 @@
     "percentage": "2%",
     "technicalData": {
       "labels": [
-        "Bristle length (cm):",
-        "Material:",
-        "Weight (g):",
-        "Handle:",
-        "Usage:",
-        "Maintenance:"
+        "Dužina čekinja (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Drška:",
+        "Upotreba:",
+        "Održavanje:"
       ],
       "features": [
         "3",
-        "Natural boar bristles",
+        "Prirodne čekinje divljeg praseta",
         "180",
-        "Wooden",
-        "Brushing, massage",
-        "Brush cleaning"
+        "Drvena",
+        "Češljanje, masaža",
+        "Čišćenje četke"
       ]
     }
   },
   {
     "id": "1077",
-    "category": "Pet Toys",
-    "subcategory": "Cat Toys",
-    "type": "Laser Toys",
-    "title": "Cat Dancer Wand - Feather Wand for Cats",
-    "description": "Cat Dancer Wand is an interactive toy with feathers on a flexible wand that imitates prey movement. Stimulates natural hunting instincts in cats. Provides fun and exercise without need for batteries.",
-    "brand": "Generic",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za mačke",
+    "type": "Laser igračke",
+    "title": "Cat Dancer Wand - Štap sa perjem za mačke",
+    "description": "Cat Dancer Wand je interaktivna igračka sa perjem na fleksibilnom štapu koja oponaša kretanje plena. Stimuliše prirodne lovačke instinkte kod mačaka. Pruža zabavu i vežbanje bez potrebe za baterijama.",
+    "brand": "Generički",
     "code": "1077",
     "price": "10.00",
     "salePrice": "/",
@@ -2452,30 +2452,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Wand length (cm):",
-        "Material:",
-        "Weight (g):",
-        "Safety:",
-        "Usage:",
-        "Benefits:"
+        "Dužina štapa (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Sigurnost:",
+        "Upotreba:",
+        "Prednosti:"
       ],
       "features": [
         "60",
-        "Plastic, feathers",
+        "Plastika, perje",
         "50",
-        "No sharp parts",
-        "Interactive play",
-        "Instinct exercise"
+        "Bez oštrih delova",
+        "Interaktivna igra",
+        "Vežbanje instinkata"
       ]
     }
   },
   {
     "id": "1078",
-    "category": "Pet Supplies",
-    "subcategory": "Beds and Loungers",
-    "type": "Cat Beds",
-    "title": "MidWest Feline Nuvo - Cat Bed",
-    "description": "MidWest Feline Nuvo is a modern cat bed with high edges and soft base. Has removable pillow for washing and sturdy construction. Provides comfortable resting space for your cat.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Ležaji i ležaljke",
+    "type": "Ležaji za mačke",
+    "title": "MidWest Feline Nuvo - Ležaj za mačke",
+    "description": "MidWest Feline Nuvo je moderan ležaj za mačke sa visokim ivicama i mekom bazom. Ima uklonjiv jastuk za pranje i čvrstu konstrukciju. Pruža udoban prostor za odmor vašoj mački.",
     "brand": "MidWest",
     "code": "1078",
     "price": "36.52",
@@ -2484,30 +2484,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (kg):",
-        "Color:",
-        "Washable:",
-        "Construction:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (kg):",
+        "Boja:",
+        "Može se prati:",
+        "Konstrukcija:"
       ],
       "features": [
         "50 x 40 x 15",
-        "Plush, foam",
+        "Pliš, pena",
         "2.5",
-        "Gray",
-        "Yes",
-        "Sturdy construction"
+        "Siva",
+        "Da",
+        "Čvrsta konstrukcija"
       ]
     }
   },
   {
     "id": "1079",
-    "category": "Pet Food",
-    "subcategory": "Bird Food",
-    "type": "Seed Mixes",
-    "title": "Rodeo Parakeet Mix - Food for Parakeets",
-    "description": "Rodeo Parakeet Mix is a specialized seed mix for parakeets with more than 15 types of seeds and cereals. Includes sunflower seeds, millet and nuts. Enriched with vitamins for feather health.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ptice",
+    "type": "Smeše semena",
+    "title": "Rodeo Parakeet Mix - Hrana za papagajčiće",
+    "description": "Rodeo Parakeet Mix je specijalizovana mešavina semena za papagajčiće sa više od 15 vrsta semena i žitarica. Uključuje semenke suncokreta, proso i orahe. Obogaćena vitaminima za zdravlje perja.",
     "brand": "Rodeo",
     "code": "1079",
     "price": "5.91",
@@ -2516,30 +2516,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (kg):",
-        "Bird type:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:",
-        "Storage method:"
+        "Težina pakovanja (kg):",
+        "Tip ptice:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:",
+        "Način čuvanja:"
       ],
       "features": [
         "1",
-        "Parakeets",
-        "Sunflower, millet, oat groats",
+        "Papagajčići",
+        "Suncokret, proso, ovseni grozd",
         "12",
-        "Vitamins, minerals",
-        "Dry and cool place"
+        "Vitamini, minerali",
+        "Na suvom i hladnom mestu"
       ]
     }
   },
   {
     "id": "1080",
-    "category": "Pet Grooming",
-    "subcategory": "Lotions and Sprays",
-    "type": "Flea Sprays",
-    "title": "Advantix - Flea and Tick Spray",
-    "description": "Advantix is an effective spray against fleas, ticks and mosquitoes for dogs. Contains permethrin and imidacloprid for long-lasting protection. Works for up to 4 weeks and is safe for dogs older than 7 weeks.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Kreme i sprejevi",
+    "type": "Sprejevi protiv buva",
+    "title": "Advantix - Sprej protiv buva i krpelja",
+    "description": "Advantix je efikasan sprej protiv buva, krpelja i komaraca za pse. Sadrži permetrin i imidakloprid za dugotrajnu zaštitu. Deluje do 4 nedelje i bezbedan je za pse starije od 7 nedelja.",
     "brand": "Advantix",
     "code": "1080",
     "price": "30.00",
@@ -2548,30 +2548,30 @@
     "percentage": "9%",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Active ingredients:",
-        "Animal type:",
-        "Protection duration:",
-        "Usage:",
-        "Safety:"
+        "Zapremina (ml):",
+        "Aktivni sastojci:",
+        "Tip životinje:",
+        "Trajanje zaštite:",
+        "Upotreba:",
+        "Sigurnost:"
       ],
       "features": [
         "250",
-        "Imidacloprid, permethrin",
-        "Dogs",
-        "4 weeks",
-        "Spray on coat",
-        "For dogs over 7 weeks"
+        "Imidakloprid, permetrin",
+        "Psi",
+        "4 nedelje",
+        "Sprej na dlaku",
+        "Za pse starije od 7 nedelja"
       ]
     }
   },
   {
     "id": "1081",
-    "category": "Pet Toys",
-    "subcategory": "Hamster Toys",
-    "type": "Tunnels and Houses",
-    "title": "Savic Hamster Igloo - Hamster House",
-    "description": "Savic Hamster Igloo is a spacious igloo-shaped house for hamsters that provides privacy and security. Made from quality plastic with ventilation holes. Fits perfectly in cage and helps reduce stress.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za hrčke",
+    "type": "Tuneli i kućice",
+    "title": "Savic Hamster Igloo - Kućica za hrčke",
+    "description": "Savic Hamster Igloo je prostrana kućica u obliku iglua za hrčke koja pruža privatnost i sigurnost. Napravljena od kvalitetne plastike sa ventilacionim otvorima. Savršeno se uklapa u kavez i pomaže smanjenju stresa.",
     "brand": "Savic",
     "code": "1081",
     "price": "10.00",
@@ -2580,30 +2580,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (g):",
-        "Ventilation:",
-        "Usage:",
-        "Safety:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Ventilacija:",
+        "Upotreba:",
+        "Sigurnost:"
       ],
       "features": [
         "15 x 15 x 12",
-        "Plastic",
+        "Plastika",
         "200",
-        "Ventilation holes",
-        "Shelter, rest",
-        "No sharp edges"
+        "Ventilacioni otvori",
+        "Sklonište, odmor",
+        "Bez oštrih ivica"
       ]
     }
   },
   {
     "id": "1082",
-    "category": "Pet Supplies",
-    "subcategory": "Bowls and Feeders",
-    "type": "Bird Feeders",
-    "title": "Gardman Window Bird Feeder - Window Bird Feeder",
-    "description": "Gardman Window Bird Feeder is a feeder that mounts on window and allows close observation of birds. Has transparent panels and two feeders. Provides birds with food throughout the year and helps in their conservation.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Posude i hranilice",
+    "type": "Hranilice za ptice",
+    "title": "Gardman Window Bird Feeder - Hranilica za ptice za prozor",
+    "description": "Gardman Window Bird Feeder je hranilica koja se montira na prozor i omogućava blisko posmatranje ptica. Ima transparentne panele i dve hranilice. Pruža pticama hranu tokom cele godine i pomaže u njihovoj zaštiti.",
     "brand": "Gardman",
     "code": "1082",
     "price": "15.65",
@@ -2612,30 +2612,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Capacity (ml):",
-        "Mounting:",
-        "Weight (g):",
-        "Usage:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Kapacitet (ml):",
+        "Montaža:",
+        "Težina (g):",
+        "Upotreba:"
       ],
       "features": [
         "25 x 20 x 8",
-        "Plastic, glass",
+        "Plastika, staklo",
         "400",
-        "On window (suction cups)",
+        "Na prozoru (usisne čašice)",
         "500",
-        "Bird feeding"
+        "Hranjenje ptica"
       ]
     }
   },
   {
     "id": "1083",
-    "category": "Pet Food",
-    "subcategory": "Fish Food",
-    "type": "Food for Cichlids",
-    "title": "Sera Cichlid Gran - Granular Food for Cichlids",
-    "description": "Sera Cichlid Gran is specialized granular food for African cichlids that stimulates natural feeding. Contains high protein content and spirulina for intense color. Helps maintain health and vitality of cichlids.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ribe",
+    "type": "Hrana za cihlide",
+    "title": "Sera Cichlid Gran - Granularna hrana za cihlide",
+    "description": "Sera Cichlid Gran je specijalizovana granularna hrana za afričke cihlide koja stimuliše prirodno hranjenje. Sadrži visok sadržaj proteina i spirulinu za intenzivnu boju. Pomaže održavanju zdravlja i vitalnosti cihlida.",
     "brand": "Sera",
     "code": "1083",
     "price": "8.26",
@@ -2644,30 +2644,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Fish type:",
-        "Food shape:",
-        "Proteins (%):",
-        "Fats (%):",
-        "Additives:"
+        "Težina pakovanja (g):",
+        "Tip ribe:",
+        "Oblik hrane:",
+        "Proteini (%):",
+        "Masti (%):",
+        "Dodaci:"
       ],
       "features": [
         "100",
-        "African cichlids",
-        "Granules",
+        "Afrički cihlidi",
+        "Granule",
         "47",
         "8",
-        "Spirulina, carotenoids"
+        "Spirulina, karotenoidi"
       ]
     }
   },
   {
     "id": "1084",
-    "category": "Pet Grooming",
-    "subcategory": "Dietary Supplements",
-    "type": "Omega-3 for Dogs",
-    "title": "Vitakraft Omega 3 - Salmon Oil for Dogs",
-    "description": "Vitakraft Omega 3 is salmon oil rich in omega-3 fatty acids for dogs. Helps maintain healthy skin and coat, reduces joint inflammation and strengthens immune system. Easy to add to food.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Dijetetski suplementi",
+    "type": "Omega-3 za pse",
+    "title": "Vitakraft Omega 3 - Lososovo ulje za pse",
+    "description": "Vitakraft Omega 3 je lososovo ulje bogato omega-3 masnim kiselinama za pse. Pomaže održavanju zdrave kože i dlake, smanjuje upalu zglobova i jača imunitet. Lako se dodaje u hranu.",
     "brand": "Vitakraft",
     "code": "1084",
     "price": "12.61",
@@ -2676,30 +2676,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Active ingredients:",
-        "Dosage:",
-        "Usage:",
-        "Benefits:",
-        "Safety:"
+        "Zapremina (ml):",
+        "Aktivni sastojci:",
+        "Doza:",
+        "Upotreba:",
+        "Prednosti:",
+        "Sigurnost:"
       ],
       "features": [
         "250",
         "Omega-3, vitamin E",
-        "1 ml per 5 kg weight",
-        "Add to food",
-        "Skin, joints, immunity",
-        "No preservatives"
+        "1 ml na 5 kg težine",
+        "Dodati u hranu",
+        "Koža, zglobovi, imunitet",
+        "Bez konzervansa"
       ]
     }
   },
   {
     "id": "1085",
-    "category": "Pet Toys",
-    "subcategory": "Rabbit Toys",
-    "type": "Balls and Toys",
-    "title": "Savic Rabbit Ball - Ball with Bell for Rabbits",
-    "description": "Savic Rabbit Ball is a ball with bell inside that attracts rabbits' attention and stimulates play. Made from safe plastic that cannot be chewed. Helps prevent boredom and provides physical activity.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za zečeve",
+    "type": "Lopte i igračke",
+    "title": "Savic Rabbit Ball - Lopta sa zvončićem za zečeve",
+    "description": "Savic Rabbit Ball je lopta sa zvončićem unutra koja privlači pažnju zečeva i stimuliše igru. Napravljena od bezbedne plastike koja se ne može žvakati. Pomaže sprečavanju dosade i pruža fizičku aktivnost.",
     "brand": "Savic",
     "code": "1085",
     "price": "5.00",
@@ -2708,30 +2708,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Diameter (cm):",
-        "Material:",
-        "Weight (g):",
-        "Sound:",
-        "Safety:",
-        "Usage:"
+        "Prečnik (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Zvuk:",
+        "Sigurnost:",
+        "Upotreba:"
       ],
       "features": [
         "8",
-        "Plastic",
+        "Plastika",
         "60",
-        "Bell",
-        "No sharp parts",
-        "Play, activity"
+        "Zvončić",
+        "Bez oštrih delova",
+        "Igra, aktivnost"
       ]
     }
   },
   {
     "id": "1086",
-    "category": "Pet Supplies",
-    "subcategory": "Aquariums",
-    "type": "Aquarium Decorations",
-    "title": "Tetra Deco Plus - Decorative Elements for Aquarium",
-    "description": "Tetra Deco Plus is a set of decorative elements for aquarium that includes artificial plants, caves and corals. Made from safe materials that do not affect water quality. Provide natural environment for fish.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Akvarijumi",
+    "type": "Dekoracije za akvarijum",
+    "title": "Tetra Deco Plus - Dekorativni elementi za akvarijum",
+    "description": "Tetra Deco Plus je set dekorativnih elemenata za akvarijum koji uključuje veštačke biljke, pećine i korale. Napravljen od bezbednih materijala koji ne utiču na kvalitet vode. Pruža prirodno okruženje za ribe.",
     "brand": "Tetra",
     "code": "1086",
     "price": "20.00",
@@ -2740,30 +2740,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Number of pieces:",
-        "Material:",
-        "Height (cm):",
-        "Weight (g):",
-        "Safety:",
-        "Usage:"
+        "Broj komada:",
+        "Materijal:",
+        "Visina (cm):",
+        "Težina (g):",
+        "Sigurnost:",
+        "Upotreba:"
       ],
       "features": [
         "5",
-        "Plastic, stone",
+        "Plastika, kamen",
         "15-25",
         "800",
-        "Safe for fish",
-        "Aquarium decoration"
+        "Bezbedno za ribe",
+        "Dekoracija za akvarijum"
       ]
     }
   },
   {
     "id": "1087",
-    "category": "Pet Food",
-    "subcategory": "Small Animal Food",
-    "type": "Mouse Food",
-    "title": "Beaphar Mouse Food - Complete Food for Mice",
-    "description": "Beaphar Mouse Food is complete food for mice that contains more than 20 ingredients including cereals, seeds and vegetables. Enriched with vitamins and minerals for health and vitality. Ideal for all types of mice.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za male životinje",
+    "type": "Hrana za miševe",
+    "title": "Beaphar Mouse Food - Potpuna hrana za miševe",
+    "description": "Beaphar Mouse Food je potpuna hrana za miševe koja sadrži više od 20 sastojaka uključujući žitarice, semenke i povrće. Obogaćena vitaminima i mineralima za zdravlje i vitalnost. Idealna za sve tipove miševa.",
     "brand": "Beaphar",
     "code": "1087",
     "price": "4.52",
@@ -2772,30 +2772,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Animal type:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:",
-        "Shelf life:"
+        "Težina pakovanja (g):",
+        "Tip životinje:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:",
+        "Rok trajanja:"
       ],
       "features": [
         "400",
-        "Mice",
-        "Cereals, seeds, vegetables",
+        "Miševi",
+        "Žitarice, semenke, povrće",
         "15",
-        "Vitamins, minerals",
-        "12 months"
+        "Vitamini, minerali",
+        "12 meseci"
       ]
     }
   },
   {
     "id": "1088",
-    "category": "Pet Grooming",
-    "subcategory": "Nail Care",
-    "type": "Nail Files",
-    "title": "Mikki Nail Clipper - Nail File for Dogs and Cats",
-    "description": "Mikki Nail Clipper is an ergonomic nail file for dogs and cats with safety stopper. Has fine grit for precise filing without damaging nails. Easy to use and safe for pets.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Nega noktiju",
+    "type": "Pile za nokte",
+    "title": "Mikki Nail Clipper - Pila za nokte za pse i mačke",
+    "description": "Mikki Nail Clipper je ergonomska pila za nokte za pse i mačke sa sigurnosnim zaštitnikom. Ima finu granulaciju za precizno piljenje bez oštećenja noktiju. Lako za korišćenje i bezbedna za ljubimce.",
     "brand": "Mikki",
     "code": "1088",
     "price": "8.00",
@@ -2804,30 +2804,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Length (cm):",
-        "Material:",
-        "Grit:",
-        "Safety stopper:",
-        "Usage:",
-        "Maintenance:"
+        "Dužina (cm):",
+        "Materijal:",
+        "Granulacija:",
+        "Sigurnosni zaštitnik:",
+        "Upotreba:",
+        "Održavanje:"
       ],
       "features": [
         "12",
-        "Stainless steel",
-        "Fine",
-        "Yes",
-        "Nail filing",
-        "Clean after use"
+        "Nerđajući čelik",
+        "Fina",
+        "Da",
+        "Piljenje noktiju",
+        "Očistiti posle upotrebe"
       ]
     }
   },
   {
     "id": "1089",
-    "category": "Pet Toys",
-    "subcategory": "Fish Toys",
-    "type": "Aquarium Toys",
-    "title": "Marina Betta Log - Toy for Betta Fish",
-    "description": "Marina Betta Log is an artificial cave with plants that serves as shelter and toy for betta fish. Made from safe plastic that does not affect water. Helps reduce stress and provides natural environment.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za ribe",
+    "type": "Igračke za akvarijum",
+    "title": "Marina Betta Log - Igračka za betta ribe",
+    "description": "Marina Betta Log je veštačka pećina sa biljkama koja služi kao sklonište i igračka za betta ribe. Napravljena od bezbedne plastike koja ne utiče na vodu. Pomaže smanjenju stresa i pruža prirodno okruženje.",
     "brand": "Marina",
     "code": "1089",
     "price": "10.00",
@@ -2836,30 +2836,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (g):",
-        "Safety:",
-        "Usage:",
-        "Benefits:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Sigurnost:",
+        "Upotreba:",
+        "Prednosti:"
       ],
       "features": [
         "15 x 8 x 8",
-        "Plastic",
+        "Plastika",
         "80",
-        "Safe for fish",
-        "Shelter, play",
-        "Stress reduction"
+        "Bezbedno za ribe",
+        "Sklonište, igra",
+        "Smanjenje stresa"
       ]
     }
   },
   {
     "id": "1090",
-    "category": "Pet Supplies",
-    "subcategory": "Terrariums",
-    "type": "Lizard Terrariums",
-    "title": "Exo Terra Natural Terrarium - Terrarium for Lizards",
-    "description": "Exo Terra Natural Terrarium is a fully equipped terrarium for lizards with glass walls and ventilation. Includes substrate, lighting and heating. Provides ideal conditions for different types of lizards.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Terrarijumi",
+    "type": "Terarijumi za guštere",
+    "title": "Exo Terra Natural Terrarium - Terarijum za guštere",
+    "description": "Exo Terra Natural Terrarium je potpuno opremljen terarijum za guštere sa staklenim zidovima i ventilacijom. Uključuje supstrat, osvetljenje i grejanje. Pruža idealne uslove za različite tipove guštera.",
     "brand": "Exo Terra",
     "code": "1090",
     "price": "80.00",
@@ -2868,30 +2868,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (l):",
-        "Dimensions (cm):",
-        "Material:",
-        "Ventilation:",
-        "Lighting:",
-        "Heating:"
+        "Zapremina (l):",
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Ventilacija:",
+        "Osvetljenje:",
+        "Grejanje:"
       ],
       "features": [
         "60",
         "60 x 45 x 45",
-        "Glass, plastic",
-        "Ventilation holes",
-        "UV lights",
-        "Heater included"
+        "Staklo, plastika",
+        "Ventilacioni otvori",
+        "UV svetla",
+        "Grejač uključen"
       ]
     }
   },
   {
     "id": "1091",
-    "category": "Pet Food",
-    "subcategory": "Turtle Food",
-    "type": "Dry Food",
-    "title": "Zoo Med Repti Sticks - Food for Land Turtles",
-    "description": "Zoo Med Repti Sticks is complete stick food for land turtles with high protein content. Contains spirulina and calcium for shell health. Helps maintain optimal turtle condition.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za kornjače",
+    "type": "Suva hrana",
+    "title": "Zoo Med Repti Sticks - Hrana za kopnene kornjače",
+    "description": "Zoo Med Repti Sticks je potpuna hrana u obliku štapića za kopnene kornjače sa visokim sadržajem proteina. Sadrži spirulinu i kalcijum za zdravlje oklopa. Pomaže održavanju optimalnog stanja kornjače.",
     "brand": "Zoo Med",
     "code": "1091",
     "price": "40.00",
@@ -2900,30 +2900,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Animal type:",
-        "Food shape:",
-        "Proteins (%):",
-        "Calcium (%):",
-        "Additives:"
+        "Težina pakovanja (g):",
+        "Tip životinje:",
+        "Oblik hrane:",
+        "Proteini (%):",
+        "Kalcijum (%):",
+        "Dodaci:"
       ],
       "features": [
         "85",
-        "Land turtles",
-        "Sticks",
+        "Kopnene kornjače",
+        "Štapići",
         "35",
         "10",
-        "Spirulina, vitamins"
+        "Spirulina, vitamini"
       ]
     }
   },
   {
     "id": "1092",
-    "category": "Pet Grooming",
-    "subcategory": "Lip Balms",
-    "type": "Paw Pad Balms",
-    "title": "Pet Head Paw & Nose Balm - Paw and Nose Balm",
-    "description": "Pet Head Paw & Nose Balm is moisturizing balm for dog paws and nose that protects from salt, ice and dry air. Contains natural ingredients and vitamin E. Absorbs quickly and leaves protective layer without greasiness.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Balzami za usne",
+    "type": "Balzami za šape",
+    "title": "Pet Head Paw & Nose Balm - Balzam za šape i nos",
+    "description": "Pet Head Paw & Nose Balm je hidrirajući balzam za šape i nos pasa koji štiti od soli, leda i suvog vazduha. Sadrži prirodne sastojke i vitamin E. Brzo se upija i ostavlja zaštitni sloj bez masnoće.",
     "brand": "Pet Head",
     "code": "1092",
     "price": "9.13",
@@ -2932,30 +2932,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Volume (g):",
-        "Active ingredients:",
-        "Scent:",
-        "Usage:",
-        "Safety:",
-        "Results:"
+        "Zapremina (g):",
+        "Aktivni sastojci:",
+        "Miris:",
+        "Upotreba:",
+        "Sigurnost:",
+        "Rezultati:"
       ],
       "features": [
         "60",
-        "Beeswax, vitamin E",
-        "Unscented",
-        "Apply to paws and nose",
-        "Safe for licking",
-        "Protection and hydration"
+        "Pčelinji vosak, vitamin E",
+        "Bez mirisa",
+        "Nanesite na šape i nos",
+        "Bezbedno za lizanje",
+        "Zaštita i hidracija"
       ]
     }
   },
   {
     "id": "1093",
-    "category": "Pet Toys",
-    "subcategory": "Rabbit Toys",
-    "type": "Chew Toys",
-    "title": "Savic Bunny Chew Toys - Chew Toys for Rabbits",
-    "description": "Savic Bunny Chew Toys are a set of chew toys for rabbits made from natural materials. Help maintain healthy teeth and provide fun. Include different textures for different chewing needs.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za zečeve",
+    "type": "Igračke za žvakanje",
+    "title": "Savic Bunny Chew Toys - Igračke za žvakanje za zečeve",
+    "description": "Savic Bunny Chew Toys su set igračaka za žvakanje za zečeve napravljene od prirodnih materijala. Pomažu održavanju zdravih zuba i pružaju zabavu. Uključuju različite teksture za različite potrebe žvakanja.",
     "brand": "Savic",
     "code": "1093",
     "price": "10.00",
@@ -2964,30 +2964,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Number of pieces:",
-        "Material:",
-        "Weight (g):",
-        "Safety:",
-        "Usage:",
-        "Benefits:"
+        "Broj komada:",
+        "Materijal:",
+        "Težina (g):",
+        "Sigurnost:",
+        "Upotreba:",
+        "Prednosti:"
       ],
       "features": [
         "4",
-        "Natural wood, sisal",
+        "Prirodno drvo, sisal",
         "180",
-        "No chemicals",
-        "Chewing, play",
-        "Healthy teeth"
+        "Bez hemikalija",
+        "Žvakanje, igra",
+        "Zdravi zubi"
       ]
     }
   },
   {
     "id": "1094",
-    "category": "Pet Supplies",
-    "subcategory": "Cages and Houses",
-    "type": "Bird Cages",
-    "title": "Prevue Pet Products Flight Cage - Large Bird Cage",
-    "description": "Prevue Pet Products Flight Cage is a spacious bird cage with multiple levels and plenty of space for flight. Has multiple feeders, water bottles and toys. Made from quality plastic and metal for long-lasting use.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Kavezi i kućice",
+    "type": "Kavezi za ptice",
+    "title": "Prevue Pet Products Flight Cage - Veliki kavez za ptice",
+    "description": "Prevue Pet Products Flight Cage je prostran kavez za ptice sa više nivoa i dovoljno prostora za let. Ima više hranilica, boca za vodu i igračaka. Napravljen od kvalitetne plastike i metala za dugotrajnu upotrebu.",
     "brand": "Prevue Pet Products",
     "code": "1094",
     "price": "80.00",
@@ -2996,30 +2996,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Dimensions (cm):",
-        "Material:",
-        "Weight (kg):",
-        "Number of levels:",
-        "Additional equipment:",
-        "Safety:"
+        "Dimenzije (cm):",
+        "Materijal:",
+        "Težina (kg):",
+        "Broj nivoa:",
+        "Dodatna oprema:",
+        "Sigurnost:"
       ],
       "features": [
         "90 x 45 x 120",
-        "Plastic, metal",
+        "Plastika, metal",
         "8.5",
         "3",
-        "Feeder, water bottle, toys",
-        "Safety locks"
+        "Hranilica, boca za vodu, igračke",
+        "Sigurne brave"
       ]
     }
   },
   {
     "id": "1095",
-    "category": "Pet Food",
-    "subcategory": "Small Animal Food",
-    "type": "Hamster Food",
-    "title": "Harry Hamster - Premium Food for Hamsters",
-    "description": "Harry Hamster is premium food for hamsters with more than 30 ingredients including seeds, cereals and dried fruits. Enriched with probiotics and vitamins for digestive health. Helps maintain vitality and shiny coat.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za male životinje",
+    "type": "Hrana za hrčke",
+    "title": "Harry Hamster - Premium hrana za hrčke",
+    "description": "Harry Hamster je premium hrana za hrčke sa više od 30 sastojaka uključujući semenke, žitarice i suvo voće. Obogaćena probiotsima i vitaminima za zdravlje digestivnog sistema. Pomaže održavanju vitalnosti i sjajne dlake.",
     "brand": "Harry",
     "code": "1095",
     "price": "7.39",
@@ -3028,30 +3028,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Animal type:",
-        "Composition:",
-        "Proteins (%):",
-        "Additives:",
-        "Shelf life:"
+        "Težina pakovanja (g):",
+        "Tip životinje:",
+        "Sastav:",
+        "Proteini (%):",
+        "Dodaci:",
+        "Rok trajanja:"
       ],
       "features": [
         "500",
-        "Hamsters",
-        "Seeds, cereals, dried fruit",
+        "Hrčci",
+        "Semenke, žitarice, suvo voće",
         "16",
-        "Probiotics, vitamins",
-        "12 months"
+        "Probiotici, vitamini",
+        "12 meseci"
       ]
     }
   },
   {
     "id": "1096",
-    "category": "Pet Grooming",
-    "subcategory": "Shampoos",
-    "type": "Dog Shampoos",
-    "title": "TropiClean Hypo-Allergenic - Shampoo for Allergic Dogs",
-    "description": "TropiClean Hypo-Allergenic is a gentle shampoo for dogs with allergies and sensitive skin. Contains natural ingredients without fragrances, colors and parabens. Gently cleans and moisturizes without skin irritation.",
+    "category": "Nega kućnih ljubimaca",
+    "subcategory": "Šamponi",
+    "type": "Šamponi za pse",
+    "title": "TropiClean Hypo-Allergenic - Šampon za alergijske pse",
+    "description": "TropiClean Hypo-Allergenic je nježan šampon za pse sa alergijama i osetljivom kožom. Sadrži prirodne sastojke bez mirisa, boja i parabena. Nježno čisti i hidrira bez iritacije kože.",
     "brand": "TropiClean",
     "code": "1096",
     "price": "11.74",
@@ -3060,30 +3060,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Animal type:",
-        "Composition:",
-        "pH value:",
-        "Scent:",
-        "Safety:"
+        "Zapremina (ml):",
+        "Tip životinje:",
+        "Sastav:",
+        "pH vrednost:",
+        "Miris:",
+        "Sigurnost:"
       ],
       "features": [
         "355",
-        "Dogs",
-        "Natural extracts, aloe vera",
+        "Psi",
+        "Prirodni ekstrakti, aloe vera",
         "6.0-7.0",
-        "Unscented",
-        "For allergic skin"
+        "Bez mirisa",
+        "Za alergijsku kožu"
       ]
     }
   },
   {
     "id": "1097",
-    "category": "Pet Toys",
-    "subcategory": "Dog Toys",
-    "type": "Tug Toys",
-    "title": "Tuffy Tug - Tough Tug Toy for Dogs",
-    "description": "Tuffy Tug is an extremely sturdy tug toy for dogs with multiple handles for gripping. Designed for intense pulling and throwing games. Resistant to chewing and provides hours of fun for strong dogs.",
+    "category": "Igračke za kućne ljubimce",
+    "subcategory": "Igračke za pse",
+    "type": "Igračke za vuču",
+    "title": "Tuffy Tug - Čvrsta igračka za vuču za pse",
+    "description": "Tuffy Tug je izuzetno čvrsta igračka za vuču za pse sa više drški za hvatanje. Dizajnirana za intenzivne igre vuče i bacanja. Otporna na žvakanje i pruža satima zabave za jake pse.",
     "brand": "Tuffy",
     "code": "1097",
     "price": "16.96",
@@ -3092,30 +3092,30 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Length (cm):",
-        "Material:",
-        "Weight (g):",
-        "Resistance:",
-        "Usage:",
-        "Safety:"
+        "Dužina (cm):",
+        "Materijal:",
+        "Težina (g):",
+        "Otpornost:",
+        "Upotreba:",
+        "Sigurnost:"
       ],
       "features": [
         "35",
-        "Ultra-hard rubber",
+        "Ultra-čvrsta guma",
         "250",
-        "Extreme",
-        "Tug play, throwing",
-        "No sharp parts"
+        "Ekstremna",
+        "Vuča, bacanje",
+        "Bez oštrih delova"
       ]
     }
   },
   {
     "id": "1098",
-    "category": "Pet Supplies",
-    "subcategory": "Bowls and Feeders",
-    "type": "Water Bottles",
-    "title": "Drinkwell Platinum - Fountain Water Bowl for Cats",
-    "description": "Drinkwell Platinum is an electric fountain water bowl for cats that provides fresh, flowing water 24/7. Has filter for removing impurities and quietly pumps water. Encourages cats to drink more water and helps prevent urinary problems.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Posude i hranilice",
+    "type": "Boce za vodu",
+    "title": "Drinkwell Platinum - Fontana za vodu za mačke",
+    "description": "Drinkwell Platinum je električna fontana za vodu za mačke koja pruža svežu, tekuću vodu 24/7. Ima filter za uklanjanje nečistoća i tiho pumpa vodu. Podstiče mačke da piju više vode i pomaže sprečavanju urinarnih problema.",
     "brand": "Drinkwell",
     "code": "1098",
     "price": "77.39",
@@ -3124,30 +3124,30 @@
     "percentage": "10%",
     "technicalData": {
       "labels": [
-        "Capacity (l):",
-        "Dimensions (cm):",
-        "Power supply:",
+        "Kapacitet (l):",
+        "Dimenzije (cm):",
+        "Napajanje:",
         "Filter:",
-        "Weight (kg):",
-        "Noise:"
+        "Težina (kg):",
+        "Buka:"
       ],
       "features": [
         "2.8",
         "30 x 30 x 15",
-        "220V adapter",
-        "Built-in filter",
+        "Priključak 220V",
+        "Ugrađeni filter",
         "2.2",
-        "Silent"
+        "Tih"
       ]
     }
   },
   {
     "id": "1099",
-    "category": "Pet Food",
-    "subcategory": "Fish Food",
-    "type": "Goldfish Food",
-    "title": "Hikari Fancy Gold - Premium food for goldfish",
-    "description": "Hikari Fancy Gold is premium food for goldfish that stimulates natural feeding and helps maintain health. Contains spirulina for color and vitamin C for immunity. Helps prevent digestive problems.",
+    "category": "Hrana za kućne ljubimce",
+    "subcategory": "Hrana za ribe",
+    "type": "Hrana za zlatne ribice",
+    "title": "Hikari Fancy Gold - Premium hrana za zlatne ribice",
+    "description": "Hikari Fancy Gold je premium hrana za zlatne ribice koja stimuliše prirodno hranjenje i pomaže održavanju zdravlja. Sadrži spirulinu za boju i vitamin C za imunitet. Pomaže sprečavanju probavnih problema.",
     "brand": "Hikari",
     "code": "1099",
     "price": "11.74",
@@ -3156,17 +3156,17 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Package weight (g):",
-        "Fish type:",
-        "Food shape:",
-        "Proteins (%):",
-        "Fats (%):",
-        "Additives:"
+        "Težina pakovanja (g):",
+        "Tip ribe:",
+        "Oblik hrane:",
+        "Proteini (%):",
+        "Masti (%):",
+        "Dodaci:"
       ],
       "features": [
         "50",
-        "Goldfish",
-        "Pellets",
+        "Zlatne ribice",
+        "Peleti",
         "32",
         "6",
         "Spirulina, vitamin C"
@@ -3175,11 +3175,11 @@
   },
   {
     "id": "1100",
-    "category": "Pet Supplies",
-    "subcategory": "Cleaners and Maintenance",
-    "type": "Cleaning Products",
-    "title": "Simple Solution Stain & Odor Remover - Stain Remover",
-    "description": "Simple Solution Stain & Odor Remover is an enzymatic product for removing stains and odors from urine, vomit and other impurities. Contains natural enzymes that break down organic matter. It is safe for use in homes with pets.",
+    "category": "Oprema za kućne ljubimce",
+    "subcategory": "Sredstva za čišćenje i održavanje",
+    "type": "Proizvodi za čišćenje",
+    "title": "Simple Solution Stain & Odor Remover - Uklanjač fleka",
+    "description": "Simple Solution Stain & Odor Remover je enzimski proizvod za uklanjanje fleka i mirisa iz urina, povraćanja i drugih nečistoća. Sadrži prirodne enzime koji razgrađuju organsku materiju. Bezbedan je za upotrebu u domovima sa ljubimcima.",
     "brand": "Simple Solution",
     "code": "1100",
     "price": "20.00",
@@ -3188,20 +3188,20 @@
     "percentage": "/",
     "technicalData": {
       "labels": [
-        "Volume (ml):",
-        "Active ingredients:",
-        "Surface type:",
-        "Usage method:",
-        "Safety:",
-        "Results:"
+        "Zapremina (ml):",
+        "Aktivni sastojci:",
+        "Tip površine:",
+        "Način upotrebe:",
+        "Sigurnost:",
+        "Rezultati:"
       ],
       "features": [
         "946",
-        "Natural enzymes",
-        "All surfaces",
-        "Apply and let it work",
-        "Safe for pets",
-        "Removes stains and odors"
+        "Prirodni enzimi",
+        "Sve površine",
+        "Nanesite i ostavite da deluje",
+        "Bezbedno za ljubimce",
+        "Uklanja fleke i mirise"
       ]
     }
   }
