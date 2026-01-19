@@ -373,6 +373,9 @@ async function renderCartDrawer() {
 
 // Function to show cart notification (defined at top level for accessibility)
 function showCartNotification(productName) {
+  // Toast notification disabled - no longer showing
+  return;
+  
   const toastElement = document.getElementById('cartToast');
   const toastMessage = document.getElementById('toastMessage');
   
@@ -2117,21 +2120,17 @@ document.addEventListener("DOMContentLoaded", async function () {
   document.body.insertAdjacentHTML("beforeend", savedDrawerHTML);
 
   // ========== TOAST NOTIFICATION CONTAINER ==========
-  const toastContainerHTML = `
-    <div class="toast-container position-fixed" style="bottom: 20px; right: 20px; z-index: 10000;">
-      <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="background-color: #000; color: #fff;">
-        <div class="toast-header" style="background-color: #009900; color: #fff; border-bottom: 1px solid #333;">
-          <span class="material-symbols-outlined me-2" style="color: #fff;">check_circle</span>
-          <span class="me-auto" style="color: #fff;">Uspeh</span>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Zatvori"></button>
-        </div>
-        <div class="toast-body" style="background-color: #000; color: #fff;">
-          <span id="toastMessage">Proizvod je dodat u korpu!</span>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.insertAdjacentHTML("beforeend", toastContainerHTML);
+  // Toast notification disabled - no longer creating the container
+  // const toastContainerHTML = `
+  //   <div class="toast-container position-fixed" style="top: 20px; right: 20px; z-index: 10000;">
+  //     <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="background-color: #000; color: #fff;">
+  //       <div class="toast-body" style="background-color: #000; color: #fff;">
+  //         <span id="toastMessage">Proizvod je dodat u korpu!</span>
+  //       </div>
+  //     </div>
+  //   </div>
+  // `;
+  // document.body.insertAdjacentHTML("beforeend", toastContainerHTML);
 
   const openCartBtn = document.getElementById("openCart");
   const openSavedBtn = document.getElementById("savedProduct");
