@@ -852,6 +852,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const revealElements = document.querySelectorAll(".reveal, .reveal-left, .reveal-right, .reveal-scale");
   revealElements.forEach(el => observer.observe(el));
 
+  // Welcome Section Button Functionality
+  const leftBtn = document.querySelector('#welcomeHome .left-btn');
+  const rightBtn = document.querySelector('#welcomeHome .right-btn');
+
+  if (leftBtn) {
+    leftBtn.addEventListener('click', function() {
+      window.location.href = '/about';
+    });
+  }
+
+  if (rightBtn) {
+    rightBtn.addEventListener('click', function() {
+      window.location.href = '/all-products';
+    });
+  }
+
   // Lightbox Functionality
   const modal = document.getElementById('lightbox-modal');
   const modalImg = document.querySelector('.lightbox-image');
