@@ -1614,7 +1614,11 @@ body {
   }
 
   .product-image {
-    height: 150px !important;
+    height: 200px !important;
+    min-height: 200px !important;
+  }
+  .product-image-skeleton {
+    height: 200px !important;
   }
 
   .product-info {

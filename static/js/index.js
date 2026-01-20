@@ -868,6 +868,60 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Responsive hero title: uvek u dva reda ispod 500px širine
+  function adjustHeroTitle() {
+    const heroTitle = document.getElementById('hero-main-title');
+    if (!heroTitle) return;
+
+    const isSmallScreen = window.innerWidth <= 500;
+
+    // Reset na default vrednosti za veće ekrane
+    if (!isSmallScreen) {
+      heroTitle.style.fontSize = '';
+      heroTitle.style.lineHeight = '';
+      return;
+    }
+
+    // Ograničenja font-size
+    const minFont = 18; // px
+    const maxFont = 40; // px
+
+    // Binarna pretraga najvećeg font-size-a koji staje u 2 reda
+    let low = minFont;
+    let high = maxFont;
+    let best = minFont;
+
+    // Osiguraj da je line-height relativan
+    heroTitle.style.lineHeight = '1.15';
+
+    for (let i = 0; i < 10; i++) {
+      const mid = (low + high) / 2;
+      heroTitle.style.fontSize = mid + 'px';
+
+      const styles = window.getComputedStyle(heroTitle);
+      const lineHeightPx = parseFloat(styles.lineHeight);
+      const maxHeight = lineHeightPx * 2 + 1; // mala tolerancija
+
+      const totalHeight = heroTitle.scrollHeight;
+
+      if (totalHeight <= maxHeight) {
+        best = mid;
+        low = mid; // pokušaj veće
+      } else {
+        high = mid;
+      }
+    }
+
+    heroTitle.style.fontSize = best + 'px';
+  }
+
+  // Inicijalno i na resize
+  adjustHeroTitle();
+  window.addEventListener('resize', () => {
+    // debounce je već gore za slider, ovde je jeftina operacija pa ide direktno
+    adjustHeroTitle();
+  });
+
   // Lightbox Functionality
   const modal = document.getElementById('lightbox-modal');
   const modalImg = document.querySelector('.lightbox-image');

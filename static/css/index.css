@@ -69,7 +69,12 @@
   line-height: 80px;
   margin: 0 auto;
 }
-#welcomeHome h1 span {
+#welcomeHome h1 .hero-title-line {
+  display: inline-block;
+  color: #f0f0f0;
+  font-family: "Baloo 2", sans-serif;
+}
+#welcomeHome h1 span span {
   color: #009900;
 }
 #welcomeHome p {
@@ -1711,33 +1716,39 @@
 @media only screen and (max-width: 499px) {
   #welcomeHome .left-btn,
   #welcomeHome .right-btn {
-    width: 140px;
-    height: 44px;
+    width: 135px;
+    height: 42px;
   }
 
   #welcomeHome h1 {
-    font-size: 2.2rem !important;
+    /* Bazična vrednost, JS će je dodatno prilagoditi da uvek stane u 2 reda */
+    font-size: clamp(1.8rem, 6vw, 2.4rem) !important;
     max-width: 330px !important;
-    line-height: 45px !important;
+    line-height: 1.15 !important;
+    word-break: normal;
+    white-space: normal;
   }
   #welcomeHome p {
+    font-size: 0.9rem !important;
+    line-height: 23px !important;
     max-width: 370px !important;
     padding-inline: 5px;
   }
   #welcomeHome .btn-flex button {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     width: 150px !important;
   }
   #welcomeHome .btn-flex span {
     font-size: 1.2rem;
-    padding-top: 5px;
+    padding-top: 2px;
+    transform: translateY(-1px);
   }
   #welcomeHome .dog-cat {
     display: none;
   }
 
   #welcomeHome {
-    height: 450px;
+    height: 400px;
   }
 }
 
@@ -1934,7 +1945,19 @@
       max-width: 100%;
     }
     #firstSection .custom-card img {
-      height: 170px;
+      height: 200px !important;
+    }
+    #firstSection .custom-card .image-c img {
+      height: 200px !important;
+    }
+    #firstSection .custom-card .image-c {
+      min-height: 200px !important;
+    }
+    #firstSection .skeleton-image {
+      height: 200px !important;
+    }
+    #firstSection .custom-card .image-skeleton {
+      height: 200px !important;
     }
     #firstSection .custom-card .discount-badge {
       top: 12px;
