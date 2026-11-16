@@ -20,21 +20,92 @@ function getCartItems() {
   }
 }
 
-function addToCart(productId, quantity = 1) {
+function getDefaultVariantLabel(product) {
+  if (!product) return "";
+  if (Array.isArray(product.variants) && product.variants.length > 0 && product.variants[0]?.label) {
+    return String(product.variants[0].label).trim();
+  }
+  if (Array.isArray(product.sizes) && product.sizes.length > 0 && product.sizes[0]) {
+    return String(product.sizes[0]).trim();
+  }
+  return "";
+}
+
+function resolveProductVariant(product, variantLabel = "") {
+  if (!product) return { label: "", price: 0, oldPrice: null };
+  const basePrice = parseFloat(formatPrice(product)) || 0;
+  const baseOld = product.oldPrice ? parseFloat(product.oldPrice) : null;
+  const list = Array.isArray(product.variants) ? product.variants : [];
+  if (list.length === 0) {
+    return {
+      label: String(variantLabel || "").trim() || getDefaultVariantLabel(product),
+      price: basePrice,
+      oldPrice: baseOld && baseOld > basePrice ? baseOld : null
+    };
+  }
+  const needle = String(variantLabel || "").trim().toLowerCase();
+  const matched = (needle ? list.find(v => String(v.label || "").trim().toLowerCase() === needle) : null) || list[0];
+  const vPrice = parseFloat(matched.price);
+  const price = !isNaN(vPrice) && vPrice > 0 ? vPrice : basePrice;
+  const vOldRaw = matched.oldPrice !== null && matched.oldPrice !== undefined ? parseFloat(matched.oldPrice) : baseOld;
+  const oldPrice = vOldRaw && !isNaN(vOldRaw) && vOldRaw > price ? vOldRaw : null;
+  return {
+    label: String(matched.label || "").trim(),
+    price,
+    oldPrice
+  };
+}
+
+function getProductPriceSummary(product) {
+  if (!product) return { minPrice: 0, maxPrice: 0, hasRange: false, defaultVariant: "", variantLabels: [] };
+  const list = Array.isArray(product.variants) && product.variants.length > 0 ? product.variants : [];
+  const prices = list.map(v => parseFloat(v.price)).filter(n => !isNaN(n) && n > 0);
+  const base = parseFloat(formatPrice(product)) || 0;
+  const minPrice = prices.length ? Math.min(...prices) : base;
+  const maxPrice = prices.length ? Math.max(...prices) : minPrice;
+  const variantLabels = list.length
+    ? list.map(v => String(v.label || "").trim()).filter(Boolean)
+    : (Array.isArray(product.sizes) ? product.sizes.map(s => String(s || "").trim()).filter(Boolean) : []);
+  return {
+    minPrice,
+    maxPrice,
+    hasRange: maxPrice > minPrice,
+    defaultVariant: getDefaultVariantLabel(product),
+    variantLabels
+  };
+}
+
+window.getDefaultVariantLabel = getDefaultVariantLabel;
+window.resolveProductVariant = resolveProductVariant;
+window.getProductPriceSummary = getProductPriceSummary;
+
+let _cartRefreshTimer = null;
+function addToCart(productId, quantity = 1, variant = "") {
   const cart = getCartItems();
-  const existingItem = cart.find(item => item.id === productId);
+  const normVar = String(variant || "").trim();
+  const existingItem = cart.find(item => item.id === productId && String(item.variant || "").trim() === normVar);
   if (existingItem) {
     existingItem.quantity += quantity;
   } else {
-    cart.push({ id: productId, quantity: quantity });
+    cart.push({ id: productId, quantity: quantity, variant: normVar });
   }
   localStorage.setItem('cart', JSON.stringify(cart));
+  if (typeof renderCartDrawer === 'function') {
+    clearTimeout(_cartRefreshTimer);
+    _cartRefreshTimer = setTimeout(() => {
+      if (document.querySelector('.cart-items')) renderCartDrawer();
+    }, 30);
+  }
   return true;
 }
 
-function removeFromCart(productId) {
+function removeFromCart(productId, variant = null) {
   const cart = getCartItems();
-  const index = cart.findIndex(item => item.id === productId);
+  const hasVariantFilter = variant !== null && variant !== undefined;
+  const normVar = hasVariantFilter ? String(variant || "").trim() : "";
+  const index = cart.findIndex(item =>
+    item.id === productId && (!hasVariantFilter || String(item.variant || "").trim() === normVar)
+  );
   if (index > -1) {
     cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -43,12 +114,16 @@ function removeFromCart(productId) {
   return false;
 }
 
-function updateCartQuantity(productId, quantity) {
+function updateCartQuantity(productId, quantity, variant = null) {
   const cart = getCartItems();
-  const item = cart.find(item => item.id === productId);
+  const hasVariantFilter = variant !== null && variant !== undefined;
+  const normVar = hasVariantFilter ? String(variant || "").trim() : "";
+  const item = cart.find(item =>
+    item.id === productId && (!hasVariantFilter || String(item.variant || "").trim() === normVar)
+  );
   if (item) {
     if (quantity <= 0) {
-      return removeFromCart(productId);
+      return removeFromCart(productId, hasVariantFilter ? normVar : null);
     }
     item.quantity = quantity;
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -57,10 +132,16 @@ function updateCartQuantity(productId, quantity) {
   return false;
 }
 
-function getCartItemQuantity(productId) {
+function getCartItemQuantity(productId, variant = null) {
   const cart = getCartItems();
-  const item = cart.find(item => item.id === productId);
-  return item ? item.quantity : 0;
+  if (variant !== null && variant !== undefined) {
+    const normVar = String(variant || "").trim();
+    const item = cart.find(item => item.id === productId && String(item.variant || "").trim() === normVar);
+    return item ? item.quantity : 0;
+  }
+  return cart
+    .filter(item => item.id === productId)
+    .reduce((sum, item) => sum + (parseInt(item.quantity, 10) || 0), 0);
 }
 
 // Saved items functions
@@ -192,8 +273,9 @@ function pickImage(product) {
 }
 
 function formatPrice(product) {
+  if (!product) return 0;
   const price = product.salePrice && product.salePrice !== '/' ? product.salePrice : product.price;
-  return price;
+  return price || 0;
 }
 
 // Format price number with commas as thousand separator
@@ -263,13 +345,17 @@ async function renderCartDrawer() {
   validCartItems.forEach(cartItem => {
     const product = productMap[cartItem.id];
     const quantity = cartItem.quantity || 1;
-    const price = parseFloat(formatPrice(product));
+    const resolvedVar = resolveProductVariant(product, cartItem.variant);
+    const price = parseFloat(resolvedVar.price) || 0;
+    const variantLabel = String(cartItem.variant || resolvedVar.label || '').trim();
+    const escVar = variantLabel.replace(/"/g, '&quot;');
+    const variantSubtitle = [product.brand || '', variantLabel ? `<strong>${variantLabel}</strong>` : ''].filter(Boolean).join(' • ');
     const itemTotal = price * quantity;
     total += itemTotal;
     totalItems += quantity;
     
     html += `
-      <div class="cart-item" data-product-id="${product.id}">
+      <div class="cart-item" data-product-id="${product.id}" data-variant="${escVar}">
         <div class="item-img">
           <div class="item-img-skeleton"></div>
           <div class="item-img-error" style="display: none;">
@@ -279,17 +365,17 @@ async function renderCartDrawer() {
         </div>
         <div class="item-details">
           <h4>${product.title}</h4>
-          <p class="item-variant">${product.brand || ''}</p>
+          <p class="item-variant">${variantSubtitle}</p>
           <div class="price-row">
             <span class="item-price">${formatPriceNumber(itemTotal)} RSD</span>
             <div class="qty-control">
-              <button class="qty-btn minus" data-product-id="${product.id}">-</button>
-              <input type="number" value="${quantity}" min="1" readonly data-product-id="${product.id}">
-              <button class="qty-btn plus" data-product-id="${product.id}">+</button>
+              <button class="qty-btn minus" data-product-id="${product.id}" data-variant="${escVar}">-</button>
+              <input type="number" value="${quantity}" min="1" readonly data-product-id="${product.id}" data-variant="${escVar}">
+              <button class="qty-btn plus" data-product-id="${product.id}" data-variant="${escVar}">+</button>
             </div>
           </div>
         </div>
-        <button class="remove-item" data-product-id="${product.id}">
+        <button class="remove-item" data-product-id="${product.id}" data-variant="${escVar}">
           <span class="material-symbols-outlined">delete</span>
         </button>
       </div>
@@ -300,7 +386,7 @@ async function renderCartDrawer() {
   if (cartCount) cartCount.textContent = `(${totalItems})`;
   if (totalPriceEl) totalPriceEl.textContent = `${formatPriceNumber(total)} RSD`;
   
-  // Fetch images from Cloudinary and update
+  // Fetch images and update
   if (validCartItems.length > 0) {
     loadCartImagesFromCloudinary(validCartItems, productMap);
   }
@@ -310,6 +396,7 @@ async function renderCartDrawer() {
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
       const productId = this.getAttribute('data-product-id');
+      const variant = this.getAttribute('data-variant') || '';
       const cartItem = this.closest('.cart-item');
       
       // Add removing class to trigger animation
@@ -320,8 +407,8 @@ async function renderCartDrawer() {
         performFlipDelete(
             cartItemsContainer,
             cartItem,
-            () => removeFromCart(productId), // Update Data
-            () => updateCartTotalsOnly()     // Update UI
+            () => removeFromCart(productId, variant), // Update Data
+            () => updateCartTotalsOnly()              // Update UI
         );
       }, 300); // Match animation duration
     });
@@ -331,9 +418,10 @@ async function renderCartDrawer() {
   cartItemsContainer.querySelectorAll('.qty-btn.plus').forEach(btn => {
     btn.addEventListener('click', function() {
       const productId = this.getAttribute('data-product-id');
+      const variant = this.getAttribute('data-variant') || '';
       const input = this.parentElement.querySelector('input');
       const currentQty = parseInt(input.value) || 1;
-      updateCartQuantity(productId, currentQty + 1);
+      updateCartQuantity(productId, currentQty + 1, variant);
       renderCartDrawer();
     });
   });
@@ -341,10 +429,11 @@ async function renderCartDrawer() {
   cartItemsContainer.querySelectorAll('.qty-btn.minus').forEach(btn => {
     btn.addEventListener('click', function() {
       const productId = this.getAttribute('data-product-id');
+      const variant = this.getAttribute('data-variant') || '';
       const input = this.parentElement.querySelector('input');
       const currentQty = parseInt(input.value) || 1;
       if (currentQty > 1) {
-        updateCartQuantity(productId, currentQty - 1);
+        updateCartQuantity(productId, currentQty - 1, variant);
         renderCartDrawer();
       }
     });
@@ -467,7 +556,8 @@ async function updateCartTotalsOnly() {
       const product = productMap[cartItem.id];
       if (product) {
           const quantity = cartItem.quantity || 1;
-          const price = parseFloat(formatPrice(product));
+          const resolvedVar = resolveProductVariant(product, cartItem.variant);
+          const price = parseFloat(resolvedVar.price) || 0;
           total += price * quantity;
           totalItems += quantity;
       }
@@ -598,12 +688,13 @@ async function renderSavedDrawer() {
       const productId = this.getAttribute('data-product-id');
       const savedCard = this.closest('.saved-item-card');
       
-      // Find the product to get its name for the notification
+      // Find the product to get its name and default variant
       const product = allProducts.find(p => p.id === productId);
       const productName = product ? product.title : 'Product';
+      const defaultVar = getDefaultVariantLabel(product);
       
       // Add to cart
-      addToCart(productId);
+      addToCart(productId, 1, defaultVar);
       renderCartDrawer();
       
       // Add removing animation
@@ -664,17 +755,24 @@ async function fetchProductImagesBatch(productIds) {
   }
 }
 
-// Load cart images from Cloudinary
+// Load cart images (uses local /uploads WebP URLs directly, falls back to batch API if needed)
 async function loadCartImagesFromCloudinary(cartItems, productMap) {
-  const productIds = cartItems.map(item => item.id);
-  const imagesData = await fetchProductImagesBatch(productIds);
+  const missingIds = cartItems
+    .filter(ci => {
+      const p = productMap[ci.id];
+      return !p || !Array.isArray(p.images) || p.images.length === 0;
+    })
+    .map(ci => ci.id);
+  const imagesData = missingIds.length > 0 ? await fetchProductImagesBatch(missingIds) : {};
   
+  const renderedCartEls = new Set();
   cartItems.forEach(cartItem => {
     const product = productMap[cartItem.id];
     if (!product) return;
     
-    const cartItemElement = document.querySelector(`.cart-item[data-product-id="${product.id}"]`);
+    const cartItemElement = Array.from(document.querySelectorAll(`.cart-item[data-product-id="${product.id}"]`)).find(el => !renderedCartEls.has(el));
     if (!cartItemElement) return;
+    renderedCartEls.add(cartItemElement);
     
     const imgElement = cartItemElement.querySelector('.item-img img');
     const skeleton = cartItemElement.querySelector('.item-img-skeleton');
@@ -682,10 +780,11 @@ async function loadCartImagesFromCloudinary(cartItems, productMap) {
     
     if (!imgElement) return;
     
+    const directImgs = Array.isArray(product.images) ? product.images : [];
     const productImages = imagesData[product.id] || [];
-    const imageUrls = productImages.length > 0 
-      ? productImages.map(img => img.url)
-      : [];
+    const imageUrls = directImgs.length > 0
+      ? directImgs
+      : productImages.map(img => img.url);
     
     let itemError = itemImgContainer?.querySelector('.item-img-error');
     
@@ -761,10 +860,12 @@ async function loadCartImagesFromCloudinary(cartItems, productMap) {
   });
 }
 
-// Load saved images from Cloudinary
+// Load saved images (uses local /uploads WebP URLs directly, falls back to batch API if needed)
 async function loadSavedImagesFromCloudinary(savedProducts) {
-  const productIds = savedProducts.map(p => p.id);
-  const imagesData = await fetchProductImagesBatch(productIds);
+  const missingIds = savedProducts
+    .filter(p => !Array.isArray(p.images) || p.images.length === 0)
+    .map(p => p.id);
+  const imagesData = missingIds.length > 0 ? await fetchProductImagesBatch(missingIds) : {};
   
   savedProducts.forEach(product => {
     const savedCard = document.querySelector(`.saved-item-card[data-product-id="${product.id}"]`);
@@ -776,10 +877,11 @@ async function loadSavedImagesFromCloudinary(savedProducts) {
     
     if (!imgElement) return;
     
+    const directImgs = Array.isArray(product.images) ? product.images : [];
     const productImages = imagesData[product.id] || [];
-    const imageUrls = productImages.length > 0 
-      ? productImages.map(img => img.url)
-      : [];
+    const imageUrls = directImgs.length > 0
+      ? directImgs
+      : productImages.map(img => img.url);
     
     let savedError = savedImgContainer?.querySelector('.saved-img-error');
     
@@ -855,19 +957,30 @@ async function loadSavedImagesFromCloudinary(savedProducts) {
   });
 }
 
-// Funkcija za učitavanje i parsiranje product.json
+// Funkcija za učitavanje proizvoda iz backend API-ja (keširano u jednoj sesiji)
+let __productsDataPromise = null;
 async function loadProductsData() {
-  try {
-    const response = await fetch('/json/product.json');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const products = await response.json();
-    return products;
-  } catch (error) {
-    console.error('Error loading product.json:', error);
-    return [];
+  if (window.productJsonPromise) {
+    try {
+      const preloaded = await window.productJsonPromise;
+      if (Array.isArray(preloaded)) return preloaded;
+      if (preloaded && Array.isArray(preloaded.products)) return preloaded.products;
+    } catch (e) {}
   }
+  if (!__productsDataPromise) {
+    __productsDataPromise = fetch('/api/products?limit=1000')
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+      })
+      .then((data) => (Array.isArray(data) ? data : (data.products || [])))
+      .catch((error) => {
+        console.error('Error loading products:', error);
+        __productsDataPromise = null;
+        return [];
+      });
+  }
+  return __productsDataPromise;
 }
 
 // Funkcija za kreiranje strukture category iz JSON podataka
@@ -903,10 +1016,16 @@ function slugify(value) {
     .toLowerCase();
 }
 
+function formatCategoryLabel(str) {
+  if (!str) return "";
+  const s = String(str).trim();
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 function parseCategories(products) {
   const categoryMap = {};
 
-  // Mapiranje category na ikonice (koriste se srpski nazivi kategorija)
+  // Mapiranje category na ikonice
   const categoryIcons = {
     "Hrana za kućne ljubimce": "restaurant",
     "Igračke za kućne ljubimce": "toys",
@@ -923,25 +1042,42 @@ function parseCategories(products) {
   };
 
   products.forEach(product => {
-    const { category, subcategory, type } = product;
+    const rawCats = Array.isArray(product.category) ? product.category : [product.category].filter(Boolean);
+    const rawSubs = Array.isArray(product.subcategory) ? product.subcategory : [product.subcategory].filter(Boolean);
+    const rawSub2s = Array.isArray(product.subcategory2)
+      ? product.subcategory2
+      : [product.type || product.subcategory2].filter(Boolean);
 
-    if (!categoryMap[category]) {
-      categoryMap[category] = {
-        icon: categoryIcons[category] || "category",
-        dataAttr: categoryDataAttrs[category] || category.toLowerCase().replace(/\s+/g, ''),
-        subcategories: {}
-      };
-    }
+    rawCats.forEach(rawCat => {
+      const category = formatCategoryLabel(rawCat);
+      if (!category) return;
 
-    if (subcategory && !categoryMap[category].subcategories[subcategory]) {
-      categoryMap[category].subcategories[subcategory] = {
-        subcategories2: new Set()
-      };
-    }
+      if (!categoryMap[category]) {
+        categoryMap[category] = {
+          icon: categoryIcons[category] || "pets",
+          dataAttr: categoryDataAttrs[category] || slugify(category).replace(/-/g, ''),
+          subcategories: {}
+        };
+      }
 
-    if (type && subcategory) {
-      categoryMap[category].subcategories[subcategory].subcategories2.add(type);
-    }
+      rawSubs.forEach(rawSub => {
+        const subcategory = formatCategoryLabel(rawSub);
+        if (!subcategory) return;
+
+        if (!categoryMap[category].subcategories[subcategory]) {
+          categoryMap[category].subcategories[subcategory] = {
+            subcategories2: new Set()
+          };
+        }
+
+        rawSub2s.forEach(rawSub2 => {
+          const sub2Label = formatCategoryLabel(rawSub2);
+          if (sub2Label) {
+            categoryMap[category].subcategories[subcategory].subcategories2.add(sub2Label);
+          }
+        });
+      });
+    });
   });
 
   return categoryMap;
@@ -2254,10 +2390,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       // (N-1) * stagger + animation_duration (300ms) + buffer
       const totalAnimationTime = (savedCards.length > 0 ? (savedCards.length - 1) * 70 : 0) + 300;
 
-      setTimeout(() => {
-        // Move items to cart logic
+      setTimeout(async () => {
+        // Move items to cart logic with default variant
+        const allProducts = await loadProductsData();
+        const productById = {};
+        allProducts.forEach(p => { productById[p.id] = p; });
         savedItems.forEach(id => {
-          addToCart(id, 1);
+          const defaultVar = getDefaultVariantLabel(productById[id]);
+          addToCart(id, 1, defaultVar);
         });
 
         // Clear saved items
@@ -2297,5 +2437,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       }, totalAnimationTime);
     });
+  }
+
+  // Reload button on 404 page (without inline onclick for CSP security)
+  const reloadPageBtn = document.getElementById("reloadPageBtn");
+  if (reloadPageBtn) {
+    reloadPageBtn.addEventListener("click", () => window.location.reload());
   }
 });

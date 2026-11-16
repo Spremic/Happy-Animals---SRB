@@ -117,6 +117,16 @@ function getSelectionFromUrl() {
   };
 }
 
+function toValArray(v) {
+  if (Array.isArray(v)) return v.filter(Boolean);
+  return v ? [v] : [];
+}
+
+function firstVal(v) {
+  if (Array.isArray(v)) return v[0] || "";
+  return v || "";
+}
+
 function filterBySelection(products, selection) {
   const { slugCat, slugSub, slugSub2 } = selection;
   // Normalize URL slugs before comparison
@@ -124,50 +134,61 @@ function filterBySelection(products, selection) {
   const normalizedSub = slugSub ? slugify(slugSub) : "";
   const normalizedSub2 = slugSub2 ? slugify(slugSub2) : "";
   
-  console.log("🔍 FILTERING:", {
-    urlSlugs: { slugCat, slugSub, slugSub2 },
-    normalized: { normalizedCat, normalizedSub, normalizedSub2 }
-  });
-  
   const filtered = products.filter((p) => {
-    const pCat = slugify(p.category || "");
-    const pSub = slugify(p.subcategory || "");
-    const pSub2 = slugify(p.type || "");
-    const matchCat = !normalizedCat || pCat === normalizedCat;
-    const matchSub = !normalizedSub || pSub === normalizedSub;
-    const matchSub2 = !normalizedSub2 || pSub2 === normalizedSub2;
+    const cats = toValArray(p.category).map(c => slugify(c));
+    const subs = toValArray(p.subcategory).map(s => slugify(s));
+    const sub2s = toValArray(p.subcategory2 && p.subcategory2.length ? p.subcategory2 : p.type).map(t => slugify(t));
+    const matchCat = !normalizedCat || cats.includes(normalizedCat);
+    const matchSub = !normalizedSub || subs.includes(normalizedSub);
+    const matchSub2 = !normalizedSub2 || sub2s.includes(normalizedSub2);
     
     return matchCat && matchSub && matchSub2;
   });
   
-  console.log(`📊 Found ${filtered.length} products out of ${products.length} total`);
   return filtered;
 }
-
-// pickImage is defined in clone.js which loads before this file
 
 // formatPrice is defined in clone.js and returns a number/string for calculations
 // This function is for HTML display only in custom-page
 function formatPriceForDisplay(product) {
-  const price = product.salePrice && product.salePrice !== '/' ? product.salePrice : product.price;
-  const formattedPrice = formatPriceString(price);
+  const variantsList = Array.isArray(product.variants) && product.variants.length > 0 ? product.variants : [];
+  const variantPrices = variantsList.map(v => parseFloat(v.price)).filter(n => !isNaN(n) && n > 0);
+  const basePrice = parseFloat(product.price) || 0;
+  const minPrice = variantPrices.length ? Math.min(...variantPrices) : basePrice;
+  const maxPrice = variantPrices.length ? Math.max(...variantPrices) : minPrice;
+  if (maxPrice > minPrice) {
+    return `<div class="price-range">od ${formatPriceString(minPrice)} RSD</div>`;
+  }
+  const formattedPrice = formatPriceString(minPrice);
   return `<div class="price-range">${formattedPrice} RSD</div>`;
 }
 
 function createProductCard(product) {
   const card = document.createElement("div");
   card.className = "product-card";
-  card.setAttribute("data-category", product.category);
-  card.setAttribute("data-subcategory", product.subcategory);
-  card.setAttribute("data-subcategory2", product.type || "");
+  card.setAttribute("data-category", firstVal(product.category));
+  card.setAttribute("data-subcategory", firstVal(product.subcategory));
+  card.setAttribute("data-subcategory2", firstVal(product.subcategory2 && product.subcategory2.length ? product.subcategory2 : product.type));
   card.setAttribute("data-product-id", product.id);
 
-  const hasDiscount = product.salePrice && product.salePrice !== '/' && product.percentage && product.percentage !== '/' && product.percentage !== '0%';
-  const badge = hasDiscount ? `<div class="product-badge">-${product.percentage}</div>` : "";
-  const oldPriceOnImage = hasDiscount ? `<div class="product-old-price-on-image">${formatPriceString(product.price)} RSD</div>` : "";
+  const variantsList = Array.isArray(product.variants) && product.variants.length > 0 ? product.variants : [];
+  const firstVar = variantsList[0] || null;
+  const defaultVariant = firstVar ? String(firstVar.label || "").trim() : ((Array.isArray(product.sizes) && product.sizes[0]) || "");
+  const escVar = defaultVariant.replace(/"/g, "&quot;");
+  const curPrice = firstVar ? (Number(firstVar.price) || parseFloat(product.price) || 0) : (parseFloat(product.price) || 0);
+  const rawOld = firstVar ? firstVar.oldPrice : product.oldPrice;
+  const oldPriceVal = rawOld && Number(rawOld) > curPrice ? Number(rawOld) : null;
+  const hasDiscount = Boolean(oldPriceVal && curPrice > 0);
+  const discPct = hasDiscount ? `${Math.round(((oldPriceVal - curPrice) / oldPriceVal) * 100)}%` : "";
+  const badge = hasDiscount ? `<div class="product-badge">-${discPct}</div>` : "";
+  const oldPriceOnImage = hasDiscount ? `<div class="product-old-price-on-image">${formatPriceString(oldPriceVal)} RSD</div>` : "";
+  const variantLabelsText = variantsList.length
+    ? variantsList.slice(0, 3).map(v => v.label).join(" / ")
+    : (Array.isArray(product.sizes) && product.sizes.length ? product.sizes.slice(0, 3).join(" / ") : "");
+  const brandLine = [product.brand || "", variantLabelsText].filter(Boolean).join(" • ");
   
-  // Create slug from product title for URL
-  const productSlug = slugify(product.title);
+  // Use slug from DB if present, else slugify product title
+  const productSlug = product.slug || slugify(product.title);
   const productUrl = `/${productSlug}`;
 
   card.innerHTML = `
@@ -195,18 +216,18 @@ function createProductCard(product) {
       </div>
     </div>
     <div class="product-info">
-      <div class="product-brand">${product.brand || ""}</div>
+      <div class="product-brand">${brandLine}</div>
       <h3 class="product-title">${product.title}</h3>
       <div class="product-price">
         ${formatPriceForDisplay(product)}
       </div>
       <p class="product-description">${product.description || ""}</p>
       <div class="product-buttons">
-        <button class="import-btn" data-product-url="${productUrl}">
+        <button class="import-btn" data-product-url="${productUrl}" data-default-variant="${escVar}">
           <span class="material-symbols-outlined">shopping_bag</span>
           Buy Now
         </button>
-        <button class="cart-icon-btn" data-product-id="${product.id}">
+        <button class="cart-icon-btn" data-product-id="${product.id}" data-default-variant="${escVar}">
           <span class="material-symbols-outlined">add_shopping_cart</span>
         </button>
       </div>
@@ -227,9 +248,10 @@ function createProductCard(product) {
   if (buyNowBtn) {
     buyNowBtn.addEventListener("click", function(e) {
       e.stopPropagation();
+      const defaultVar = buyNowBtn.getAttribute("data-default-variant") || "";
       // Add product to cart
       if (typeof addToCart !== 'undefined') {
-        addToCart(product.id);
+        addToCart(product.id, 1, defaultVar);
       }
       // Redirect to shopping cart
       window.location.href = '/shopping-cart';
@@ -386,8 +408,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   const resolveName = (field, slugValue) => {
     if (!slugValue) return "";
     const normalizedSlug = slugify(slugValue);
-    const found = allProducts.find((p) => slugify(p[field] || "") === normalizedSlug);
-    return found ? found[field] : decodeSlug(slugValue);
+    for (const p of allProducts) {
+      const vals = toValArray(field === "type" && (!p.type || p.type === "") ? p.subcategory2 : p[field]);
+      const match = vals.find((v) => slugify(v) === normalizedSlug);
+      if (match) return match.charAt(0).toUpperCase() + match.slice(1);
+    }
+    return decodeSlug(slugValue);
   };
 
   const updateBreadcrumbs = () => {
@@ -475,13 +501,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     products.forEach(product => {
       // Extract subcategory only if we're on a category page (no slugSub)
-      if (!selection.slugSub && product.subcategory) {
-        options.subcategory.add(product.subcategory);
+      if (!selection.slugSub) {
+        toValArray(product.subcategory).forEach(s => options.subcategory.add(s.charAt(0).toUpperCase() + s.slice(1)));
       }
       
       // Extract type only if we're on a subcategory page (no slugSub2)
-      if (!selection.slugSub2 && product.type) {
-        options.type.add(product.type);
+      if (!selection.slugSub2) {
+        toValArray(product.subcategory2 && product.subcategory2.length ? product.subcategory2 : product.type)
+          .forEach(t => options.type.add(t.charAt(0).toUpperCase() + t.slice(1)));
       }
       
       // Extract brand (always)
@@ -490,7 +517,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
       
       // Extract price
-      const price = parseFloat(product.salePrice && product.salePrice !== '/' ? product.salePrice : product.price);
+      const price = parseFloat(product.price);
       if (!isNaN(price)) {
         options.prices.push(price);
       }
@@ -770,9 +797,15 @@ document.addEventListener("DOMContentLoaded", async function () {
       const haystack = [
         p.title,
         p.brand,
-        p.category,
-        p.subcategory,
-        p.type
+        ...toValArray(p.category),
+        ...toValArray(p.subcategory),
+        ...toValArray(p.subcategory2),
+        p.type,
+        ...toValArray(p.petType),
+        p.flavor,
+        p.lifeStage,
+        ...toValArray(p.specialDiet),
+        ...toValArray(p.sizes)
       ]
         .filter(Boolean)
         .join(" ")
@@ -795,15 +828,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     if (filters.subcategory.length > 0) {
       products = products.filter(p => {
-        const pSub = slugify(p.subcategory || '');
-        return filters.subcategory.includes(pSub);
+        const subs = toValArray(p.subcategory).map(s => slugify(s));
+        return subs.some(s => filters.subcategory.includes(s));
       });
     }
     
     if (filters.type.length > 0) {
       products = products.filter(p => {
-        const pType = slugify(p.type || '');
-        return filters.type.includes(pType);
+        const types = toValArray(p.subcategory2 && p.subcategory2.length ? p.subcategory2 : p.type).map(t => slugify(t));
+        return types.some(t => filters.type.includes(t));
       });
     }
     
@@ -816,11 +849,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     if (filters.priceRange.length > 0) {
       products = products.filter(p => {
-        const price = parseFloat(p.salePrice && p.salePrice !== '/' ? p.salePrice : p.price);
-        if (isNaN(price)) return false;
+        const basePrice = parseFloat(p.price);
+        const varPrices = Array.isArray(p.variants)
+          ? p.variants.map(v => parseFloat(v.price)).filter(n => !isNaN(n) && n > 0)
+          : [];
+        const allPrices = !isNaN(basePrice) ? [basePrice, ...varPrices] : varPrices;
+        if (!allPrices.length) return false;
         return filters.priceRange.some(range => {
           const [min, max] = range.split('-').map(v => v === 'Infinity' ? Infinity : parseFloat(v));
-          return price >= min && price <= max;
+          return allPrices.some(pr => pr >= min && pr <= max);
         });
       });
     }
@@ -1020,9 +1057,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     
     console.log("✅ Rendering completed. Added cards:", productsGrid.children.length);
 
-    // Fetch images in batch (optimized)
-    const productIds = listToRender.map(p => p.id);
-    const imagesData = await fetchProductImagesBatch(productIds);
+    // Use images directly from API response, fallback to batch only if missing
+    const productById = {};
+    listToRender.forEach(p => { productById[p.id] = p; });
+    const missingIds = listToRender
+      .filter(p => !Array.isArray(p.images) || p.images.length === 0)
+      .map(p => p.id);
+    const imagesData = missingIds.length > 0 ? await fetchProductImagesBatch(missingIds) : {};
+    listToRender.forEach(p => {
+      if (Array.isArray(p.images) && p.images.length > 0) {
+        imagesData[p.id] = p.images.map(u => ({ url: u }));
+      }
+    });
     
     // Update images when loaded
     updateProductImages(imagesData);
@@ -1137,7 +1183,11 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Get unique main categories from products and populate hero categories
   async function populateHeroCategories() {
     const allProducts = await loadProductsData();
-    const uniqueCategories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+    const catSet = new Set();
+    allProducts.forEach(p => {
+      toValArray(p.category).forEach(c => catSet.add(c.charAt(0).toUpperCase() + c.slice(1)));
+    });
+    const uniqueCategories = [...catSet];
     const topCategories = uniqueCategories.slice(0, 4);
     
     const heroCategoryItems = document.querySelectorAll(".hero-category-item");
@@ -1287,13 +1337,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Prevent event bubbling
     e.stopPropagation();
     
-    // Get product ID
+    // Get product ID & default variant
     const productId = addToCartButton.getAttribute("data-product-id");
     if (!productId) return;
+    const defaultVar = addToCartButton.getAttribute("data-default-variant") || "";
     
     // Add to cart using localStorage
     if (typeof addToCart !== 'undefined') {
-      addToCart(productId);
+      addToCart(productId, 1, defaultVar);
     }
     
     // Find cart icon each time (in case header loads after this script)

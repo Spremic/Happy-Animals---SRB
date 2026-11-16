@@ -123,37 +123,146 @@
         <!-- Right Column: Product Details -->
         <div class="product-details reveal-right">
           <% if (product) { %>
+            <%
+              const rawVariants = Array.isArray(product.variants) && product.variants.length > 0
+                ? product.variants
+                : (Array.isArray(product.sizes)
+                    ? product.sizes.filter(Boolean).map(s => ({
+                        label: s,
+                        price: Number(product.price) || 0,
+                        oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
+                        stock: Number(product.stock) || 0
+                      }))
+                    : []);
+              const activeVariant = rawVariants[0] || null;
+              const curPrice = activeVariant ? (Number(activeVariant.price) || Number(product.price) || 0) : (Number(product.price) || 0);
+              const rawOld = activeVariant ? activeVariant.oldPrice : product.oldPrice;
+              const oldPriceVal = rawOld && Number(rawOld) > curPrice ? Number(rawOld) : null;
+              const discPct = oldPriceVal ? Math.round(((oldPriceVal - curPrice) / oldPriceVal) * 100) + '%' : '';
+              const savingsVal = oldPriceVal ? Math.round(oldPriceVal - curPrice) : 0;
+              const variantTypeLabels = {
+                kg: 'Težina / Pakovanje:',
+                size: 'Veličina:',
+                volume: 'Zapremina:',
+                pieces: 'Pakovanje:',
+                custom: 'Varijanta:'
+              };
+              const variantTitle = variantTypeLabels[product.variantType] || 'Pakovanje / Veličina:';
+              const initStock = activeVariant && typeof activeVariant.stock === 'number'
+                ? activeVariant.stock
+                : (Number(product.stock) || 0);
+              const petTypesList = Array.isArray(product.petType) ? product.petType.filter(Boolean) : [];
+              const specialDietList = Array.isArray(product.specialDiet) ? product.specialDiet.filter(Boolean) : [];
+              const colorHexMap = {
+                crvena: '#d32f2f', plava: '#1976d2', zelena: '#2e7d32', crna: '#1c1c1c',
+                bela: '#f5f5f5', zuta: '#fbc02d', 'žuta': '#fbc02d', roze: '#ec407a',
+                ljubicasta: '#7b1fa2', 'ljubičasta': '#7b1fa2', siva: '#757575', braon: '#6d4c41',
+                narandzasta: '#f57c00', 'narandžasta': '#f57c00', bez: '#d7ccc8', 'bež': '#d7ccc8'
+              };
+            %>
             <div class="product-header">
-              <% if (product.percentage && product.percentage !== '/' && product.salePrice && product.salePrice !== '/') { %>
-                <div class="discount-label reveal delay-100">-<%= product.percentage %></div>
-              <% } %>
+              <div class="discount-label reveal delay-100" id="productDiscountLabel" <% if (!discPct) { %>style="display: none;"<% } %>><%= discPct ? `-${discPct}` : '' %></div>
               
               <h1 class="product-title reveal delay-100"><%= product.title %></h1>
+
+              <% if (petTypesList.length || product.lifeStage || product.flavor || specialDietList.length) { %>
+                <div class="pet-meta-badges reveal delay-100">
+                  <% if (petTypesList.length) { %>
+                    <span class="pet-meta-badge">Ljubimac: <%= petTypesList.join(', ') %></span>
+                  <% } %>
+                  <% if (product.lifeStage) { %>
+                    <span class="pet-meta-badge">Uzrast: <%= product.lifeStage %></span>
+                  <% } %>
+                  <% if (product.flavor) { %>
+                    <span class="pet-meta-badge">Ukus: <%= product.flavor %></span>
+                  <% } %>
+                  <% specialDietList.forEach((diet) => { %>
+                    <span class="pet-meta-badge diet"><%= diet %></span>
+                  <% }); %>
+                </div>
+              <% } %>
               
               <div class="product-price-wrapper reveal delay-200">
-                <% if (product.salePrice && product.salePrice !== '/') { %>
-                  <div class="price-container">
-                    <% if (product.price && product.price !== '/') { %>
-                      <div class="original-price">
-                        <span class="original-amount"><%= formatPriceString(product.price) %></span>
-                        <span class="original-currency">RSD</span>
-                      </div>
-                    <% } %>
-                    <div class="current-price">
-                      <span class="price-amount"><%= formatPriceString(product.salePrice) %></span>
-                      <span class="price-currency">RSD</span>
-                    </div>
+                <div class="price-container">
+                  <div class="original-price" id="productOriginalPriceRow" <% if (!oldPriceVal) { %>style="display: none;"<% } %>>
+                    <span class="original-amount" id="productOriginalAmount"><%= oldPriceVal ? formatPriceString(oldPriceVal) : '' %></span>
+                    <span class="original-currency">RSD</span>
                   </div>
-                <% } else { %>
-                  <div class="price-container">
-                    <div class="current-price">
-                      <span class="price-amount"><%= formatPriceString(product.price) %></span>
-                      <span class="price-currency">RSD</span>
-                    </div>
+                  <div class="current-price">
+                    <span class="price-amount" id="productPriceAmount"><%= formatPriceString(curPrice) %></span>
+                    <span class="price-currency">RSD</span>
                   </div>
-                <% } %>
+                  <div class="savings-hint" id="productSavingsHint" <% if (!savingsVal) { %>style="display: none;"<% } %>>
+                    <%= savingsVal ? `Ušteda: ${formatPriceString(savingsVal)} RSD` : '' %>
+                  </div>
+                </div>
               </div>
             </div>
+
+            <% if (rawVariants.length > 0) { %>
+              <div class="product-option reveal delay-200" id="variantSelectorGroup">
+                <div class="option-header">
+                  <span class="option-title"><%= variantTitle %></span>
+                  <span class="stock-warning <%= initStock === 0 ? 'out-of-stock' : (initStock <= 5 ? 'low-stock' : '') %>" id="variantStockStatus">
+                    <%= initStock > 0 ? (initStock <= 5 ? `Još samo ${initStock} na stanju` : 'Na stanju') : 'Trenutno nema na stanju' %>
+                  </span>
+                </div>
+                <div class="size-options" id="variantOptions">
+                  <% rawVariants.forEach((v, idx) => { %>
+                    <%
+                      const vPrice = Number(v.price) || curPrice;
+                      const vOld = v.oldPrice && Number(v.oldPrice) > vPrice ? Number(v.oldPrice) : '';
+                      const vStock = typeof v.stock === 'number' ? v.stock : (Number(product.stock) || 0);
+                    %>
+                    <button
+                      type="button"
+                      class="size-btn <%= idx === 0 ? 'active' : '' %>"
+                      data-size="<%= v.label %>"
+                      data-variant-label="<%= v.label %>"
+                      data-variant-price="<%= vPrice %>"
+                      data-variant-oldprice="<%= vOld %>"
+                      data-variant-stock="<%= vStock %>"
+                    >
+                      <%= v.label %>
+                    </button>
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+
+            <%
+              const normalizedColors = Array.isArray(product.colors)
+                ? product.colors
+                    .map((c) => {
+                      const label = typeof c === 'string' ? c.trim() : String((c && (c.name || c.label)) || '').trim();
+                      const rawHex = typeof c === 'object' && c ? String(c.hex || c.code || '').trim() : '';
+                      const bgCol = (rawHex && rawHex !== '#2c2527' && rawHex.startsWith('#'))
+                        ? rawHex
+                        : (label.startsWith('#') ? label : (colorHexMap[label.toLowerCase()] || rawHex || '#4b5563'));
+                      return label ? { label, bgCol } : null;
+                    })
+                    .filter(Boolean)
+                : [];
+            %>
+            <% if (normalizedColors.length > 0) { %>
+              <div class="product-option reveal delay-200" id="colorSelectorGroup">
+                <div class="option-header">
+                  <span class="option-title">Boja / Varijanta izgleda:</span>
+                  <span class="stock-warning" id="selectedColorName"><%= normalizedColors[0].label %></span>
+                </div>
+                <div class="color-options">
+                  <% normalizedColors.forEach((cObj, idx) => { %>
+                    <button
+                      type="button"
+                      class="color-btn <%= idx === 0 ? 'active' : '' %>"
+                      data-color="<%= cObj.label %>"
+                      title="<%= cObj.label %>"
+                      style="background-color: <%= cObj.bgCol %>;"
+                    ></button>
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
 
             <!-- Description -->
             <div class="product-description reveal delay-300">
@@ -182,7 +291,7 @@
 
           <!-- Action Buttons -->
           <div class="product-actions reveal delay-400">
-            <button class="btn-buy-now">
+            <button class="btn-buy-now" <% if (product && product.id) { %>data-product-id="<%= product.id %>"<% } %>>
               <span class="material-symbols-outlined">shopping_cart</span>
               Kupi sada
             </button>
@@ -205,6 +314,16 @@
         <h2 class="specifications-title reveal">Specifikacije</h2>
         <div class="specifications-content">
           <% if (product) { %>
+            <%
+              const specPetTypes = Array.isArray(product.petType) ? product.petType.filter(Boolean).join(', ') : '';
+              const specSpecialDiet = Array.isArray(product.specialDiet) ? product.specialDiet.filter(Boolean).join(', ') : '';
+              const specVariants = Array.isArray(product.variants) && product.variants.length > 0
+                ? product.variants.map(v => `${v.label} (${formatPriceString(v.price)} RSD)`).join(' • ')
+                : (Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes.join(', ') : '');
+              const catDisp = Array.isArray(product.category) ? product.category.join(', ') : product.category;
+              const subDisp = Array.isArray(product.subcategory) ? product.subcategory.join(', ') : product.subcategory;
+              const typeDisp = Array.isArray(product.subcategory2) && product.subcategory2.length ? product.subcategory2.join(', ') : product.type;
+            %>
             <% if (product.brand) { %>
               <div class="spec-item reveal delay-100">
                 <div class="spec-label-wrapper">
@@ -215,48 +334,107 @@
                 </div>
               </div>
             <% } %>
-            <% if (product.technicalData && product.technicalData.labels) { %>
+            <% if (specPetTypes) { %>
+              <div class="spec-item reveal delay-100">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Namenjeno za:</span>
+                </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= specPetTypes %></span>
+                </div>
+              </div>
+            <% } %>
+            <% if (product.lifeStage) { %>
+              <div class="spec-item reveal delay-100">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Uzrast ljubimca:</span>
+                </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= product.lifeStage %></span>
+                </div>
+              </div>
+            <% } %>
+            <% if (product.flavor) { %>
+              <div class="spec-item reveal delay-100">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Ukus / Sastojak:</span>
+                </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= product.flavor %></span>
+                </div>
+              </div>
+            <% } %>
+            <% if (specSpecialDiet) { %>
+              <div class="spec-item reveal delay-200">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Posebne karakteristike:</span>
+                </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= specSpecialDiet %></span>
+                </div>
+              </div>
+            <% } %>
+            <% if (specVariants) { %>
+              <div class="spec-item reveal delay-200">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Pakovanja i cene:</span>
+                </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= specVariants %></span>
+                </div>
+              </div>
+            <% } %>
+            <% if (product.technicalData && Array.isArray(product.technicalData.labels) && product.technicalData.labels.length > 0) { %>
               <% product.technicalData.labels.forEach((label, index) => { %>
                 <div class="spec-item reveal delay-<%= Math.floor(index / 3) + 1 %>00">
                   <div class="spec-label-wrapper">
                     <span class="spec-label"><%= label %></span>
                   </div>
                   <div class="spec-value-wrapper">
-                    <span class="spec-value"><%= product.technicalData.features[index] || 'N/A' %></span>
+                    <span class="spec-value"><%= (product.technicalData.features && product.technicalData.features[index]) || 'N/A' %></span>
                   </div>
                 </div>
               <% }); %>
-            <% } else { %>
-              <% if (product.category) { %>
-                <div class="spec-item reveal delay-100">
-                  <div class="spec-label-wrapper">
-                    <span class="spec-label">Kategorija:</span>
-                  </div>
-                  <div class="spec-value-wrapper">
-                    <span class="spec-value"><%= product.category %></span>
-                  </div>
+            <% } %>
+            <% if (catDisp) { %>
+              <div class="spec-item reveal delay-200">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Kategorija:</span>
                 </div>
-              <% } %>
-              <% if (product.subcategory) { %>
-                <div class="spec-item reveal delay-200">
-                  <div class="spec-label-wrapper">
-                    <span class="spec-label">Potkategorija:</span>
-                  </div>
-                  <div class="spec-value-wrapper">
-                    <span class="spec-value"><%= product.subcategory %></span>
-                  </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= catDisp %></span>
                 </div>
-              <% } %>
-              <% if (product.type) { %>
-                <div class="spec-item reveal delay-200">
-                  <div class="spec-label-wrapper">
-                    <span class="spec-label">Tip:</span>
-                  </div>
-                  <div class="spec-value-wrapper">
-                    <span class="spec-value"><%= product.type %></span>
-                  </div>
+              </div>
+            <% } %>
+            <% if (subDisp) { %>
+              <div class="spec-item reveal delay-200">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Potkategorija:</span>
                 </div>
-              <% } %>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= subDisp %></span>
+                </div>
+              </div>
+            <% } %>
+            <% if (typeDisp) { %>
+              <div class="spec-item reveal delay-200">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Tip proizvoda:</span>
+                </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= typeDisp %></span>
+                </div>
+              </div>
+            <% } %>
+            <% if (product.material) { %>
+              <div class="spec-item reveal delay-200">
+                <div class="spec-label-wrapper">
+                  <span class="spec-label">Materijal / Sastav:</span>
+                </div>
+                <div class="spec-value-wrapper">
+                  <span class="spec-value"><%= product.material %></span>
+                </div>
+              </div>
             <% } %>
           <% } else { %>
             <div class="spec-item reveal delay-100">

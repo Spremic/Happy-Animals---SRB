@@ -123,17 +123,21 @@ async function renderCartItems() {
     if (!product) return;
     
     const quantity = cartItem.quantity || 1;
-    // Use formatPrice from clone.js, but ensure it returns a number
-    const priceValue = product.salePrice && product.salePrice !== '/' ? product.salePrice : product.price;
-    const price = parseFloat(priceValue) || 0;
+    const resolvedVar = typeof resolveProductVariant === 'function'
+      ? resolveProductVariant(product, cartItem.variant)
+      : { label: cartItem.variant || '', price: parseFloat(formatPrice(product)) || 0 };
+    const price = parseFloat(resolvedVar.price) || 0;
+    const variantLabel = String(cartItem.variant || resolvedVar.label || '').trim();
+    const escVar = variantLabel.replace(/"/g, '&quot;');
+    const brandVariantText = [product.brand || '', variantLabel ? `<strong>${variantLabel}</strong>` : ''].filter(Boolean).join(' • ');
     const itemTotal = price * quantity;
     total += itemTotal;
     totalItems += quantity;
     const productSlug = slugify(product.title);
     
     html += `
-      <div class="order-item" data-product-id="${product.id}">
-        <button class="remove-item" aria-label="Ukloni proizvod" data-product-id="${product.id}">×</button>
+      <div class="order-item" data-product-id="${product.id}" data-variant="${escVar}">
+        <button class="remove-item" aria-label="Ukloni proizvod" data-product-id="${product.id}" data-variant="${escVar}">×</button>
         <div class="item-image">
           <div class="item-image-skeleton"></div>
           <div class="item-image-error" style="display: none;">
@@ -143,13 +147,13 @@ async function renderCartItems() {
         </div>
         <div class="item-info">
           <h4 class="item-title">${product.title}</h4>
-          <p class="item-brand">${product.brand || ''}</p>
+          <p class="item-brand">${brandVariantText}</p>
           <div class="item-footer">
             <span class="item-price">${formatPriceNumber(itemTotal)} RSD</span>
             <div class="quantity-controls">
-              <button class="quantity-btn minus" aria-label="Smanji količinu" data-product-id="${product.id}">-</button>
-              <span class="quantity" data-product-id="${product.id}">${quantity}</span>
-              <button class="quantity-btn plus" aria-label="Povećaj količinu" data-product-id="${product.id}">+</button>
+              <button class="quantity-btn minus" aria-label="Smanji količinu" data-product-id="${product.id}" data-variant="${escVar}">-</button>
+              <span class="quantity" data-product-id="${product.id}" data-variant="${escVar}">${quantity}</span>
+              <button class="quantity-btn plus" aria-label="Povećaj količinu" data-product-id="${product.id}" data-variant="${escVar}">+</button>
             </div>
           </div>
         </div>
@@ -163,7 +167,7 @@ async function renderCartItems() {
   if (productCount) productCount.textContent = uniqueProducts;
   if (orderTotal) orderTotal.textContent = `Ukupno: ${formatPriceNumber(total)} RSD`;
   
-  // Fetch images from Cloudinary and update
+  // Use local images already present in API product data, fallback to batch only if missing
   if (validCartItems.length > 0) {
     loadShoppingCartImagesFromCloudinary(validCartItems, productMap);
   }
@@ -178,15 +182,17 @@ function attachCartEventHandlers() {
   document.querySelectorAll('.quantity-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const productId = this.getAttribute('data-product-id');
-      const quantitySpan = document.querySelector(`.quantity[data-product-id="${productId}"]`);
-      let quantity = parseInt(quantitySpan.textContent);
+      const variant = this.getAttribute('data-variant') || '';
+      const orderItem = this.closest('.order-item');
+      const quantitySpan = orderItem?.querySelector('.quantity');
+      let quantity = parseInt(quantitySpan?.textContent || '1', 10) || 1;
       
       if (this.classList.contains('plus')) {
         quantity++;
-        updateCartQuantity(productId, quantity);
+        updateCartQuantity(productId, quantity, variant);
       } else if (this.classList.contains('minus') && quantity > 1) {
         quantity--;
-        updateCartQuantity(productId, quantity);
+        updateCartQuantity(productId, quantity, variant);
       }
       
       // Re-render to update prices
@@ -199,6 +205,7 @@ function attachCartEventHandlers() {
     btn.addEventListener('click', function(e) {
       e.stopPropagation();
       const productId = this.getAttribute('data-product-id');
+      const variant = this.getAttribute('data-variant') || '';
       const orderItem = this.closest('.order-item');
       const orderDetails = document.querySelector('.order-details');
       
@@ -214,12 +221,12 @@ function attachCartEventHandlers() {
           performFlipDelete(
             orderDetails,
             orderItem,
-            () => removeFromCart(productId), // Update Data
-            () => renderCartItems()          // Update UI
+            () => removeFromCart(productId, variant), // Update Data
+            () => renderCartItems()                   // Update UI
           );
         } else {
           // Fallback: simple removal and re-render
-          removeFromCart(productId);
+          removeFromCart(productId, variant);
           renderCartItems();
         }
       }, 300); // Match animation duration
@@ -284,17 +291,24 @@ async function fetchProductImagesBatch(productIds) {
   }
 }
 
-// Load shopping cart images from Cloudinary
+// Load shopping cart images (uses local /uploads WebP URLs directly, falls back to batch API if needed)
 async function loadShoppingCartImagesFromCloudinary(cartItems, productMap) {
-  const productIds = cartItems.map(item => item.id);
-  const imagesData = await fetchProductImagesBatch(productIds);
+  const missingIds = cartItems
+    .filter(ci => {
+      const p = productMap[ci.id];
+      return !p || !Array.isArray(p.images) || p.images.length === 0;
+    })
+    .map(ci => ci.id);
+  const imagesData = missingIds.length > 0 ? await fetchProductImagesBatch(missingIds) : {};
   
+  const renderedOrderEls = new Set();
   cartItems.forEach(cartItem => {
     const product = productMap[cartItem.id];
     if (!product) return;
     
-    const orderItem = document.querySelector(`.order-item[data-product-id="${product.id}"]`);
+    const orderItem = Array.from(document.querySelectorAll(`.order-item[data-product-id="${product.id}"]`)).find(el => !renderedOrderEls.has(el));
     if (!orderItem) return;
+    renderedOrderEls.add(orderItem);
     
     const imgElement = orderItem.querySelector('.item-image img');
     const skeleton = orderItem.querySelector('.item-image-skeleton');
@@ -302,10 +316,11 @@ async function loadShoppingCartImagesFromCloudinary(cartItems, productMap) {
     
     if (!imgElement) return;
     
+    const directImgs = Array.isArray(product.images) ? product.images : [];
     const productImages = imagesData[product.id] || [];
-    const imageUrls = productImages.length > 0 
-      ? productImages.map(img => img.url)
-      : [];
+    const imageUrls = directImgs.length > 0
+      ? directImgs
+      : productImages.map(img => img.url);
     
     let itemError = itemImageContainer?.querySelector('.item-image-error');
     
@@ -381,8 +396,124 @@ async function loadShoppingCartImagesFromCloudinary(cartItems, productMap) {
   });
 }
 
+// Initialize checkout form submission via /api/send-order & server-side stock validation
+function setupCheckoutSubmission() {
+  const paymentBtns = document.querySelectorAll('.payment-btn');
+  if (!paymentBtns.length) return;
+
+  paymentBtns.forEach(btn => {
+    btn.addEventListener('click', async function () {
+      const form = document.querySelector('.shipping-form');
+      if (form && !form.reportValidity()) {
+        return;
+      }
+
+      const cartItems = typeof getCartItems === 'function' ? getCartItems() : [];
+      if (!cartItems.length) {
+        alert('Vaša korpa je prazna.');
+        return;
+      }
+
+      const firstName = (document.getElementById('firstName')?.value || '').trim();
+      const lastName = (document.getElementById('lastName')?.value || '').trim();
+      const phoneNumber = (document.getElementById('phone')?.value || '').trim();
+      const email = (document.getElementById('email')?.value || '').trim();
+      const postalCode = (document.getElementById('zipCode')?.value || '').trim();
+      const city = (document.getElementById('city')?.value || '').trim();
+      const streetName = (document.getElementById('streetAddress')?.value || '').trim();
+      const apartment = (document.getElementById('apartment')?.value || '').trim();
+      const note = (document.getElementById('notes')?.value || '').trim();
+      const selectedPayment = document.querySelector('input[name="payment"]:checked')?.value || 'cod';
+
+      const payloadItems = cartItems.map(ci => {
+        const p = productMap[ci.id] || {};
+        const resolvedVar = typeof resolveProductVariant === 'function'
+          ? resolveProductVariant(p, ci.variant)
+          : { label: ci.variant || '' };
+        const chosenVariant = String(ci.variant || resolvedVar.label || '').trim();
+        return {
+          id: ci.id,
+          productId: p._id || '',
+          code: p.code || ci.id,
+          slug: p.slug || '',
+          title: p.title || '',
+          variant: chosenVariant,
+          size: chosenVariant,
+          quantity: parseInt(ci.quantity, 10) || 1,
+          image: (Array.isArray(p.images) && p.images[0]) || p.imageUrl || ''
+        };
+      });
+
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Obrada porudžbine...';
+
+      try {
+        const res = await fetch('/api/send-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            phoneNumber,
+            email,
+            streetName,
+            apartment,
+            city,
+            postalCode,
+            note,
+            paymentMethod: selectedPayment,
+            items: payloadItems,
+            acceptTerms: true
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          alert(data.message || 'Greška pri slanju porudžbine. Proverite unete podatke.');
+          btn.disabled = false;
+          btn.textContent = originalText;
+          return;
+        }
+
+        localStorage.setItem('cart', JSON.stringify([]));
+        if (typeof updateCartBadge === 'function') updateCartBadge();
+
+        const orderDetails = document.querySelector('.order-details');
+        if (orderDetails) {
+          const orderNumDisplay = data.orderNumber || data.orderId || '';
+          orderDetails.innerHTML = `
+            <div class="empty-cart-message" style="text-align: center; padding: 50px 20px; color: #e0e0e0;">
+              <span class="material-symbols-outlined" style="font-size: 64px; color: #009900; margin-bottom: 16px; display: block;">check_circle</span>
+              <h3 style="margin-bottom: 10px;">Hvala na porudžbini!</h3>
+              <p style="margin-bottom: 8px;">Broj porudžbine: <strong>#${orderNumDisplay}</strong></p>
+              <p style="margin-bottom: 24px; color: #a0a0a0;">Ukupno za plaćanje: <strong>${formatPriceNumber(data.totalAmount || 0)} RSD</strong>. Potvrda je poslata na vaš email.</p>
+              <a href="/all-products" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #009900, #007700); color: white; text-decoration: none; border-radius: 8px; font-weight: 500;">Nastavi kupovinu</a>
+            </div>
+          `;
+        }
+        const productCount = document.querySelector('.product-count');
+        const orderTotal = document.querySelector('.order-total');
+        if (productCount) productCount.textContent = '0';
+        if (orderTotal) orderTotal.textContent = 'Ukupno: 0.00 RSD';
+        if (form) form.reset();
+      } catch (err) {
+        console.error('Order submission error:', err);
+        alert('Greška u komunikaciji sa serverom. Pokušajte ponovo.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+  });
+}
+
 // Start initialization
 initializeShoppingCart();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupCheckoutSubmission);
+} else {
+  setupCheckoutSubmission();
+}
 
 // Also try after window load as fallback
 window.addEventListener('load', function() {

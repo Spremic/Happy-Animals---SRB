@@ -1036,22 +1036,27 @@
 }
 
 .size-btn {
-  min-width: 50px;
-  height: 50px;
-  padding: 0 20px;
+  min-width: 56px;
+  min-height: 48px;
+  height: auto;
+  padding: 8px 18px;
   background: rgba(255, 255, 255, 0.05);
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   color: #f0f0f0;
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .size-btn:hover {
   background: rgba(0, 153, 0, 0.1);
-  border-color: rgba(0, 153, 0, 0.3);
+  border-color: rgba(0, 153, 0, 0.35);
   transform: translateY(-2px);
 }
 
@@ -1059,7 +1064,48 @@
   background: linear-gradient(135deg, #009900, #007700);
   border-color: #009900;
   color: white;
-  box-shadow: none;
+  box-shadow: 0 4px 14px rgba(0, 153, 0, 0.28);
+}
+
+.pet-meta-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.pet-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #d6f5d6;
+  background: rgba(0, 153, 0, 0.14);
+  border: 1px solid rgba(0, 153, 0, 0.28);
+}
+
+.pet-meta-badge.diet {
+  color: #ffe8a3;
+  background: rgba(255, 193, 7, 0.12);
+  border-color: rgba(255, 193, 7, 0.28);
+}
+
+.savings-hint {
+  font-size: 0.92rem;
+  color: #4ade80;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.stock-warning.low-stock {
+  color: #f59e0b;
+}
+
+.stock-warning.out-of-stock {
+  color: #ef4444;
 }
 
 /* Description */

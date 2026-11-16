@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="sr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Proizvodi | Happy Animals Admin</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    
+    <!-- Google Fonts Matching Storefront -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Classic Admin Styles (0 SCSS, 0 Frameworks) -->
+    <link href="/admin/css/admin.css?v=2.4" rel="stylesheet" />
+    <link href="/admin/css/proizvodi.css?v=3.4" rel="stylesheet" />
+  </head>
+
+  <body id="page-top">
+    <div id="wrapper">
+      <!-- Sidebar -->
+      <ul class="sidebar" id="accordionSidebar"></ul>
+
+      <div id="content-wrapper">
+        <div id="content">
+          <!-- Topbar -->
+          <nav class="topbar mb-4">
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none" title="Meni">
+              <i class="fa fa-bars"></i>
+            </button>
+            <ul class="navbar-nav ml-auto">
+              <div class="topbar-divider d-none d-sm-block"></div>
+              <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="mr-2 d-none d-lg-inline text-muted small font-weight-bold">Admin</span>
+                  <img class="img-profile" src="/admin/img/avatar.jpg" alt="Avatar" />
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                  <a class="dropdown-item" href="/logout" id="logoutBTN">
+                    <i class="fas fa-sign-out-alt fa-sm"></i> Odjavite se
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Glavni sadržaj -->
+          <div class="container-fluid">
+            <!-- Header red -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+              <div>
+                <h1 class="h3 mb-1" style="color: #2c2527; font-weight: 800;">Svi Pet Shop artikli</h1>
+                <p class="text-muted small mb-0">Pregled, unos i ažuriranje artikala i njihovih zaliha</p>
+              </div>
+              <button class="btn btn-primary" onclick="openAddModal()">
+                <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Dodaj novi proizvod
+              </button>
+            </div>
+
+            <!-- Segmentirani filter slajder: Svi artikli / Istaknuto na početnoj / Bestseller / Van lagera -->
+            <div class="product-scope-slider-wrapper mb-3">
+              <div class="product-scope-slider" id="productScopeSlider">
+                <button type="button" class="scope-slider-btn active" data-scope="all" onclick="setProductScope('all')">
+                  <i class="fas fa-boxes mr-1"></i> Svi artikli
+                  <span class="scope-count-badge" id="scopeCountAll"><span class="skeleton skeleton-badge-num" style="width: 18px;"></span> <span class="skeleton skeleton-badge-num" style="width: 18px;"></span></span>
+                </button>
+                <button type="button" class="scope-slider-btn" data-scope="featured" onclick="setProductScope('featured')">
+                  <i class="fas fa-star mr-1 text-warning"></i> Istaknuto na početnoj
+                  <span class="scope-count-badge" id="scopeCountFeatured"><span class="skeleton skeleton-badge-num"></span></span>
+                </button>
+                <button type="button" class="scope-slider-btn" data-scope="bestseller" onclick="setProductScope('bestseller')">
+                  <i class="fas fa-fire mr-1 text-danger"></i> Bestseller
+                  <span class="scope-count-badge" id="scopeCountBestseller"><span class="skeleton skeleton-badge-num"></span></span>
+                </button>
+                <button type="button" class="scope-slider-btn" data-scope="out_of_stock" onclick="setProductScope('out_of_stock')">
+                  <i class="fas fa-box-open mr-1 text-secondary"></i> Van lagera
+                  <span class="scope-count-badge" id="scopeCountOutOfStock"><span class="skeleton skeleton-badge-num"></span></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Filteri i pretraga -->
+            <div class="card shadow-sm mb-4">
+              <div class="card-body py-3">
+                <div class="row align-items-center">
+                  <div class="col-md-5 mb-2 mb-md-0">
+                    <div class="input-group">
+                      <input type="text" id="searchInput" class="form-control" placeholder="Pretraži po nazivu ili šifri..." style="border-radius: 8px 0 0 8px;" />
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" onclick="loadProducts(1)">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3 mb-2 mb-md-0">
+                    <select id="categoryFilter" class="form-control" style="border-radius: 8px;" onchange="loadProducts(1)">
+                      <option value="">Sve kategorije</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2 mb-2 mb-md-0">
+                    <select id="statusFilter" class="form-control" style="border-radius: 8px;" onchange="loadProducts(1)">
+                      <option value="">Svi statusi</option>
+                      <option value="aktivan">Aktivan</option>
+                      <option value="neaktivan">Neaktivan</option>
+                      <option value="rasprodato">Rasprodato</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2 text-md-right">
+                    <span id="productTotalCount" class="badge badge-light p-2" style="font-size: 0.9rem; border: 1px solid #f3d5dc;">Ukupno: <span class="skeleton skeleton-badge-num" style="width: 28px; height: 13px;"></span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabela sa proizvodima -->
+            <div class="card shadow mb-4">
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0" id="productsTable" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th style="width: 70px;">Slika</th>
+                        <th style="width: 100px;">Šifra</th>
+                        <th>Naziv artikla</th>
+                        <th>Kategorija</th>
+                        <th>Cena</th>
+                        <th>Pakovanja / Veličine</th>
+                        <th>Boje</th>
+                        <th>Status</th>
+                        <th style="min-width: 160px; width: 160px; text-align: center; white-space: nowrap;">Akcije</th>
+                      </tr>
+                    </thead>
+                    <tbody id="productsList">
+                      <% for(let i = 0; i < 6; i++) { %>
+                      <tr class="skeleton-row">
+                        <td><div class="skeleton skeleton-img"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 70px;"></div></td>
+                        <td>
+                          <div class="skeleton skeleton-text" style="width: 75%; height: 16px; margin-bottom: 6px;"></div>
+                          <div class="skeleton skeleton-text" style="width: 45%; height: 12px;"></div>
+                        </td>
+                        <td><div class="skeleton skeleton-badge" style="width: 75px;"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 85px; height: 15px;"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 60px;"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 50px;"></div></td>
+                        <td><div class="skeleton skeleton-badge" style="width: 70px;"></div></td>
+                        <td style="text-align: center; white-space: nowrap; width: 160px; min-width: 160px;">
+                          <div class="table-action-btns" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
+                            <div class="skeleton skeleton-btn" style="flex: 0 0 34px; width: 34px; height: 34px;"></div>
+                            <div class="skeleton skeleton-btn" style="flex: 0 0 34px; width: 34px; height: 34px;"></div>
+                            <div class="skeleton skeleton-btn" style="flex: 0 0 34px; width: 34px; height: 34px;"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Paginacija -->
+              <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
+                <div id="paginationInfo" class="text-muted small">Prikazano 0 od 0</div>
+                <ul class="pagination pagination-sm mb-0" id="paginationControls"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ZA DODAVANJE / IZMENU PROIZVODA (Supermedia dizajn) -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header header-gradient">
+            <h5 class="modal-title" id="productModalTitle">
+              <i class="fas fa-paw"></i>
+              <span>Dodaj novi artikal</span>
+            </h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Zatvori">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="productForm">
+            <div class="modal-body p-4" style="max-height: 80vh; overflow-y: auto; background-color: #faf7f8;">
+              <input type="hidden" id="productId" />
+              <input type="hidden" id="productMainImages" />
+
+              <!-- 1. Osnovni podaci -->
+              <div class="card modal-info-card mb-4">
+                <div class="card-header">
+                  <h6><i class="fas fa-info-circle"></i> Osnovni podaci artikla</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-3 form-group mb-md-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Šifra artikla <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="productCode" placeholder="npr. ha-01" required style="border-radius: 8px;" />
+                      <small class="text-muted">Jedinstveni identifikator artikla</small>
+                    </div>
+                    <div class="col-md-5 form-group mb-md-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Naziv artikla <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="productTitle" placeholder="npr. Premil Sunrise 15kg" required style="border-radius: 8px;" />
+                      <small class="text-muted">Puni komercijalni naziv artikla</small>
+                    </div>
+                    <div class="col-md-4 form-group mb-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Brend</label>
+                      <input type="text" class="form-control" id="productBrand" placeholder="npr. Royal Canin, Premil..." style="border-radius: 8px;" />
+                      <small class="text-muted">Proizvođač / brend artikla</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. UPLOAD SLIKA - MODERN DRAG & DROP -->
+              <div class="card modal-info-card mb-4">
+                <div class="card-header">
+                  <h6><i class="fas fa-images"></i> Fotografije artikla (Automatska WebP optimizacija)</h6>
+                </div>
+                <div class="card-body">
+                  <div class="modern-upload-zone" id="uploadDropZone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h6 class="font-weight-bold mb-1">Prevucite slike ovde ili kliknite za odabir</h6>
+                    <p class="text-muted small mb-2">Podržani formati: JPG, PNG, WEBP. Možete označiti i prevući više slika odjednom.</p>
+                    <div class="upload-zone-actions mt-2">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-paste-url"
+                        id="pasteAndAddUrlBtn"
+                        title="Zalepi URL slike ili sliku iz memorije"
+                      >
+                        <i class="fas fa-paste mr-1"></i> Zalepi URL
+                      </button>
+                    </div>
+                  </div>
+                  <input type="file" id="imageFileInput" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/*" style="display: none;" />
+
+                  <div class="modern-preview-container mt-3" id="imagesPreviewContainer"></div>
+                </div>
+              </div>
+
+              <!-- 3. Cene, zalihe i status -->
+              <div class="card modal-info-card mb-4">
+                <div class="card-header">
+                  <h6><i class="fas fa-tags"></i> Osnovna cena, lager i status</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-3 form-group mb-3 mb-md-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Osnovna cena (RSD) <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="productPrice" placeholder="1890" min="0" required style="border-radius: 8px 0 0 8px;" />
+                        <div class="input-group-append">
+                          <span class="input-group-text font-weight-bold" style="border-radius: 0 8px 8px 0; background: #faf4f6; color: #7c2e4b; font-size: 0.85rem;">RSD</span>
+                        </div>
+                      </div>
+                      <small class="text-muted">Automatski prati najnižu cenu varijante ako postoje varijante</small>
+                    </div>
+                    <div class="col-md-3 form-group mb-3 mb-md-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Stara cena</label>
+                      <div class="input-group">
+                        <input type="number" class="form-control" id="productOldPrice" placeholder="2290" min="0" style="border-radius: 8px 0 0 8px;" />
+                        <div class="input-group-append">
+                          <span class="input-group-text" style="border-radius: 0 8px 8px 0; background: #faf4f6; font-size: 0.85rem;">RSD</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 form-group mb-3 mb-md-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Na stanju (kom) <span class="text-danger">*</span></label>
+                      <input type="number" class="form-control" id="productStock" placeholder="15" min="0" value="15" required style="border-radius: 8px;" />
+                    </div>
+                    <div class="col-md-3 form-group mb-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Status</label>
+                      <select class="form-control" id="productStatus" style="border-radius: 8px;">
+                        <option value="aktivan">Aktivan</option>
+                        <option value="neaktivan">Neaktivan</option>
+                        <option value="rasprodato">Rasprodato</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4. Kategorizacija i Pet Shop opcije -->
+              <div class="card modal-info-card category-card-overflow mb-4">
+                <div class="card-header">
+                  <h6><i class="fas fa-layer-group"></i> Kategorizacija i Pet Shop opcije</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-lg-3 col-md-6 form-group mb-3 mb-lg-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Glavna kategorija <span class="text-danger">*</span></label>
+                      <div class="combo-search-wrapper" id="categoryComboWrapper">
+                        <input
+                          type="text"
+                          class="form-control combo-search-input"
+                          id="productCategory"
+                          placeholder="npr. Hrana za pse..."
+                          autocomplete="off"
+                          required
+                          style="border-radius: 8px;"
+                        />
+                        <button type="button" class="combo-toggle-btn" tabindex="-1" onclick="toggleComboDropdown('category', event)" title="Prikaži postojeće iz baze">
+                          <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="combo-dropdown-menu" id="categoryDropdownList"></div>
+                      </div>
+                      <small class="text-muted">Slobodan unos ili izbor iz baze</small>
+                    </div>
+                    <div class="col-lg-3 col-md-6 form-group mb-3 mb-lg-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Potkategorija</label>
+                      <div class="combo-search-wrapper" id="subcategoryComboWrapper">
+                        <input
+                          type="text"
+                          class="form-control combo-search-input"
+                          id="productSubcategory"
+                          placeholder="npr. Suva hrana, Amovi..."
+                          autocomplete="off"
+                          style="border-radius: 8px;"
+                        />
+                        <button type="button" class="combo-toggle-btn" tabindex="-1" onclick="toggleComboDropdown('subcategory', event)" title="Prikaži postojeće iz baze">
+                          <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="combo-dropdown-menu" id="subcategoryDropdownList"></div>
+                      </div>
+                      <small class="text-muted">Slobodan unos ili izbor iz baze</small>
+                    </div>
+                    <div class="col-lg-3 col-md-6 form-group mb-3 mb-md-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Potkategorija 2</label>
+                      <div class="combo-search-wrapper" id="subcategory2ComboWrapper">
+                        <input
+                          type="text"
+                          class="form-control combo-search-input"
+                          id="productSubcategory2"
+                          placeholder="npr. Štenci, Grain-Free..."
+                          autocomplete="off"
+                          style="border-radius: 8px;"
+                        />
+                        <button type="button" class="combo-toggle-btn" tabindex="-1" onclick="toggleComboDropdown('subcategory2', event)" title="Prikaži postojeće iz baze">
+                          <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="combo-dropdown-menu" id="subcategory2DropdownList"></div>
+                      </div>
+                      <small class="text-muted">Slobodan unos ili izbor iz baze</small>
+                    </div>
+                    <div class="col-lg-3 col-md-6 form-group mb-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Sastav / Materijal</label>
+                      <input type="text" class="form-control" id="productMaterial" placeholder="npr. Losos 35%, pirinač" style="border-radius: 8px;" />
+                      <small class="text-muted">Glavni sastojci ili materijal izrade</small>
+                    </div>
+                  </div>
+
+                  <hr class="my-3" />
+
+                  <div class="row">
+                    <div class="col-lg-5 form-group mb-3 mb-lg-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Vrsta ljubimca</label>
+                      <div class="size-chips-wrapper" id="petTypeWrapper">
+                        <label class="size-chip"><input type="checkbox" value="Psi" /><span>Psi</span></label>
+                        <label class="size-chip"><input type="checkbox" value="Mačke" /><span>Mačke</span></label>
+                        <label class="size-chip"><input type="checkbox" value="Ptice" /><span>Ptice</span></label>
+                        <label class="size-chip"><input type="checkbox" value="Glodari i zečevi" /><span>Glodari</span></label>
+                        <label class="size-chip"><input type="checkbox" value="Ribice" /><span>Ribice</span></label>
+                        <label class="size-chip"><input type="checkbox" value="Reptili" /><span>Reptili</span></label>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 form-group mb-3 mb-lg-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Uzrast ljubimca</label>
+                      <select class="form-control" id="productLifeStage" style="border-radius: 8px;">
+                        <option value="">Svi uzrasti</option>
+                        <option value="Štenci / Mačići (Junior)">Štenci / Mačići (Junior)</option>
+                        <option value="Odrasli (Adult)">Odrasli (Adult)</option>
+                        <option value="Seniori (Senior)">Seniori (Senior)</option>
+                        <option value="Osetljivi / Sterilisani">Osetljivi / Sterilisani</option>
+                      </select>
+                    </div>
+                    <div class="col-lg-4 col-md-6 form-group mb-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Ukus / Aroma</label>
+                      <input type="text" class="form-control" id="productFlavor" placeholder="npr. Piletina i pirinač, Losos, Jagnjetina..." style="border-radius: 8px;" />
+                    </div>
+                  </div>
+
+                  <div class="mt-3">
+                    <label class="font-weight-bold d-block" style="font-size: 0.88rem;">Posebne osobine i dijete</label>
+                    <div class="size-chips-wrapper" id="specialDietWrapper">
+                      <label class="size-chip"><input type="checkbox" value="Bez žitarica (Grain-Free)" /><span>Bez žitarica</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Hipoalergeno" /><span>Hipoalergeno</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Sterilisani ljubimci" /><span>Sterilisani</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Osetljivo varenje" /><span>Osetljivo varenje</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Podrška zglobovima" /><span>Podrška zglobovima</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Prirodni sastojci" /><span>Prirodni sastojci</span></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 5. Varijante (kilogrami / veličine / zapremina) sa cenom po varijanti + boje -->
+              <div class="card modal-info-card mb-4">
+                <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+                  <h6 class="mb-0"><i class="fas fa-weight-hanging"></i> Pakovanja / Veličine i cene po varijanti</h6>
+                  <small class="text-muted">Svaka težina ili veličina može imati sopstvenu cenu</small>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-5 form-group mb-3 mb-md-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Tip mere / varijante</label>
+                      <select class="form-control" id="productVariantType" style="border-radius: 8px;">
+                        <option value="kg">Težina / Kilogrami (400g, 2kg, 10kg...)</option>
+                        <option value="size">Veličine opreme (XS, S, M, L, XL...)</option>
+                        <option value="volume">Zapremina (100ml, 250ml, 500ml, 1L...)</option>
+                        <option value="pieces">Komada u pakovanju (1 kom, 6 kom, 12 kom...)</option>
+                        <option value="custom">Prilagođeno (slobodan unos)</option>
+                      </select>
+                    </div>
+                    <div class="col-md-7 form-group mb-0">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Brzi izbor pakovanja / veličine</label>
+                      <div class="size-chips-wrapper" id="variantPresetsWrapper"></div>
+                    </div>
+                  </div>
+
+                  <div class="row align-items-end mb-3 p-3 rounded" style="background: #f8f5f6; border: 1px dashed #d8c8ce;">
+                    <div class="col-md-4 form-group mb-2 mb-md-0">
+                      <label class="small font-weight-bold mb-1">Oznaka varijante</label>
+                      <input type="text" id="newVariantLabel" class="form-control" placeholder="npr. 2.5kg, L (80x60cm), 500ml" style="border-radius: 8px;" />
+                    </div>
+                    <div class="col-md-3 form-group mb-2 mb-md-0">
+                      <label class="small font-weight-bold mb-1">Cena za ovu varijantu (RSD)</label>
+                      <input type="number" id="newVariantPrice" class="form-control" placeholder="1890" min="0" style="border-radius: 8px;" />
+                    </div>
+                    <div class="col-md-3 form-group mb-2 mb-md-0">
+                      <label class="small font-weight-bold mb-1">Stara cena (opciono)</label>
+                      <input type="number" id="newVariantOldPrice" class="form-control" placeholder="2290" min="0" style="border-radius: 8px;" />
+                    </div>
+                    <div class="col-md-2">
+                      <button type="button" class="btn btn-outline-primary btn-block font-weight-bold" id="addVariantBtn" style="border-radius: 8px; height: 38px;">
+                        <i class="fas fa-plus mr-1"></i> Dodaj
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="variantsListContainer" class="mb-3"></div>
+
+                  <hr class="my-3" />
+                  <div class="form-group mb-0">
+                    <label class="font-weight-bold" style="font-size: 0.88rem;">Dostupne boje (opciono za povodce, amove, krevete, igračke)</label>
+                    <div id="colorsContainer" class="mb-2"></div>
+                    <div class="input-group">
+                      <input type="color" id="newColorHex" value="#2c2527" class="form-control p-1" style="max-width: 50px; height: 38px; border-radius: 8px 0 0 8px; cursor: pointer;" />
+                      <input type="text" id="newColorName" class="form-control" placeholder="Naziv boje (npr. Zelena, Crna, Plava)" style="height: 38px;" />
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="button" onclick="addColor()" style="border-radius: 0 8px 8px 0;">
+                          <i class="fas fa-plus mr-1"></i> Dodaj boju
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 6. Opis artikla, tehničke specifikacije i oznake -->
+              <div class="card modal-info-card mb-2">
+                <div class="card-header">
+                  <h6><i class="fas fa-align-left"></i> Opis artikla, specifikacije i istaknute oznake</h6>
+                </div>
+                <div class="card-body">
+                  <div class="form-group mb-3">
+                    <label class="font-weight-bold" style="font-size: 0.88rem;">Opis artikla</label>
+                    <textarea class="form-control" id="productDescription" rows="3" placeholder="Detaljan opis sastava, namene, doziranja i prednosti za ljubimca..." style="border-radius: 8px;"></textarea>
+                  </div>
+
+                  <div class="mb-3 p-3 rounded" style="background: #f8f5f6; border: 1px solid #eadfe3;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <label class="font-weight-bold mb-0" style="font-size: 0.88rem;">Dodatne specifikacije (npr. Proteini: 28%, Masti: 16%, Zemlja porekla)</label>
+                      <button type="button" class="btn btn-sm btn-outline-primary" id="addTechSpecBtn" style="border-radius: 6px;">
+                        <i class="fas fa-plus mr-1"></i> Dodaj stavku
+                      </button>
+                    </div>
+                    <div id="techSpecsContainer"></div>
+                  </div>
+
+                  <div class="d-flex flex-wrap align-items-center" style="gap: 20px;">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="productIsFeatured" />
+                      <label class="custom-control-label font-weight-bold text-dark" for="productIsFeatured" style="cursor: pointer;">
+                        <i class="fas fa-star text-warning mr-1"></i> Istaknuto na početnoj (Noviteti)
+                      </label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="productIsBestseller" />
+                      <label class="custom-control-label font-weight-bold text-dark" for="productIsBestseller" style="cursor: pointer;">
+                        <i class="fas fa-fire text-danger mr-1"></i> Bestseller (Najtraženije)
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">Otkaži</button>
+              <button type="submit" class="btn btn-primary px-4" id="saveProductBtn">
+                <span id="saveBtnText">Sačuvaj artikal</span>
+                <span id="saveBtnSpinner" class="spinner-border spinner-border-sm ml-2" style="display: none;" role="status"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pure Classic JS (0 Dependencies) -->
+    <script src="/admin/js/clone.js?v=2.4"></script>
+    <script src="/admin/js/proizvodi.js?v=3.5"></script>
+  </body>
+</html>

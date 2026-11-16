@@ -13,10 +13,8 @@
     <link rel="dns-prefetch" href="https://code.jquery.com" />
     
     <!-- Preload critical resources for maximum performance -->
-    <link rel="preload" href="/json/product.json" as="fetch" crossorigin="anonymous" />
     <link rel="preload" href="/css/clone.css" as="style" />
     <link rel="preload" href="/css/index.css" as="style" />
-    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
     <link rel="stylesheet" href="/css/clone.css" />
     <link rel="stylesheet" href="/css/index.css" />
     <link rel="stylesheet" href="/css/loader.css" />
@@ -173,7 +171,7 @@
         <div class="aboutLeft reveal-left">
           <div>
             <!-- Image by Pexels from Pixabay -->
-            <img src="/pasPozadina.jpg" alt="pozadina" loading="lazy" />
+            <img src="/img/pasPozadina.jpg" alt="pozadina" loading="lazy" />
           </div>
         </div>
         <div class="aboutRight">
@@ -292,7 +290,7 @@
         <div class="productRight reveal-right">
           <!-- Image by Oto Farfan Boxler from Pixabay -->
           <div>
-            <img src="/papagaj.png" alt="slika papagaja" loading="lazy" />
+            <img src="/img/papagaj.png" alt="slika papagaja" loading="lazy" />
           </div>
         </div>
       </div>
@@ -317,7 +315,7 @@
 
           <div class="cooperationLeftIMG reveal-left delay-200">
             <!-- Image by Susann Mielke from Pixabay -->
-            <img src="/saradnja.jpg" alt="slika mačke" loading="lazy" />
+            <img src="/img/saradnja.jpg" alt="slika mačke" loading="lazy" />
           </div>
         </div>
 
@@ -542,14 +540,12 @@
       </div>
     </div>
 
-    <!-- Inline script to start loading JSON immediately (before other scripts) -->
+    <!-- Inline script to start loading products immediately (before other scripts) -->
     <script>
-      // Start loading JSON immediately for maximum performance
-      window.productJsonPromise = fetch('/json/product.json', {
-        cache: 'no-store',
-        headers: { 'Cache-Control': 'no-cache' }
-      }).then(response => response.json()).catch(err => {
-        console.error('Error preloading products JSON:', err);
+      window.productJsonPromise = fetch('/api/products?limit=1000', {
+        cache: 'no-store'
+      }).then(response => response.json()).then(data => Array.isArray(data) ? data : (data.products || [])).catch(err => {
+        console.error('Error preloading products:', err);
         return [];
       });
     </script>

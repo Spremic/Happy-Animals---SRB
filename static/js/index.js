@@ -79,33 +79,41 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Load and display featured products (optimized)
+  // Load and display featured products (optimized - direct from cached /api/products)
   async function loadFeaturedProducts() {
     try {
-      // Use preloaded JSON if available, otherwise fetch
       let allProducts;
-      if (window.productJsonPromise) {
+      if (typeof loadProductsData === 'function') {
+        allProducts = await loadProductsData();
+      } else if (window.productJsonPromise) {
         allProducts = await window.productJsonPromise;
       } else {
-        const response = await fetch('/json/product.json', {
-          cache: 'no-store',
-          headers: { 'Cache-Control': 'no-cache' }
-        });
-        allProducts = await response.json();
+        const response = await fetch('/api/products?limit=1000');
+        const data = await response.json();
+        allProducts = Array.isArray(data) ? data : (data.products || []);
       }
-      
-      // Shuffle array and get random products
-      const shuffled = allProducts.sort(() => 0.5 - Math.random());
+
+      if (!Array.isArray(allProducts) || allProducts.length === 0) {
+        const container = document.getElementById('featuredProductsContainer');
+        if (container) container.innerHTML = '';
+        return;
+      }
+
+      // Shuffle array and get random products (prioritizing featured if available)
+      const featuredFirst = allProducts.filter(p => p.isFeatured);
+      const pool = featuredFirst.length >= 6 ? featuredFirst : allProducts;
+      const shuffled = [...pool].sort(() => 0.5 - Math.random());
       featuredProducts = shuffled.slice(0, 9); // Get 9 products (3 slides of 3)
-      
+
       // Render products immediately with skeleton loaders
       renderProductsWithSkeletons();
-      
-      // Fetch images in batch (optimized)
-      const productIds = featuredProducts.map(p => p.id);
-      const imagesData = await fetchProductImagesBatch(productIds);
-      
-      // Update images when loaded
+
+      // Use images already returned from API cache, fallback to batch only if missing
+      const missingIds = featuredProducts
+        .filter(p => !Array.isArray(p.images) || p.images.length === 0)
+        .map(p => p.id);
+      const imagesData = missingIds.length > 0 ? await fetchProductImagesBatch(missingIds) : {};
+
       updateProductImages(imagesData);
     } catch (error) {
       console.error('Error loading products:', error);
@@ -128,10 +136,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Render all products immediately with skeleton image loaders
     featuredProducts.forEach((product, index) => {
-      const price = product.salePrice && product.salePrice !== '/' ? product.salePrice : product.price;
-      const hasDiscount = product.salePrice && product.salePrice !== '/' && product.percentage && product.percentage !== '/' && product.percentage !== '0%';
-      const discountPercentage = hasDiscount ? product.percentage : '';
-      const oldPriceValue = hasDiscount ? product.price : null;
+      const variantsList = Array.isArray(product.variants) && product.variants.length > 0 ? product.variants : [];
+      const firstVar = variantsList[0] || null;
+      const defaultVariant = firstVar ? String(firstVar.label || '').trim() : ((Array.isArray(product.sizes) && product.sizes[0]) || '');
+      const variantPrices = variantsList.map(v => Number(v.price)).filter(n => !isNaN(n) && n > 0);
+      const minPrice = variantPrices.length ? Math.min(...variantPrices) : (parseFloat(product.price) || 0);
+      const maxPrice = variantPrices.length ? Math.max(...variantPrices) : minPrice;
+      const hasPriceRange = maxPrice > minPrice;
+      const price = firstVar ? (Number(firstVar.price) || parseFloat(product.price) || 0) : (parseFloat(product.price) || 0);
+      const rawOld = firstVar ? firstVar.oldPrice : product.oldPrice;
+      const oldPriceValue = rawOld && Number(rawOld) > price ? Number(rawOld) : null;
+      const hasDiscount = Boolean(oldPriceValue && price > 0);
+      const discountPercentage = hasDiscount ? `${Math.round(((oldPriceValue - price) / oldPriceValue) * 100)}%` : '';
+      const variantLabelsText = variantsList.length
+        ? variantsList.slice(0, 3).map(v => v.label).join(' / ')
+        : (Array.isArray(product.sizes) && product.sizes.length ? product.sizes.slice(0, 3).join(' / ') : '');
+      const brandLine = [product.brand || '', variantLabelsText].filter(Boolean).join(' • ');
+      const escVar = defaultVariant.replace(/"/g, '&quot;');
+      const priceText = hasPriceRange
+        ? `od ${formatPriceString(minPrice)} RSD`
+        : `${formatPriceString(price)} RSD`;
       
       const cardHTML = `
         <div class="custom-card" data-product-id="${product.id}">
@@ -164,15 +188,15 @@ document.addEventListener("DOMContentLoaded", function () {
             <img src="" alt="${product.title}" loading="lazy" data-product-id="${product.id}" style="display: none;" />
           </div>
           <div class="content-c">
-            <span class="product-brand">${product.brand}</span>
+            <span class="product-brand">${brandLine}</span>
             <h4>${product.title}</h4>
             <div class="price-container">
-              ${oldPriceValue ? `<div class="price-old">${formatPriceString(oldPriceValue)} RSD</div>` : ''}
-              <div class="price">${formatPriceString(price)} RSD</div>
+              ${!hasPriceRange && oldPriceValue ? `<div class="price-old">${formatPriceString(oldPriceValue)} RSD</div>` : ''}
+              <div class="price">${priceText}</div>
             </div>
             <div class="btns-flex">
-              <button class="buy-now">Kupi sada</button>
-              <button class="add-to-cart" data-product-id="${product.id}">
+              <button class="buy-now" data-default-variant="${escVar}">Kupi sada</button>
+              <button class="add-to-cart" data-product-id="${product.id}" data-default-variant="${escVar}">
                 <span class="material-symbols-outlined cart-icon">add_shopping_cart</span>
               </button>
             </div>
@@ -189,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const product = featuredProducts[index];
       if (!product) return;
       
-      const productSlug = slugify(product.title);
+      const productSlug = product.slug || slugify(product.title);
       const productUrl = `/${productSlug}`;
       
       // Set heart state if product is saved
@@ -226,9 +250,10 @@ document.addEventListener("DOMContentLoaded", function () {
       if (buyNowBtn) {
         buyNowBtn.addEventListener("click", function(e) {
           e.stopPropagation();
+          const defaultVar = buyNowBtn.getAttribute("data-default-variant") || "";
           // Add product to cart
           if (typeof addToCart !== 'undefined') {
-            addToCart(product.id);
+            addToCart(product.id, 1, defaultVar);
           }
           // Redirect to shopping cart
           window.location.href = '/shopping-cart';
@@ -259,10 +284,11 @@ document.addEventListener("DOMContentLoaded", function () {
       
       if (!productImage || !imageContainer) return;
 
+      const directImgs = Array.isArray(product.images) ? product.images : [];
       const productImages = imagesData[product.id] || [];
-      const imageUrls = productImages.length > 0 
-        ? productImages.map(img => img.url)
-        : [];
+      const imageUrls = directImgs.length > 0
+        ? directImgs
+        : productImages.map(img => img.url);
 
       // Get or create error fallback element
       let errorFallback = imageContainer.querySelector('.image-error');
@@ -663,13 +689,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Prevent event bubbling
     e.stopPropagation();
     
-    // Get product ID
+    // Get product ID & default variant
     const productId = addToCartButton.getAttribute("data-product-id");
     if (!productId) return;
+    const defaultVar = addToCartButton.getAttribute("data-default-variant") || "";
     
     // Add to cart using localStorage
     if (typeof addToCart !== 'undefined') {
-      addToCart(productId);
+      addToCart(productId, 1, defaultVar);
     }
     
     // Find cart icon each time (in case header loads after this script)

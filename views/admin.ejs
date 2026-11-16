@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="sr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Administratori | Happy Animals</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    
+    <!-- Google Fonts Matching Storefront -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Classic Admin Styles (0 SCSS, 0 Frameworks) -->
+    <link href="/admin/css/admin.css?v=2.5" rel="stylesheet" />
+  </head>
+  <body id="page-top">
+    <div id="wrapper">
+      <ul class="sidebar" id="accordionSidebar"></ul>
+
+      <div id="content-wrapper">
+        <div id="content">
+          <!-- Topbar -->
+          <nav class="topbar mb-4">
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none" title="Meni">
+              <i class="fa fa-bars"></i>
+            </button>
+            <ul class="navbar-nav ml-auto">
+              <div class="topbar-divider d-none d-sm-block"></div>
+              <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="mr-2 d-none d-lg-inline text-muted small font-weight-bold">Admin</span>
+                  <img class="img-profile" src="/admin/img/avatar.jpg" alt="Avatar" />
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                  <a class="dropdown-item" href="/logout" id="logoutBTN">
+                    <i class="fas fa-sign-out-alt fa-sm"></i> Odjavite se
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Sadržaj -->
+          <div class="container-fluid">
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+              <div>
+                <h1 class="h3 mb-1" style="color: #2c2527; font-weight: 800;">Upravljanje administratorima</h1>
+                <p class="text-muted small mb-0">Pregled, dodavanje i izmena administratorskih naloga i dozvola pristupa</p>
+              </div>
+              <button type="button" class="btn btn-primary" onclick="prepareAddAdmin()">
+                <i class="fas fa-plus fa-sm mr-1"></i> Dodaj novog admina
+              </button>
+            </div>
+
+            <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold" style="color: #7c2e4b;">Lista administratora</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover" id="adminsTable" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Ime</th>
+                        <th>Email</th>
+                        <th>Tip</th>
+                        <th>Dozvole</th>
+                        <th style="min-width: 120px; width: 120px; text-align: center; white-space: nowrap;">Akcije</th>
+                      </tr>
+                    </thead>
+                    <tbody id="adminsList">
+                      <% for(let i = 0; i < 4; i++) { %>
+                      <tr class="skeleton-row">
+                        <td><div class="skeleton skeleton-text" style="width: 120px; height: 16px;"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 160px; height: 14px;"></div></td>
+                        <td><div class="skeleton skeleton-badge" style="width: 80px;"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 150px; height: 13px;"></div></td>
+                        <td style="text-align: center; white-space: nowrap; width: 120px; min-width: 120px;">
+                          <div class="table-action-btns" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
+                            <div class="skeleton skeleton-btn" style="flex: 0 0 34px; width: 34px; height: 34px;"></div>
+                            <div class="skeleton skeleton-btn" style="flex: 0 0 34px; width: 34px; height: 34px;"></div>
+                          </div>
+                        </td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal za admina (Supermedia dizajn) -->
+    <div class="modal fade" id="adminModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header header-gradient">
+            <h5 class="modal-title" id="adminModalTitle">
+              <i class="fas fa-user-shield"></i>
+              <span>Dodaj administratora</span>
+            </h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Zatvori">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="adminForm">
+            <div class="modal-body p-4" style="max-height: 82vh; overflow-y: auto; background-color: #faf7f8;">
+              <input type="hidden" id="adminId" />
+
+              <!-- 1. Osnovni podaci naloga -->
+              <div class="card modal-info-card mb-4">
+                <div class="card-header">
+                  <h6><i class="fas fa-id-card"></i> Osnovni podaci naloga</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6 form-group">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Ime i prezime <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" id="adminName" placeholder="Unesite puno ime i prezime" required style="border-radius: 8px;" />
+                    </div>
+                    <div class="col-md-6 form-group">
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Email adresa <span class="text-danger">*</span></label>
+                      <input type="email" class="form-control" id="adminMail" placeholder="admin@miabutik.rs" required style="border-radius: 8px;" />
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-0">
+                    <label class="font-weight-bold" style="font-size: 0.88rem;">
+                      Lozinka <span id="passReq" class="text-danger">*</span>
+                      <small id="passHelp" class="text-muted font-weight-normal" style="display: none;">(ostavite prazno ukoliko ne menjate)</small>
+                    </label>
+                    <input type="password" class="form-control" id="adminPassword" placeholder="Najmanje 6 karaktera" minlength="6" style="border-radius: 8px;" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. Uloga i dozvole pristupa -->
+              <div class="card modal-info-card mb-2">
+                <div class="card-header">
+                  <h6><i class="fas fa-user-shield"></i> Uloga i dozvole pristupa</h6>
+                </div>
+                <div class="card-body">
+                  <!-- Glavni administrator switch card -->
+                  <div class="card mb-3 shadow-sm border-left-primary" id="mainAdminCard" style="background: #fdf8fa; border: 1px solid #ebd9df; border-left: 4px solid #7c2e4b !important; border-radius: 8px; cursor: pointer;">
+                    <div class="card-body py-3">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="adminTypeSwitch" />
+                        <label class="custom-control-label font-weight-bold" for="adminTypeSwitch" style="color: #7c2e4b; font-size: 1.02rem;">
+                          Glavni Administrator (Superadmin)
+                        </label>
+                      </div>
+                      <div class="small text-muted mt-1" style="padding-left: 2.25rem;">
+                        Glavni administrator ima neograničen pristup svim delovima sistema i dozvolama.
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Sekcija za pojedinačne dozvole -->
+                  <div id="permissionsSection">
+                    <label class="font-weight-bold d-block mb-2" style="font-size: 0.86rem; color: #4a3e42;">
+                      <i class="fas fa-key mr-1" style="color: #7c2e4b;"></i> Dozvole za pristup stranicama
+                    </label>
+                    <div class="row">
+                      <div class="col-md-6 mb-2">
+                        <div class="custom-control custom-checkbox permission-card active-perm" id="cardPermProizvodi">
+                          <input type="checkbox" class="custom-control-input perm-check" id="permProizvodi" value="proizvodi" checked />
+                          <label class="custom-control-label w-100" for="permProizvodi">
+                            <div class="font-weight-bold">Proizvodi</div>
+                            <div class="small text-muted font-weight-normal">Upravljanje artiklima i zalihama</div>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-2">
+                        <div class="custom-control custom-checkbox permission-card active-perm" id="cardPermNarudzbe">
+                          <input type="checkbox" class="custom-control-input perm-check" id="permNarudzbe" value="narudzbine" checked />
+                          <label class="custom-control-label w-100" for="permNarudzbe">
+                            <div class="font-weight-bold">Narudžbine</div>
+                            <div class="small text-muted font-weight-normal">Pregled i promena statusa porudžbina</div>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-12 mb-0">
+                        <div class="custom-control custom-checkbox permission-card disabled mb-0" id="cardPermAdmini">
+                          <input type="checkbox" class="custom-control-input perm-check" id="permAdmini" value="admini" disabled />
+                          <label class="custom-control-label w-100" for="permAdmini">
+                            <div class="font-weight-bold">Administratori</div>
+                            <div class="admin-only-notice"><i class="fas fa-lock mr-1"></i>Samo za glavnog administratora</div>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Banner kada je Glavni Admin -->
+                  <div id="mainAdminInfo" class="alert alert-success text-center shadow-sm py-4 mb-0" style="display: none; border-left: 4px solid #27ae60; background: #eafaf1; border-radius: 8px;">
+                    <div class="mb-2"><i class="fas fa-user-shield fa-3x" style="color: #27ae60;"></i></div>
+                    <h5 class="alert-heading font-weight-bold" style="color: #1e824c;">Pun pristup sistemu</h5>
+                    <p class="mb-0 text-muted" style="font-size: 0.9rem;">Ovaj korisnik je označen kao <strong>Glavni administrator</strong> i automatski ima neograničen pristup svim funkcijama.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary px-3" data-dismiss="modal" id="cancelAdminBtn">Otkaži</button>
+              <button type="submit" class="btn btn-primary px-4" id="saveAdminBtn">
+                <span id="saveAdminBtnText">Sačuvaj administratora</span>
+                <span id="saveAdminBtnSpinner" class="spinner-border spinner-border-sm ml-2" style="display: none;" role="status"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pure Classic JS (0 Dependencies) -->
+    <script src="/admin/js/clone.js?v=2.4"></script>
+    <script src="/admin/js/admin.js?v=2.5"></script>
+  </body>
+</html>

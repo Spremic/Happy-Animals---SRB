@@ -1308,12 +1308,85 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // Size selection
+  // Dynamic variant / size / weight selection with live price, discount & stock updates
+  function formatLocalPriceStr(val) {
+    if (typeof formatPriceString === "function") return formatPriceString(val);
+    const num = parseFloat(val);
+    if (isNaN(num)) return String(val || 0);
+    return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function applySelectedVariantUI(btn) {
+    if (!btn) return;
+    const vPrice = parseFloat(btn.getAttribute("data-variant-price"));
+    const vOldRaw = btn.getAttribute("data-variant-oldprice");
+    const vOld = vOldRaw ? parseFloat(vOldRaw) : null;
+    const vStockRaw = btn.getAttribute("data-variant-stock");
+    const vStock = vStockRaw !== null && vStockRaw !== "" ? parseInt(vStockRaw, 10) : null;
+
+    const priceAmountEl = document.getElementById("productPriceAmount") || document.querySelector(".current-price .price-amount");
+    const oldRowEl = document.getElementById("productOriginalPriceRow") || document.querySelector(".original-price");
+    const oldAmountEl = document.getElementById("productOriginalAmount") || document.querySelector(".original-price .original-amount");
+    const discountEl = document.getElementById("productDiscountLabel") || document.querySelector(".discount-label");
+    const savingsEl = document.getElementById("productSavingsHint");
+    const stockEl = document.getElementById("variantStockStatus");
+
+    if (!isNaN(vPrice) && priceAmountEl) {
+      priceAmountEl.textContent = formatLocalPriceStr(vPrice);
+    }
+
+    if (vOld && !isNaN(vOld) && !isNaN(vPrice) && vOld > vPrice) {
+      const discPct = Math.round(((vOld - vPrice) / vOld) * 100);
+      const savings = Math.round(vOld - vPrice);
+      if (oldAmountEl) oldAmountEl.textContent = formatLocalPriceStr(vOld);
+      if (oldRowEl) oldRowEl.style.display = "flex";
+      if (discountEl) {
+        discountEl.textContent = `-${discPct}%`;
+        discountEl.style.display = "inline-block";
+      }
+      if (savingsEl) {
+        savingsEl.textContent = `Ušteda: ${formatLocalPriceStr(savings)} RSD`;
+        savingsEl.style.display = "block";
+      }
+    } else {
+      if (oldRowEl) oldRowEl.style.display = "none";
+      if (discountEl) discountEl.style.display = "none";
+      if (savingsEl) savingsEl.style.display = "none";
+    }
+
+    if (stockEl && vStock !== null && !isNaN(vStock)) {
+      stockEl.classList.remove("low-stock", "out-of-stock");
+      if (vStock <= 0) {
+        stockEl.textContent = "Trenutno nema na stanju";
+        stockEl.classList.add("out-of-stock");
+      } else if (vStock <= 5) {
+        stockEl.textContent = `Još samo ${vStock} na stanju`;
+        stockEl.classList.add("low-stock");
+      } else {
+        stockEl.textContent = "Na stanju";
+      }
+    }
+  }
+
   const sizeButtons = document.querySelectorAll(".size-btn");
   sizeButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
       sizeButtons.forEach((b) => b.classList.remove("active"));
       this.classList.add("active");
+      applySelectedVariantUI(this);
+    });
+  });
+
+  // Color selection
+  const colorButtons = document.querySelectorAll(".color-btn");
+  const selectedColorNameEl = document.getElementById("selectedColorName");
+  colorButtons.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      colorButtons.forEach((b) => b.classList.remove("active"));
+      this.classList.add("active");
+      if (selectedColorNameEl) {
+        selectedColorNameEl.textContent = this.getAttribute("data-color") || "";
+      }
     });
   });
 
@@ -1498,18 +1571,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         this.classList.remove("adding");
       }, 600);
 
-      // Get product ID from button data attribute
+      // Get selected options & product ID
       const productId = addToCartBtn.getAttribute("data-product-id");
-      if (productId && typeof addToCart !== 'undefined') {
-        addToCart(productId);
-      }
+      const activeVariantBtn = document.querySelector(".size-btn.active");
+      const selectedVariant =
+        activeVariantBtn?.getAttribute("data-variant-label") ||
+        activeVariantBtn?.getAttribute("data-size") ||
+        "";
 
-      // Get selected options
-      const selectedSize = document.querySelector(".size-btn.active")?.getAttribute("data-size");
+      if (productId && typeof addToCart !== 'undefined') {
+        addToCart(productId, 1, selectedVariant);
+      }
 
       console.log("Added to cart:", {
         productId: productId,
-        size: selectedSize,
+        variant: selectedVariant,
       });
     });
   }
@@ -1518,12 +1594,19 @@ document.addEventListener("DOMContentLoaded", async function () {
   const buyNowBtn = document.querySelector(".btn-buy-now");
   if (buyNowBtn) {
     buyNowBtn.addEventListener("click", function () {
-      // Get product ID from product container
+      // Get product ID from button or container
       const productContainer = document.querySelector(".product-container");
-      const productId = productContainer?.getAttribute("data-product-id");
-      
+      const productId =
+        buyNowBtn.getAttribute("data-product-id") ||
+        productContainer?.getAttribute("data-product-id");
+      const activeVariantBtn = document.querySelector(".size-btn.active");
+      const selectedVariant =
+        activeVariantBtn?.getAttribute("data-variant-label") ||
+        activeVariantBtn?.getAttribute("data-size") ||
+        "";
+
       if (productId && typeof addToCart !== 'undefined') {
-        addToCart(productId);
+        addToCart(productId, 1, selectedVariant);
       }
       
       // Redirect to shopping cart
@@ -1622,23 +1705,19 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
     
     try {
-      // Use preloaded JSON if available, otherwise fetch
+      // Use loadProductsData from clone.js or fetch /api/products directly
       let products;
-      if (window.productJsonPromise) {
-        console.log('[RECOMMENDED] Using preloaded JSON');
+      if (typeof loadProductsData === 'function') {
+        products = await loadProductsData();
+      } else if (window.productJsonPromise) {
         products = await window.productJsonPromise;
       } else {
-        console.log('[RECOMMENDED] Fetching JSON from server');
-        const response = await fetch('/json/product.json', {
-          cache: 'no-store',
-          headers: { 'Cache-Control': 'no-cache' }
-        });
-        
+        const response = await fetch('/api/products?limit=1000');
         if (!response.ok) {
           throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
         }
-        
-        products = await response.json();
+        const data = await response.json();
+        products = Array.isArray(data) ? data : (data.products || []);
       }
       console.log('[RECOMMENDED] Products loaded:', products.length);
 
@@ -1660,11 +1739,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       container.innerHTML = '';
       displayRecommendedProducts(recommendedProducts);
 
-      // Fetch images in batch (optimized)
-      const productIds = recommendedProducts.map(p => p.id);
-      console.log('[RECOMMENDED] Fetching images for', productIds.length, 'products');
-      const imagesData = await fetchProductImagesBatch(productIds);
-      console.log('[RECOMMENDED] Images data received:', Object.keys(imagesData).length, 'products have images');
+      // Use images from API response directly, fallback to batch only if missing
+      const missingIds = recommendedProducts
+        .filter(p => !Array.isArray(p.images) || p.images.length === 0)
+        .map(p => p.id);
+      const imagesData = missingIds.length > 0 ? await fetchProductImagesBatch(missingIds) : {};
       
       // Update images when loaded
       updateRecommendedProductImages(imagesData, recommendedProducts);
@@ -1699,10 +1778,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       btn.addEventListener("click", function (e) {
         e.stopPropagation();
         
-        // Get product ID from data attribute
+        // Get product ID & default variant from data attributes
         const productId = btn.getAttribute("data-product-id");
+        const defaultVariant = btn.getAttribute("data-default-variant") || "";
         if (productId && typeof addToCart !== 'undefined') {
-          addToCart(productId);
+          addToCart(productId, 1, defaultVariant);
         }
         
         // Get button position
@@ -1774,13 +1854,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     recommendedBuyNowBtns.forEach((btn) => {
       btn.addEventListener("click", function (e) {
         e.stopPropagation();
-        // Get product ID from the card
+        // Get product ID and default variant from the card/button
         const card = btn.closest(".recommended-card");
         const productId = card?.getAttribute("data-product-id");
+        const defaultVariant = btn.getAttribute("data-default-variant") || "";
         
         // Add product to cart
         if (productId && typeof addToCart !== 'undefined') {
-          addToCart(productId);
+          addToCart(productId, 1, defaultVariant);
         }
         
         // Redirect to shopping cart
@@ -1796,10 +1877,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (!container) return;
 
     container.innerHTML = products.map((product, index) => {
-      const price = product.salePrice && product.salePrice !== '/' ? product.salePrice : product.price;
-      const hasDiscount = product.salePrice && product.salePrice !== '/' && product.percentage && product.percentage !== '/' && product.percentage !== '0%';
-      const discountPercentage = hasDiscount ? product.percentage : '';
-      const oldPriceValue = hasDiscount ? product.price : null;
+      const variantsList = Array.isArray(product.variants) && product.variants.length > 0 ? product.variants : [];
+      const firstVar = variantsList[0] || null;
+      const defaultVariantLabel = firstVar ? firstVar.label : ((Array.isArray(product.sizes) && product.sizes[0]) || '');
+      const variantPrices = variantsList.map(v => Number(v.price)).filter(n => !isNaN(n) && n > 0);
+      const minPrice = variantPrices.length ? Math.min(...variantPrices) : (parseFloat(product.price) || 0);
+      const maxPrice = variantPrices.length ? Math.max(...variantPrices) : minPrice;
+      const hasPriceRange = maxPrice > minPrice;
+      const price = firstVar ? (Number(firstVar.price) || parseFloat(product.price) || 0) : (parseFloat(product.price) || 0);
+      const oldRaw = firstVar ? firstVar.oldPrice : product.oldPrice;
+      const oldPriceValue = oldRaw && Number(oldRaw) > price ? Number(oldRaw) : null;
+      const hasDiscount = Boolean(oldPriceValue && price > 0);
+      const discountPercentage = hasDiscount ? `${Math.round(((oldPriceValue - price) / oldPriceValue) * 100)}%` : '';
+      const priceLabelText = hasPriceRange
+        ? `od ${formatPriceString(minPrice)} RSD`
+        : `${formatPriceString(price)} RSD`;
 
       return `
         <div class="recommended-card" data-product-id="${product.id}">
@@ -1829,14 +1921,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             <span class="product-brand">${product.brand || 'Brend'}</span>
             <h4>${product.title}</h4>
             <div class="recommended-price-container">
-              ${oldPriceValue ? `<div class="recommended-old-price">${formatPriceString(oldPriceValue)} RSD</div>` : ''}
-              <div class="recommended-price">${formatPriceString(price)} RSD</div>
+              ${!hasPriceRange && oldPriceValue ? `<div class="recommended-old-price">${formatPriceString(oldPriceValue)} RSD</div>` : ''}
+              <div class="recommended-price">${priceLabelText}</div>
             </div>
             <div class="recommended-btns-flex">
-              <button class="recommended-buy-now" data-product-url="/${slugify(product.title)}">
+              <button class="recommended-buy-now" data-product-url="/${product.slug || slugify(product.title)}" data-default-variant="${defaultVariantLabel.replace(/"/g, '&quot;')}">
                 Kupi sada
               </button>
-              <button class="recommended-add-to-cart" data-product-id="${product.id}">
+              <button class="recommended-add-to-cart" data-product-id="${product.id}" data-default-variant="${defaultVariantLabel.replace(/"/g, '&quot;')}">
                 <span class="material-symbols-outlined cart-icon">add_shopping_cart</span>
               </button>
             </div>
@@ -1932,10 +2024,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       
       if (!productImage || !imageContainer) return;
 
+      const directImgs = Array.isArray(product.images) ? product.images : [];
       const productImages = imagesData[product.id] || [];
-      const imageUrls = productImages.length > 0 
-        ? productImages.map(img => img.url)
-        : [];
+      const imageUrls = directImgs.length > 0
+        ? directImgs
+        : productImages.map(img => img.url);
 
       // Start with image hidden and skeleton visible
       productImage.style.opacity = '0';

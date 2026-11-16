@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="sr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Kontrolna tabla | Happy Animals Admin</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    
+    <!-- Google Fonts Matching Storefront -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Classic Admin CSS (0 SCSS, 0 Frameworks) -->
+    <link href="/admin/css/admin.css?v=2.4" rel="stylesheet" />
+  </head>
+
+  <body id="page-top">
+    <div id="wrapper">
+      <ul class="sidebar" id="accordionSidebar"></ul>
+
+      <div id="content-wrapper">
+        <div id="content">
+          <!-- Topbar -->
+          <nav class="topbar mb-4">
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none" title="Meni">
+              <i class="fa fa-bars"></i>
+            </button>
+            <ul class="navbar-nav ml-auto">
+              <div class="topbar-divider d-none d-sm-block"></div>
+              <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="mr-2 d-none d-lg-inline text-muted small font-weight-bold">Admin</span>
+                  <img class="img-profile" src="/admin/img/avatar.jpg" alt="Avatar" />
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                  <a class="dropdown-item" href="/logout" id="logoutBTN">
+                    <i class="fas fa-sign-out-alt fa-sm"></i> Odjavite se
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Sadržaj kontrolne table -->
+          <div class="container-fluid">
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+              <div>
+                <h1 class="h3 mb-1" style="color: #2c2527; font-weight: 800;">Kontrolna tabla</h1>
+                <p class="text-muted small mb-0">Pregled poslovanja i ključnih metrika Happy Animals prodavnice</p>
+              </div>
+              <a href="/admin/proizvodi" class="btn btn-primary">
+                <i class="fas fa-boxes fa-sm mr-1"></i> Upravljanje proizvodima
+              </a>
+            </div>
+
+            <!-- KPI Kartice -->
+            <div class="row">
+              <div class="col-xl-4 col-md-4 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #7c2e4b; font-size: 0.78rem;">Ukupno artikala</div>
+                        <div class="h5 mb-0 font-weight-bold" style="color: #2c2527; font-size: 1.6rem;" id="dashTotalProducts">
+                          <span class="skeleton skeleton-kpi"></span>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-boxes fa-2x" style="color: #d76a92; font-size: 2rem;"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-4 col-md-4 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1" style="font-size: 0.78rem;">Aktivni artikli</div>
+                        <div class="h5 mb-0 font-weight-bold" style="color: #2c2527; font-size: 1.6rem;" id="dashActiveProducts">
+                          <span class="skeleton skeleton-kpi"></span>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-success" style="font-size: 2rem;"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xl-4 col-md-4 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                  <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                      <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1" style="font-size: 0.78rem;">Ukupno porudžbina</div>
+                        <div class="h5 mb-0 font-weight-bold" style="color: #2c2527; font-size: 1.6rem;" id="dashTotalOrders">
+                          <span class="skeleton skeleton-kpi"></span>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-shopping-bag fa-2x text-info" style="font-size: 2rem;"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Poslednje porudžbine tabela -->
+            <div class="card shadow mb-4">
+              <div class="card-header py-3 d-flex align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold" style="color: #7c2e4b;">Najnovije porudžbine</h6>
+                <a href="/admin/narudzbe" class="small font-weight-bold text-primary">Pogledaj sve &rarr;</a>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead>
+                      <tr>
+                        <th>Broj</th>
+                        <th>Kupac</th>
+                        <th>Grad</th>
+                        <th>Iznos</th>
+                        <th>Status</th>
+                        <th class="text-center">Akcija</th>
+                      </tr>
+                    </thead>
+                    <tbody id="recentOrdersList">
+                      <% for(let i = 0; i < 5; i++) { %>
+                      <tr class="skeleton-row">
+                        <td><div class="skeleton skeleton-text" style="width: 130px; height: 16px;"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 100px; height: 15px;"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 80px; height: 14px;"></div></td>
+                        <td><div class="skeleton skeleton-text" style="width: 90px; height: 15px;"></div></td>
+                        <td><div class="skeleton skeleton-badge" style="width: 80px;"></div></td>
+                        <td class="text-center"><div class="skeleton skeleton-btn" style="width: 65px; height: 28px; border-radius: 4px;"></div></td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pure Classic JS (0 Dependencies) -->
+    <script src="/admin/js/clone.js?v=2.4"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const [statsRes, orderRes] = await Promise.all([
+            fetch("/api/admin/dashboard-stats"),
+            fetch("/api/orders?limit=10"),
+          ]);
+          const statsData = await statsRes.json();
+          const orderData = await orderRes.json();
+
+          if (statsData && statsData.success && statsData.stats) {
+            document.getElementById("dashTotalProducts").textContent = statsData.stats.totalProducts ?? 0;
+            document.getElementById("dashActiveProducts").textContent = statsData.stats.activeProducts ?? 0;
+            document.getElementById("dashTotalOrders").textContent = statsData.stats.totalOrders ?? 0;
+          } else {
+            // Fallback na agregirane podatke iz /api/orders
+            const orders = orderData.orders || [];
+            document.getElementById("dashTotalOrders").textContent = orderData.totalCount ?? orders.length;
+          }
+
+          const orders = (orderData && orderData.orders) || [];
+          const tbody = document.getElementById("recentOrdersList");
+          if (!orders.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Još uvek nema novih porudžbina.</td></tr>';
+            return;
+          }
+
+          function escapeHtml(str) {
+            if (str === null || str === undefined) return "";
+            return String(str)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+          }
+
+          function formatStatusName(status) {
+            if (!status) return "Na čekanju";
+            const clean = String(status).trim().toLowerCase().replace(/-/g, "_");
+            const map = {
+              na_cekanju: "Na čekanju",
+              cekanje: "Na čekanju",
+              pending: "Na čekanju",
+              aktivne: "Na čekanju",
+              obradjeno: "Obrađeno",
+              processing: "Obrađeno",
+              poslato: "Poslato",
+              shipped: "Poslato",
+              isporuceno: "Isporučeno",
+              delivered: "Isporučeno",
+              otkazano: "Otkazano",
+              cancelled: "Otkazano",
+              canceled: "Otkazano",
+            };
+            return map[clean] || status || "Na čekanju";
+          }
+
+          tbody.innerHTML = orders.slice(0, 5).map(o => {
+            const orderNum = escapeHtml(o.orderNumber || o._id);
+            const fullName = escapeHtml(`${o.firstName || ""} ${o.lastName || ""}`.trim() || "-");
+            const city = escapeHtml(o.city || "-");
+            const totalStr = (Number(o.totalAmount) || 0).toLocaleString("sr-RS");
+            const rawStatus = escapeHtml((o.status || "na_cekanju").trim().toLowerCase().replace(/-/g, "_"));
+            const displayStatus = escapeHtml(formatStatusName(o.status));
+
+            return `
+              <tr>
+                <td class="font-weight-bold" style="color: #7c2e4b;">${orderNum}</td>
+                <td>${fullName}</td>
+                <td>${city}</td>
+                <td><strong>${totalStr} RSD</strong></td>
+                <td><span class="badge-status-${rawStatus}">${displayStatus}</span></td>
+                <td class="text-center"><a href="/admin/narudzbe" class="btn btn-sm btn-outline-primary">Pregledaj</a></td>
+              </tr>
+            `;
+          }).join("");
+        } catch (e) {
+          console.error("Dashboard stats error", e);
+        }
+      });
+    </script>
+  </body>
+</html>
