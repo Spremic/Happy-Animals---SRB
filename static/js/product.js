@@ -1366,6 +1366,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         stockEl.textContent = "Na stanju";
       }
     }
+
+    const addCartCtrl = document.querySelector(".btn-add-cart");
+    const buyNowCtrl = document.querySelector(".btn-buy-now");
+    const isOutOfStock = vStock !== null && !isNaN(vStock) && vStock <= 0;
+    if (addCartCtrl) {
+      addCartCtrl.disabled = isOutOfStock;
+      addCartCtrl.classList.toggle("out-of-stock-disabled", isOutOfStock);
+    }
+    if (buyNowCtrl) {
+      buyNowCtrl.disabled = isOutOfStock;
+      buyNowCtrl.classList.toggle("out-of-stock-disabled", isOutOfStock);
+    }
   }
 
   const sizeButtons = document.querySelectorAll(".size-btn");
@@ -1376,6 +1388,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       applySelectedVariantUI(this);
     });
   });
+
+  const initialActiveSizeBtn = document.querySelector(".size-btn.active");
+  if (initialActiveSizeBtn) {
+    applySelectedVariantUI(initialActiveSizeBtn);
+  }
 
   // Color selection
   const colorButtons = document.querySelectorAll(".color-btn");
@@ -1514,6 +1531,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   
   if (addToCartBtn) {
     addToCartBtn.addEventListener("click", function () {
+      const activeVariantBtnEarly = document.querySelector(".size-btn.active");
+      const activeStockRaw = activeVariantBtnEarly?.getAttribute("data-variant-stock");
+      if (activeStockRaw !== null && activeStockRaw !== "" && parseInt(activeStockRaw, 10) <= 0) {
+        return;
+      }
+
       // Get button position
       const buttonRect = addToCartBtn.getBoundingClientRect();
       const buttonX = buttonRect.left + buttonRect.width / 2;
@@ -1578,14 +1601,20 @@ document.addEventListener("DOMContentLoaded", async function () {
         activeVariantBtn?.getAttribute("data-variant-label") ||
         activeVariantBtn?.getAttribute("data-size") ||
         "";
+      const activeColorBtn = document.querySelector(".color-btn.active");
+      const selectedColor =
+        activeColorBtn?.getAttribute("data-color") ||
+        document.getElementById("selectedColorName")?.textContent?.trim() ||
+        "";
 
       if (productId && typeof addToCart !== 'undefined') {
-        addToCart(productId, 1, selectedVariant);
+        addToCart(productId, 1, selectedVariant, selectedColor);
       }
 
       console.log("Added to cart:", {
         productId: productId,
         variant: selectedVariant,
+        color: selectedColor,
       });
     });
   }
@@ -1594,6 +1623,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   const buyNowBtn = document.querySelector(".btn-buy-now");
   if (buyNowBtn) {
     buyNowBtn.addEventListener("click", function () {
+      const activeVariantBtnEarly = document.querySelector(".size-btn.active");
+      const activeStockRaw = activeVariantBtnEarly?.getAttribute("data-variant-stock");
+      if (activeStockRaw !== null && activeStockRaw !== "" && parseInt(activeStockRaw, 10) <= 0) {
+        return;
+      }
+
       // Get product ID from button or container
       const productContainer = document.querySelector(".product-container");
       const productId =
@@ -1604,9 +1639,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         activeVariantBtn?.getAttribute("data-variant-label") ||
         activeVariantBtn?.getAttribute("data-size") ||
         "";
+      const activeColorBtn = document.querySelector(".color-btn.active");
+      const selectedColor =
+        activeColorBtn?.getAttribute("data-color") ||
+        document.getElementById("selectedColorName")?.textContent?.trim() ||
+        "";
 
       if (productId && typeof addToCart !== 'undefined') {
-        addToCart(productId, 1, selectedVariant);
+        addToCart(productId, 1, selectedVariant, selectedColor);
       }
       
       // Redirect to shopping cart
@@ -1614,27 +1654,54 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  // Image zoom button (placeholder - can be enhanced with lightbox)
+  // Image zoom lightbox helper
+  function openProductImageLightbox() {
+    const imgSrc = mainImage ? mainImage.getAttribute("src") || mainImage.src : "";
+    if (!imgSrc) return;
+    let lightbox = document.getElementById("productImageLightbox");
+    if (!lightbox) {
+      lightbox = document.createElement("div");
+      lightbox.id = "productImageLightbox";
+      lightbox.style.cssText =
+        "position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;padding:24px;";
+      const closeBtn = document.createElement("button");
+      closeBtn.type = "button";
+      closeBtn.setAttribute("aria-label", "Zatvori uvećanu sliku");
+      closeBtn.textContent = "×";
+      closeBtn.style.cssText =
+        "position:absolute;top:18px;right:24px;background:#1a1a1a;color:#fff;border:1px solid #444;border-radius:50%;width:42px;height:42px;font-size:26px;line-height:1;cursor:pointer;";
+      const bigImg = document.createElement("img");
+      bigImg.id = "productLightboxImg";
+      bigImg.alt = mainImage?.alt || "Slika proizvoda";
+      bigImg.style.cssText =
+        "max-width:92vw;max-height:88vh;border-radius:12px;object-fit:contain;box-shadow:0 12px 40px rgba(0,0,0,0.6);";
+      closeBtn.addEventListener("click", () => {
+        lightbox.style.display = "none";
+      });
+      lightbox.addEventListener("click", (ev) => {
+        if (ev.target === lightbox) lightbox.style.display = "none";
+      });
+      lightbox.appendChild(closeBtn);
+      lightbox.appendChild(bigImg);
+      document.body.appendChild(lightbox);
+    }
+    const lbImg = document.getElementById("productLightboxImg");
+    if (lbImg) lbImg.src = imgSrc;
+    lightbox.style.display = "flex";
+  }
+
   const zoomBtn = document.querySelector(".image-zoom-btn");
 
   if (zoomBtn && mainImageContainer) {
     zoomBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      // Only allow zoom on screens 1024px and above
-      if (window.innerWidth >= 1024) {
-        // TODO: Implement lightbox/modal for image zoom
-        console.log("Zoom image");
-      }
+      openProductImageLightbox();
     });
   }
 
   if (mainImageContainer) {
     mainImageContainer.addEventListener("click", function () {
-      // Only open zoom on screens 1024px and above
-      if (window.innerWidth >= 1024) {
-        // TODO: Implement lightbox on main image click
-        console.log("Open image in lightbox");
-      }
+      openProductImageLightbox();
     });
   }
 
@@ -1642,8 +1709,23 @@ document.addEventListener("DOMContentLoaded", async function () {
   const viewMoreBtn = document.querySelector(".view-more-btn");
   if (viewMoreBtn) {
     viewMoreBtn.addEventListener("click", function () {
-      // TODO: Navigate to seller page or show seller details
-      console.log("View seller details");
+      let panel = document.getElementById("sellerMoreInfoPanel");
+      if (panel) {
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+        return;
+      }
+      panel = document.createElement("div");
+      panel.id = "sellerMoreInfoPanel";
+      panel.style.cssText =
+        "margin-top:12px;padding:12px 14px;border-radius:8px;background:rgba(0,153,0,0.08);border:1px solid rgba(0,153,0,0.35);color:#e6e6e6;font-size:0.9rem;line-height:1.5;";
+      panel.textContent =
+        "Happy Animals — Ovlašćeni pet shop sa 100% originalnim proizvodima proverenih proizvođača, brzom dostavom širom Srbije (besplatno preko 3.000 RSD) i stručnim savetima za negu ljubimaca.";
+      const sellerCard = document.querySelector(".seller-card");
+      if (sellerCard) {
+        sellerCard.appendChild(panel);
+      } else {
+        document.body.appendChild(panel);
+      }
     });
   }
 

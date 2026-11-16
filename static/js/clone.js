@@ -79,15 +79,33 @@ window.getDefaultVariantLabel = getDefaultVariantLabel;
 window.resolveProductVariant = resolveProductVariant;
 window.getProductPriceSummary = getProductPriceSummary;
 
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+window.escapeHtml = escapeHtml;
+
 let _cartRefreshTimer = null;
-function addToCart(productId, quantity = 1, variant = "") {
+function addToCart(productId, quantity = 1, variant = "", color = "") {
   const cart = getCartItems();
   const normVar = String(variant || "").trim();
-  const existingItem = cart.find(item => item.id === productId && String(item.variant || "").trim() === normVar);
+  const normColor = String(color || "").trim();
+  const existingItem = cart.find(item =>
+    item.id === productId &&
+    String(item.variant || "").trim() === normVar &&
+    String(item.color || "").trim() === normColor
+  );
   if (existingItem) {
     existingItem.quantity += quantity;
   } else {
-    cart.push({ id: productId, quantity: quantity, variant: normVar });
+    const entry = { id: productId, quantity: quantity, variant: normVar };
+    if (normColor) entry.color = normColor;
+    cart.push(entry);
   }
   localStorage.setItem('cart', JSON.stringify(cart));
   if (typeof renderCartDrawer === 'function') {
@@ -348,34 +366,43 @@ async function renderCartDrawer() {
     const resolvedVar = resolveProductVariant(product, cartItem.variant);
     const price = parseFloat(resolvedVar.price) || 0;
     const variantLabel = String(cartItem.variant || resolvedVar.label || '').trim();
-    const escVar = variantLabel.replace(/"/g, '&quot;');
-    const variantSubtitle = [product.brand || '', variantLabel ? `<strong>${variantLabel}</strong>` : ''].filter(Boolean).join(' • ');
+    const colorLabel = String(cartItem.color || '').trim();
+    const safeProdId = escapeHtml(product.id);
+    const safeTitle = escapeHtml(product.title);
+    const safeBrand = escapeHtml(product.brand || '');
+    const safeVar = escapeHtml(variantLabel);
+    const safeColor = escapeHtml(colorLabel);
+    const variantSubtitle = [
+      safeBrand,
+      safeVar ? `<strong>${safeVar}</strong>` : '',
+      safeColor ? `<span>${safeColor}</span>` : ''
+    ].filter(Boolean).join(' • ');
     const itemTotal = price * quantity;
     total += itemTotal;
     totalItems += quantity;
     
     html += `
-      <div class="cart-item" data-product-id="${product.id}" data-variant="${escVar}">
+      <div class="cart-item" data-product-id="${safeProdId}" data-variant="${safeVar}">
         <div class="item-img">
           <div class="item-img-skeleton"></div>
           <div class="item-img-error" style="display: none;">
             <span class="material-symbols-outlined">image_not_supported</span>
           </div>
-          <img src="" alt="${product.title}" loading="lazy" style="opacity: 0; display: block;">
+          <img src="" alt="${safeTitle}" loading="lazy" style="opacity: 0; display: block;">
         </div>
         <div class="item-details">
-          <h4>${product.title}</h4>
+          <h4>${safeTitle}</h4>
           <p class="item-variant">${variantSubtitle}</p>
           <div class="price-row">
             <span class="item-price">${formatPriceNumber(itemTotal)} RSD</span>
             <div class="qty-control">
-              <button class="qty-btn minus" data-product-id="${product.id}" data-variant="${escVar}">-</button>
-              <input type="number" value="${quantity}" min="1" readonly data-product-id="${product.id}" data-variant="${escVar}">
-              <button class="qty-btn plus" data-product-id="${product.id}" data-variant="${escVar}">+</button>
+              <button class="qty-btn minus" data-product-id="${safeProdId}" data-variant="${safeVar}">-</button>
+              <input type="number" value="${quantity}" min="1" readonly data-product-id="${safeProdId}" data-variant="${safeVar}">
+              <button class="qty-btn plus" data-product-id="${safeProdId}" data-variant="${safeVar}">+</button>
             </div>
           </div>
         </div>
-        <button class="remove-item" data-product-id="${product.id}" data-variant="${escVar}">
+        <button class="remove-item" data-product-id="${safeProdId}" data-variant="${safeVar}">
           <span class="material-symbols-outlined">delete</span>
         </button>
       </div>
@@ -1173,7 +1200,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               <a href="/about"><li>O Nama</li></a>
               <a href="/gallery"><li>Galerija</li></a>
               <li class="dropdown">
-                <a href="/products">Proizvodi</a>
+                <a href="/all-products">Proizvodi</a>
                 <div class="mega-dropdown">
                   <div class="mega-dropdown-wrapper">
                     <!-- Left Sidebar: Categories List -->
@@ -1223,7 +1250,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 </li>
               </a>
               <li class="dropdown">
-                <a href="/products" class="mobile-menu-products-link">
+                <a href="/all-products" class="mobile-menu-products-link">
                   <span class="material-symbols-outlined">shopping_bag</span>
                   <span>Proizvodi</span>
                   <span class="material-symbols-outlined dropdown-arrow">chevron_right</span>
@@ -2444,4 +2471,22 @@ document.addEventListener("DOMContentLoaded", async function () {
   if (reloadPageBtn) {
     reloadPageBtn.addEventListener("click", () => window.location.reload());
   }
+
+  // Delegated navigation for accessible standalone CTA buttons
+  document.addEventListener("click", (e) => {
+    const navBtn = e.target.closest("button[data-nav-href]");
+    if (!navBtn) return;
+    const targetUrl = navBtn.getAttribute("data-nav-href");
+    if (!targetUrl) return;
+    if (targetUrl.startsWith("#")) {
+      const targetEl = document.querySelector(targetUrl);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.location.hash = targetUrl;
+      }
+    } else {
+      window.location.href = targetUrl;
+    }
+  });
 });

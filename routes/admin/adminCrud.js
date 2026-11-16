@@ -1,7 +1,9 @@
+const mongoose = require("mongoose");
 const Admin = require("../../db/admin");
 const Order = require("../../db/order");
 const Product = require("../../db/proizvodi");
 const bcrypt = require("bcryptjs");
+const { clearAdminSessionCache } = require("../../utils/auth");
 
 async function getAdmins(req, res) {
   try {
@@ -19,7 +21,11 @@ async function addAdmin(req, res) {
       return res.status(400).json({ success: false, message: "Sva polja su obavezna." });
     }
 
-    if (typeof password !== "string" || password.trim().length < 6) {
+    if (typeof name !== "string" || typeof mail !== "string" || typeof password !== "string") {
+      return res.status(400).json({ success: false, message: "Neispravan format podataka." });
+    }
+
+    if (password.trim().length < 6) {
       return res.status(400).json({ success: false, message: "Lozinka mora imati najmanje 6 karaktera." });
     }
 
@@ -71,6 +77,10 @@ async function updateAdmin(req, res) {
   try {
     const { id } = req.params;
     const { name, mail, password, permissions, adminType } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Neispravan ID administratora." });
+    }
 
     const caller = req.authUser;
     const callerIsMain = caller && caller.adminType === "main";
@@ -160,6 +170,7 @@ async function updateAdmin(req, res) {
     }
 
     await targetAdmin.save();
+    clearAdminSessionCache(id);
     res.json({ success: true, message: "Administrator uspešno ažuriran." });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -171,6 +182,10 @@ async function deleteAdmin(req, res) {
     const { id } = req.params;
     const caller = req.authUser;
     const callerIsMain = caller && caller.adminType === "main";
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Neispravan ID administratora." });
+    }
 
     // 1. Zabrana samobrisanja
     if (caller && String(caller._id) === String(id)) {
@@ -202,6 +217,7 @@ async function deleteAdmin(req, res) {
     }
 
     await Admin.findByIdAndDelete(id);
+    clearAdminSessionCache(id);
     res.json({ success: true, message: "Administrator uspešno obrisan." });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

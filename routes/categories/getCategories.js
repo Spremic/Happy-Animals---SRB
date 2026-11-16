@@ -223,6 +223,7 @@ async function fetchAndBuildCategories() {
 async function getCategories(req, res) {
   try {
     const categoriesWithData = await fetchAndBuildCategories();
+    res.setHeader("Cache-Control", "public, max-age=300, stale-while-revalidate=600");
     res.json({ success: true, categories: categoriesWithData });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

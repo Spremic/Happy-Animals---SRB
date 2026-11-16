@@ -73,6 +73,7 @@ const PUBLIC_PATHS = new Set([
   "/all-products",
   "/custom-page",
   "/proizvodi",
+  "/products",
   "/proizvod",
   "/info",
   "/about.html",
@@ -117,7 +118,9 @@ function isPublicRoute(reqOrPath, maybeMethod) {
     path = reqOrPath;
     method = maybeMethod || "GET";
   } else if (reqOrPath && typeof reqOrPath === "object") {
-    path = reqOrPath.path || "";
+    const rawOriginal = reqOrPath.originalUrl || reqOrPath.url || "";
+    const cleanOriginal = rawOriginal ? rawOriginal.split("?")[0] : "";
+    path = cleanOriginal || ((reqOrPath.baseUrl || "") + (reqOrPath.path || "")) || reqOrPath.path || "";
     method = reqOrPath.method || "GET";
   }
   method = method.toUpperCase();
@@ -244,7 +247,8 @@ function checkPermission(permission) {
       return next();
     }
 
-    if (req.path.startsWith("/api/")) {
+    const fullPath = req.originalUrl || ((req.baseUrl || "") + (req.path || "")) || req.path || "";
+    if (fullPath.startsWith("/api/")) {
       return res
         .status(403)
         .json({ success: false, message: "Nemate dozvolu za ovu akciju." });
@@ -386,5 +390,6 @@ module.exports = {
   getJwtSecret,
   getAuthCookieOptions,
   csrfProtection,
+  clearAdminSessionCache,
 };
 

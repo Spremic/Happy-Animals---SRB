@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Product = require("../../db/proizvodi");
 const GlavnaKategorija = require("../../db/glavna_kategorija");
 const { deleteLocalFolder } = require("../../utils/imageHelper");
@@ -7,6 +8,9 @@ const getCategories = require("../categories/getCategories");
 async function deleteProduct(req, res) {
   try {
     const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Neispravan ID proizvoda." });
+    }
     const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ success: false, message: "Proizvod nije pronađen." });

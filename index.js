@@ -232,7 +232,7 @@ const orderLimiter = rateLimit({
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 30,
+  max: 10,
   standardHeaders: "draft-7",
   legacyHeaders: false,
   validate: { trustProxy: false },
@@ -305,7 +305,7 @@ app.get(["/shopping-cart", "/korpa"], (req, res) => {
   res.sendFile(path.join(__dirname, "static", "shopping-cart.html"));
 });
 
-app.get(["/all-products", "/custom-page", "/proizvodi"], (req, res) => {
+app.get(["/all-products", "/custom-page", "/proizvodi", "/products"], (req, res) => {
   res.sendFile(path.join(__dirname, "static", "custom-page.html"));
 });
 
@@ -388,8 +388,8 @@ app.post("/api/product-images/batch", async (req, res) => {
 });
 
 // Upload lokalnih slika i Sharp WebP konverzija (admin)
-app.get("/api/cloudinary/first/:folder", getFirstImage);
-app.get("/api/cloudinary/all/:folder", getAllImages);
+app.get("/api/cloudinary/first/:folder", checkPermission("proizvodi"), getFirstImage);
+app.get("/api/cloudinary/all/:folder", checkPermission("proizvodi"), getAllImages);
 app.post("/api/upload-local", checkPermission("proizvodi"), upload.any(), uploadLocal);
 app.post("/api/cloudinary/upload-local", checkPermission("proizvodi"), upload.any(), uploadLocal);
 

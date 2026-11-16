@@ -268,6 +268,9 @@ async function getOrders(req, res) {
 async function getOrderById(req, res) {
   try {
     const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Neispravan ID porudžbine." });
+    }
     const order = await Order.findById(id).lean().exec();
     if (!order) {
       return res.status(404).json({ success: false, message: "Porudžbina nije pronađena." });
@@ -282,6 +285,10 @@ async function updateOrder(req, res) {
   try {
     const { id } = req.params;
     const { status, paymentStatus, note } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Neispravan ID porudžbine." });
+    }
 
     const order = await Order.findById(id);
     if (!order) {
@@ -331,6 +338,9 @@ async function updateOrder(req, res) {
 async function deleteOrder(req, res) {
   try {
     const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Neispravan ID porudžbine." });
+    }
     const order = await Order.findById(id);
     if (!order) {
       return res.status(404).json({ success: false, message: "Porudžbina nije pronađena." });

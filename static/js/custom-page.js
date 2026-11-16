@@ -533,24 +533,22 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function calculatePriceRanges(prices) {
     if (prices.length === 0) return [];
-    const min = Math.min(...prices);
-    const max = Math.max(...prices);
     const ranges = [];
-    
-    // Always show all relevant ranges based on actual price distribution
-    const hasLow = prices.some(p => p < 25);
-    const hasMid = prices.some(p => p >= 25 && p <= 75);
-    const hasHigh = prices.some(p => p > 75);
-    
-    if (hasLow) ranges.push({ label: 'Under 25 RSD', min: 0, max: 25 });
-    if (hasMid) ranges.push({ label: '25 - 75 RSD', min: 25, max: 75 });
-    if (hasHigh) ranges.push({ label: 'Over 75 RSD', min: 75, max: Infinity });
-    
-    // If no ranges, add default
+
+    const hasTier1 = prices.some(p => p <= 1500);
+    const hasTier2 = prices.some(p => p > 1500 && p <= 4000);
+    const hasTier3 = prices.some(p => p > 4000 && p <= 8000);
+    const hasTier4 = prices.some(p => p > 8000);
+
+    if (hasTier1) ranges.push({ label: 'Do 1.500 RSD', min: 0, max: 1500 });
+    if (hasTier2) ranges.push({ label: '1.500 - 4.000 RSD', min: 1500, max: 4000 });
+    if (hasTier3) ranges.push({ label: '4.000 - 8.000 RSD', min: 4000, max: 8000 });
+    if (hasTier4) ranges.push({ label: 'Preko 8.000 RSD', min: 8000, max: Infinity });
+
     if (ranges.length === 0) {
-      ranges.push({ label: 'All Prices', min: 0, max: Infinity });
+      ranges.push({ label: 'Sve cene', min: 0, max: Infinity });
     }
-    
+
     return ranges;
   }
 

@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const fsPromises = fs.promises;
 const sharp = require("sharp");
+const mongoose = require("mongoose");
 sharp.cache(false);
 
 const Product = require("../../db/proizvodi");
@@ -88,6 +89,10 @@ async function updateProduct(req, res) {
       isFeatured,
       isBestseller,
     } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ success: false, message: "Neispravan ID proizvoda." });
+    }
 
     const existingProduct = await Product.findById(id).exec();
     if (!existingProduct) {

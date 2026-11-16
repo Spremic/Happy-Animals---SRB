@@ -33,12 +33,20 @@ function isSafeRemoteUrl(urlString) {
   try {
     const parsed = new URL(urlString);
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return false;
-    const host = parsed.hostname.toLowerCase();
+    const rawHost = parsed.hostname.toLowerCase();
+    const host = rawHost.replace(/^\[|\]$/g, "");
     if (
       host === "localhost" ||
       host === "127.0.0.1" ||
       host === "::1" ||
+      host === "::" ||
+      host === "0:0:0:0:0:0:0:1" ||
       host === "0.0.0.0" ||
+      host.startsWith("127.") ||
+      host.startsWith("fe80:") ||
+      host.startsWith("fc") ||
+      host.startsWith("fd") ||
+      host.startsWith("::ffff:") ||
       host.endsWith(".local") ||
       host.endsWith(".internal")
     ) {
@@ -90,6 +98,7 @@ async function uploadLocal(req, res) {
       try {
         const fetchRes = await fetch(targetUrl, {
           signal: controller.signal,
+          redirect: "error",
           headers: {
             "User-Agent":
               "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",

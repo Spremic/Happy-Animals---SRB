@@ -37,6 +37,18 @@ function slugify(value) {
 
 // Store productMap globally for use in event handlers
 let productMap = {};
+let activeCouponCode = "";
+let activeDiscountPercent = 0;
+
+function safeEscHtml(val) {
+  if (typeof escapeHtml === "function") return escapeHtml(val);
+  return String(val ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 // Render cart items dynamically
 async function renderCartItems() {
@@ -128,32 +140,41 @@ async function renderCartItems() {
       : { label: cartItem.variant || '', price: parseFloat(formatPrice(product)) || 0 };
     const price = parseFloat(resolvedVar.price) || 0;
     const variantLabel = String(cartItem.variant || resolvedVar.label || '').trim();
-    const escVar = variantLabel.replace(/"/g, '&quot;');
-    const brandVariantText = [product.brand || '', variantLabel ? `<strong>${variantLabel}</strong>` : ''].filter(Boolean).join(' • ');
+    const colorLabel = String(cartItem.color || '').trim();
+    const escId = safeEscHtml(product.id);
+    const escTitle = safeEscHtml(product.title);
+    const escBrand = safeEscHtml(product.brand || '');
+    const escVar = safeEscHtml(variantLabel);
+    const escColor = safeEscHtml(colorLabel);
+    const brandVariantText = [
+      escBrand,
+      escVar ? `<strong>${escVar}</strong>` : '',
+      escColor ? `<span>${escColor}</span>` : ''
+    ].filter(Boolean).join(' • ');
     const itemTotal = price * quantity;
     total += itemTotal;
     totalItems += quantity;
     const productSlug = slugify(product.title);
     
     html += `
-      <div class="order-item" data-product-id="${product.id}" data-variant="${escVar}">
-        <button class="remove-item" aria-label="Ukloni proizvod" data-product-id="${product.id}" data-variant="${escVar}">×</button>
+      <div class="order-item" data-product-id="${escId}" data-variant="${escVar}">
+        <button class="remove-item" aria-label="Ukloni proizvod" data-product-id="${escId}" data-variant="${escVar}">×</button>
         <div class="item-image">
           <div class="item-image-skeleton"></div>
           <div class="item-image-error" style="display: none;">
             <span class="material-symbols-outlined">image_not_supported</span>
           </div>
-          <img src="" alt="${product.title}" loading="lazy" style="opacity: 0; display: block;">
+          <img src="" alt="${escTitle}" loading="lazy" style="opacity: 0; display: block;">
         </div>
         <div class="item-info">
-          <h4 class="item-title">${product.title}</h4>
+          <h4 class="item-title">${escTitle}</h4>
           <p class="item-brand">${brandVariantText}</p>
           <div class="item-footer">
             <span class="item-price">${formatPriceNumber(itemTotal)} RSD</span>
             <div class="quantity-controls">
-              <button class="quantity-btn minus" aria-label="Smanji količinu" data-product-id="${product.id}" data-variant="${escVar}">-</button>
-              <span class="quantity" data-product-id="${product.id}" data-variant="${escVar}">${quantity}</span>
-              <button class="quantity-btn plus" aria-label="Povećaj količinu" data-product-id="${product.id}" data-variant="${escVar}">+</button>
+              <button class="quantity-btn minus" aria-label="Smanji količinu" data-product-id="${escId}" data-variant="${escVar}">-</button>
+              <span class="quantity" data-product-id="${escId}" data-variant="${escVar}">${quantity}</span>
+              <button class="quantity-btn plus" aria-label="Povećaj količinu" data-product-id="${escId}" data-variant="${escVar}">+</button>
             </div>
           </div>
         </div>
@@ -163,9 +184,24 @@ async function renderCartItems() {
   
   orderDetails.innerHTML = html;
   
-  // Update totals - show number of different products, not total quantity
+  const discountAmount = activeDiscountPercent > 0 ? Math.round(total * (activeDiscountPercent / 100)) : 0;
+  const shippingAmount = total >= 3000 || total === 0 ? 0 : 350;
+  const grandTotal = Math.max(0, total - discountAmount) + shippingAmount;
+
+  // Update totals - show number of different products, plus server-matching shipping & discount
   if (productCount) productCount.textContent = uniqueProducts;
-  if (orderTotal) orderTotal.textContent = `Ukupno: ${formatPriceNumber(total)} RSD`;
+  if (orderTotal) {
+    orderTotal.textContent = `Ukupno: ${formatPriceNumber(grandTotal)} RSD`;
+  }
+  const couponFeedback = document.getElementById('couponFeedback');
+  if (couponFeedback && total > 0) {
+    const parts = [`Dostava: ${shippingAmount === 0 ? 'Besplatna (0.00 RSD)' : `${formatPriceNumber(shippingAmount)} RSD`}`];
+    if (discountAmount > 0 && activeCouponCode) {
+      parts.push(`Kupon ${activeCouponCode}: -${formatPriceNumber(discountAmount)} RSD`);
+    }
+    couponFeedback.textContent = parts.join(' • ');
+    couponFeedback.style.color = discountAmount > 0 ? '#4ade80' : '#a0a0a0';
+  }
   
   // Use local images already present in API product data, fallback to batch only if missing
   if (validCartItems.length > 0) {
@@ -396,8 +432,51 @@ async function loadShoppingCartImagesFromCloudinary(cartItems, productMap) {
   });
 }
 
-// Initialize checkout form submission via /api/send-order & server-side stock validation
+// Initialize coupon button and checkout form submission via /api/send-order
 function setupCheckoutSubmission() {
+  const applyCouponBtn = document.getElementById('applyCouponBtn');
+  if (applyCouponBtn && !applyCouponBtn.dataset.bound) {
+    applyCouponBtn.dataset.bound = '1';
+    applyCouponBtn.addEventListener('click', async function () {
+      const codeInput = document.getElementById('couponCode');
+      const feedbackEl = document.getElementById('couponFeedback');
+      const codeVal = (codeInput?.value || '').trim();
+      if (!codeVal) {
+        activeCouponCode = '';
+        activeDiscountPercent = 0;
+        if (feedbackEl) {
+          feedbackEl.textContent = 'Molimo unesite kupon kod.';
+          feedbackEl.style.color = '#f87171';
+        }
+        renderCartItems();
+        return;
+      }
+      try {
+        const res = await fetch('/api/coupons/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: codeVal })
+        });
+        const data = await res.json();
+        if (res.ok && data.valid) {
+          activeCouponCode = data.code || codeVal.toUpperCase();
+          activeDiscountPercent = parseFloat(data.discountPercent) || 0;
+          renderCartItems();
+        } else {
+          activeCouponCode = '';
+          activeDiscountPercent = 0;
+          if (feedbackEl) {
+            feedbackEl.textContent = data.message || 'Neispravan kupon kod.';
+            feedbackEl.style.color = '#f87171';
+          }
+          renderCartItems();
+        }
+      } catch (err) {
+        console.error('Coupon validation error:', err);
+      }
+    });
+  }
+
   const paymentBtns = document.querySelectorAll('.payment-btn');
   if (!paymentBtns.length) return;
 
@@ -439,6 +518,7 @@ function setupCheckoutSubmission() {
           title: p.title || '',
           variant: chosenVariant,
           size: chosenVariant,
+          color: String(ci.color || '').trim() || 'Standard',
           quantity: parseInt(ci.quantity, 10) || 1,
           image: (Array.isArray(p.images) && p.images[0]) || p.imageUrl || ''
         };
@@ -463,6 +543,7 @@ function setupCheckoutSubmission() {
             postalCode,
             note,
             paymentMethod: selectedPayment,
+            couponCode: activeCouponCode || (document.getElementById('couponCode')?.value || '').trim(),
             items: payloadItems,
             acceptTerms: true
           })
@@ -476,6 +557,8 @@ function setupCheckoutSubmission() {
         }
 
         localStorage.setItem('cart', JSON.stringify([]));
+        activeCouponCode = '';
+        activeDiscountPercent = 0;
         if (typeof updateCartBadge === 'function') updateCartBadge();
 
         const orderDetails = document.querySelector('.order-details');

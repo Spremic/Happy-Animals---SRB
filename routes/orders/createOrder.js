@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 const Order = require("../../db/order");
 const Product = require("../../db/proizvodi");
@@ -5,6 +6,17 @@ const { sendOrderNotificationEmail } = require("../../utils/email");
 const getProducts = require("../products/getProducts");
 const getCategories = require("../categories/getCategories");
 const { resolveVariantForItem } = require("../../utils/productVariants");
+
+let _orderStockLock = Promise.resolve();
+function acquireOrderStockLock() {
+  let release;
+  const next = new Promise((resolve) => {
+    release = resolve;
+  });
+  const prev = _orderStockLock;
+  _orderStockLock = prev.then(() => next);
+  return prev.then(() => release);
+}
 
 async function createOrder(req, res) {
   try {
@@ -122,6 +134,16 @@ async function createOrder(req, res) {
     const productOrderMap = new Map();
 
     const unavailableItems = [];
+
+    let discount = 0;
+    let cleanCoupon = "";
+    let shipping = 0;
+    let totalAmount = 0;
+    const deductedProducts = [];
+    let rollbackDeductedStock = async () => {};
+
+    const releaseStockLock = await acquireOrderStockLock();
+    try {
 
     // =========================================================================
     // BEZBEDNOSNA VALIDACIJA: Provera svakog artikla u bazi podataka
@@ -353,8 +375,7 @@ async function createOrder(req, res) {
     // =========================================================================
     // SERVERSKI PRORAČUN KUPONA I POPUSTA
     // =========================================================================
-    let discount = 0;
-    const cleanCoupon = String(couponCode || "").trim().toUpperCase();
+    cleanCoupon = String(couponCode || "").trim().toUpperCase();
     if (cleanCoupon === "HA10" || cleanCoupon === "MIA10") {
       discount = Math.round(calculatedTotal * 0.1);
     } else if (cleanCoupon) {
@@ -368,16 +389,14 @@ async function createOrder(req, res) {
     // SERVERSKI PRORAČUN DOSTAVE (POTPUNO IGNORIŠE KLIJENTSKI shippingAmount!)
     // Pravilo sajta: Besplatna dostava za porudžbine >= 3.000 RSD, inače 350 RSD
     // =========================================================================
-    const shipping = calculatedTotal >= 3000 ? 0 : 350;
-    const totalAmount = Math.max(0, calculatedTotal - discount) + shipping;
+    shipping = calculatedTotal >= 3000 ? 0 : 350;
+    totalAmount = Math.max(0, calculatedTotal - discount) + shipping;
 
     // =========================================================================
     // ATOMSKO AŽURIRANJE ZALIHA (LAGERA) U BAZI PRE UPISA PORUDŽBINE
     // Sprečava Race Condition i zaobilaženje stanja dupliranim stavkama
     // =========================================================================
-    const deductedProducts = [];
-
-    const rollbackDeductedStock = async () => {
+    rollbackDeductedStock = async () => {
       for (const prev of deductedProducts) {
         try {
           const restored = await Product.findOneAndUpdate(
@@ -441,14 +460,28 @@ async function createOrder(req, res) {
 
       if (updateInfo.variantDeductions && updateInfo.variantDeductions.size > 0 && Array.isArray(updatedProd.variants) && updatedProd.variants.length > 0) {
         let varChanged = false;
+        let variantInsufficient = false;
         updatedProd.variants.forEach((v) => {
           const vKey = String(v.label || "").trim().toLowerCase();
           const vSub = updateInfo.variantDeductions.get(vKey);
           if (vSub) {
-            v.stock = Math.max(0, (typeof v.stock === "number" ? v.stock : 0) - vSub);
-            varChanged = true;
+            const avail = typeof v.stock === "number" ? v.stock : 0;
+            if (avail < vSub) {
+              variantInsufficient = true;
+            } else {
+              v.stock = avail - vSub;
+              varChanged = true;
+            }
           }
         });
+        if (variantInsufficient) {
+          await Product.findOneAndUpdate({ _id: prod._id }, { $inc: { stock: deductQty } });
+          await rollbackDeductedStock();
+          return res.status(400).json({
+            success: false,
+            message: `Za izabranu varijantu artikla "${prod.title}" više nema dovoljno zaliha na stanju.`,
+          });
+        }
         if (varChanged) {
           await updatedProd.save();
         }
@@ -467,10 +500,13 @@ async function createOrder(req, res) {
         variantDeductions: updateInfo.variantDeductions,
       });
     }
+    } finally {
+      releaseStockLock();
+    }
 
     // Generisanje čitljivog broja porudžbine
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-    const randomHex = Math.floor(1000 + Math.random() * 9000);
+    const randomHex = crypto.randomInt(1000, 10000);
     const orderNumber = `HA-${dateStr}-${randomHex}`;
 
     // Kreiranje porudžbine u bazi (uz rollback zaliha ako upis ne uspe)
