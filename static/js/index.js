@@ -148,14 +148,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const oldPriceValue = rawOld && Number(rawOld) > price ? Number(rawOld) : null;
       const hasDiscount = Boolean(oldPriceValue && price > 0);
       const discountPercentage = hasDiscount ? `${Math.round(((oldPriceValue - price) / oldPriceValue) * 100)}%` : '';
-      const variantLabelsText = variantsList.length
-        ? variantsList.slice(0, 3).map(v => v.label).join(' / ')
-        : (Array.isArray(product.sizes) && product.sizes.length ? product.sizes.slice(0, 3).join(' / ') : '');
-      const brandLine = [product.brand || '', variantLabelsText].filter(Boolean).join(' • ');
+      const brandLine = product.brand || 'Happy Animals';
       const escVar = defaultVariant.replace(/"/g, '&quot;');
       const priceText = hasPriceRange
         ? `od ${formatPriceString(minPrice)} RSD`
         : `${formatPriceString(price)} RSD`;
+      const optionsHTML = typeof window.buildCardOptionsHTML === 'function'
+        ? window.buildCardOptionsHTML(product)
+        : '';
       
       const cardHTML = `
         <div class="custom-card" data-product-id="${product.id}">
@@ -190,13 +190,14 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="content-c">
             <span class="product-brand">${brandLine}</span>
             <h4>${product.title}</h4>
+            ${optionsHTML}
             <div class="price-container">
               ${!hasPriceRange && oldPriceValue ? `<div class="price-old">${formatPriceString(oldPriceValue)} RSD</div>` : ''}
               <div class="price">${priceText}</div>
             </div>
             <div class="btns-flex">
               <button class="buy-now" data-default-variant="${escVar}">Kupi sada</button>
-              <button class="add-to-cart" data-product-id="${product.id}" data-default-variant="${escVar}">
+              <button class="add-to-cart" data-product-id="${product.id}" data-default-variant="${escVar}" aria-label="Dodaj u korpu">
                 <span class="material-symbols-outlined cart-icon">add_shopping_cart</span>
               </button>
             </div>
@@ -236,26 +237,34 @@ document.addEventListener("DOMContentLoaded", function () {
         checkHeartState();
       }
       
-      // Add click handler to card (except when clicking buttons)
+      // Add click handler to card (except when clicking buttons or option pills)
       card.addEventListener("click", function(e) {
-        // Don't navigate if clicking on buttons
-        if (e.target.closest(".buy-now") || e.target.closest(".add-to-cart") || e.target.closest(".heart-container")) {
+        if (
+          e.target.closest(".buy-now") ||
+          e.target.closest(".add-to-cart") ||
+          e.target.closest(".heart-container") ||
+          e.target.closest(".card-options-wrap") ||
+          e.target.closest(".card-variant-pill") ||
+          e.target.closest(".card-color-dot")
+        ) {
           return;
         }
         window.location.href = productUrl;
       });
       
-      // Add click handler to Buy Now button
+      // Add click handler to Buy Now button -> open quick options modal
       const buyNowBtn = card.querySelector(".buy-now");
       if (buyNowBtn) {
         buyNowBtn.addEventListener("click", function(e) {
           e.stopPropagation();
+          if (typeof window.openProductModalFromCard === 'function') {
+            window.openProductModalFromCard(card, 'buy_now');
+            return;
+          }
           const defaultVar = buyNowBtn.getAttribute("data-default-variant") || "";
-          // Add product to cart
           if (typeof addToCart !== 'undefined') {
             addToCart(product.id, 1, defaultVar);
           }
-          // Redirect to shopping cart
           window.location.href = '/shopping-cart';
         });
       }
@@ -681,7 +690,7 @@ document.addEventListener("DOMContentLoaded", function () {
   `;
   document.head.appendChild(style);
 
-  // Add to cart animation - using event delegation for dynamically added products
+  // Add to cart -> open universal options modal so user picks package/size/color
   document.addEventListener("click", function (e) {
     const addToCartButton = e.target.closest(".add-to-cart");
     if (!addToCartButton) return;
@@ -689,12 +698,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // Prevent event bubbling
     e.stopPropagation();
     
-    // Get product ID & default variant
+    const card = addToCartButton.closest(".custom-card");
+    if (card && typeof window.openProductModalFromCard === 'function') {
+      window.openProductModalFromCard(card, 'add_cart');
+      return;
+    }
+
+    // Legacy fallback if modal is unavailable
     const productId = addToCartButton.getAttribute("data-product-id");
     if (!productId) return;
     const defaultVar = addToCartButton.getAttribute("data-default-variant") || "";
-    
-    // Add to cart using localStorage
     if (typeof addToCart !== 'undefined') {
       addToCart(productId, 1, defaultVar);
     }

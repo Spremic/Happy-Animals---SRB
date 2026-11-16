@@ -1852,7 +1852,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // Recommended add to cart functionality with flying animation
+  // Recommended add to cart functionality -> open universal quick options modal
   function setupRecommendedAddToCart() {
     const recommendedAddToCartBtns = document.querySelectorAll(".recommended-add-to-cart");
     
@@ -1860,93 +1860,38 @@ document.addEventListener("DOMContentLoaded", async function () {
       btn.addEventListener("click", function (e) {
         e.stopPropagation();
         
-        // Get product ID & default variant from data attributes
+        const card = btn.closest(".recommended-card");
+        if (card && typeof window.openProductModalFromCard === "function") {
+          window.openProductModalFromCard(card, "add_cart");
+          return;
+        }
+
         const productId = btn.getAttribute("data-product-id");
         const defaultVariant = btn.getAttribute("data-default-variant") || "";
         if (productId && typeof addToCart !== 'undefined') {
           addToCart(productId, 1, defaultVariant);
         }
-        
-        // Get button position
-        const buttonRect = btn.getBoundingClientRect();
-        const buttonX = buttonRect.left + buttonRect.width / 2;
-        const buttonY = buttonRect.top + buttonRect.height / 2;
-
-        // Find cart icon each time (in case header loads after this script)
-        const cartIcon = document.querySelector("#openCart");
-        if (!cartIcon) {
-          console.warn("Cart icon (#openCart) not found. Header may not be loaded yet.");
-          return;
-        }
-        
-        const cartRect = cartIcon.getBoundingClientRect();
-        const cartX = cartRect.left + cartRect.width / 2;
-        const cartY = cartRect.top + cartRect.height / 2;
-
-        // Create flying element
-        const flyingElement = document.createElement("div");
-        flyingElement.className = "flying-item";
-        flyingElement.innerHTML =
-          '<span class="material-symbols-outlined cart-icon">add_shopping_cart</span>';
-        document.body.appendChild(flyingElement);
-
-        // Set initial position
-        flyingElement.style.position = "fixed";
-        flyingElement.style.left = buttonX + "px";
-        flyingElement.style.top = buttonY + "px";
-        flyingElement.style.pointerEvents = "none";
-        flyingElement.style.zIndex = "9999";
-
-        // Trigger animation
-        setTimeout(() => {
-          flyingElement.style.transition =
-            "all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
-          flyingElement.style.left = cartX + "px";
-          flyingElement.style.top = cartY + "px";
-          flyingElement.style.opacity = "0";
-          flyingElement.style.transform = "scale(0.3)";
-        }, 10);
-
-        // Add pulse effect to cart
-        cartIcon.style.animation = "cartNotify 0.6s ease";
-        setTimeout(() => {
-          cartIcon.style.animation = "";
-        }, 600);
-
-        // Remove flying element after animation
-        setTimeout(() => {
-          flyingElement.remove();
-        }, 800);
-
-        // Add button animation
-        this.classList.add("adding");
-        setTimeout(() => {
-          this.classList.remove("adding");
-        }, 250);
-
-        // TODO: Implement actual cart functionality
-        console.log("Added recommended product to cart");
       });
     });
   }
 
-  // Recommended buy now functionality
+  // Recommended buy now functionality -> open universal quick options modal
   function setupRecommendedBuyNow() {
     const recommendedBuyNowBtns = document.querySelectorAll(".recommended-buy-now");
     recommendedBuyNowBtns.forEach((btn) => {
       btn.addEventListener("click", function (e) {
         e.stopPropagation();
-        // Get product ID and default variant from the card/button
         const card = btn.closest(".recommended-card");
+        if (card && typeof window.openProductModalFromCard === "function") {
+          window.openProductModalFromCard(card, "buy_now");
+          return;
+        }
+
         const productId = card?.getAttribute("data-product-id");
         const defaultVariant = btn.getAttribute("data-default-variant") || "";
-        
-        // Add product to cart
         if (productId && typeof addToCart !== 'undefined') {
           addToCart(productId, 1, defaultVariant);
         }
-        
-        // Redirect to shopping cart
         window.location.href = '/shopping-cart';
       });
     });
@@ -1969,11 +1914,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       const price = firstVar ? (Number(firstVar.price) || parseFloat(product.price) || 0) : (parseFloat(product.price) || 0);
       const oldRaw = firstVar ? firstVar.oldPrice : product.oldPrice;
       const oldPriceValue = oldRaw && Number(oldRaw) > price ? Number(oldRaw) : null;
-      const hasDiscount = Boolean(oldPriceValue && price > 0);
+      const hasDiscount = Boolean(!hasPriceRange && oldPriceValue && price > 0);
       const discountPercentage = hasDiscount ? `${Math.round(((oldPriceValue - price) / oldPriceValue) * 100)}%` : '';
       const priceLabelText = hasPriceRange
         ? `od ${formatPriceString(minPrice)} RSD`
         : `${formatPriceString(price)} RSD`;
+      const optionsHTML = typeof window.buildCardOptionsHTML === "function"
+        ? window.buildCardOptionsHTML(product)
+        : "";
 
       return `
         <div class="recommended-card" data-product-id="${product.id}">
@@ -2002,6 +1950,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           <div class="recommended-content-c">
             <span class="product-brand">${product.brand || 'Brend'}</span>
             <h4>${product.title}</h4>
+            ${optionsHTML}
             <div class="recommended-price-container">
               ${!hasPriceRange && oldPriceValue ? `<div class="recommended-old-price">${formatPriceString(oldPriceValue)} RSD</div>` : ''}
               <div class="recommended-price">${priceLabelText}</div>
@@ -2010,7 +1959,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               <button class="recommended-buy-now" data-product-url="/${product.slug || slugify(product.title)}" data-default-variant="${defaultVariantLabel.replace(/"/g, '&quot;')}">
                 Kupi sada
               </button>
-              <button class="recommended-add-to-cart" data-product-id="${product.id}" data-default-variant="${defaultVariantLabel.replace(/"/g, '&quot;')}">
+              <button class="recommended-add-to-cart" data-product-id="${product.id}" data-default-variant="${defaultVariantLabel.replace(/"/g, '&quot;')}" aria-label="Dodaj u korpu">
                 <span class="material-symbols-outlined cart-icon">add_shopping_cart</span>
               </button>
             </div>
@@ -2033,10 +1982,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       const productUrl = buyNowBtn.getAttribute("data-product-url");
       if (!productUrl) return;
       
-      // Add click handler to card (except when clicking buttons)
+      // Add click handler to card (except when clicking buttons or variant/color pills)
       card.addEventListener("click", function(e) {
-        // Don't navigate if clicking on buttons or heart
-        if (e.target.closest(".recommended-buy-now") || e.target.closest(".recommended-add-to-cart") || e.target.closest(".recommended-heart-container")) {
+        if (
+          e.target.closest(".recommended-buy-now") ||
+          e.target.closest(".recommended-add-to-cart") ||
+          e.target.closest(".recommended-heart-container") ||
+          e.target.closest(".card-options-wrap") ||
+          e.target.closest(".card-variant-pill") ||
+          e.target.closest(".card-color-dot")
+        ) {
           return;
         }
         window.location.href = productUrl;

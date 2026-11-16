@@ -178,14 +178,16 @@ function createProductCard(product) {
   const curPrice = firstVar ? (Number(firstVar.price) || parseFloat(product.price) || 0) : (parseFloat(product.price) || 0);
   const rawOld = firstVar ? firstVar.oldPrice : product.oldPrice;
   const oldPriceVal = rawOld && Number(rawOld) > curPrice ? Number(rawOld) : null;
-  const hasDiscount = Boolean(oldPriceVal && curPrice > 0);
+  const variantPrices = variantsList.map(v => parseFloat(v.price)).filter(n => !isNaN(n) && n > 0);
+  const hasPriceRange = variantPrices.length > 1 && Math.max(...variantPrices) > Math.min(...variantPrices);
+  const hasDiscount = Boolean(!hasPriceRange && oldPriceVal && curPrice > 0);
   const discPct = hasDiscount ? `${Math.round(((oldPriceVal - curPrice) / oldPriceVal) * 100)}%` : "";
   const badge = hasDiscount ? `<div class="product-badge">-${discPct}</div>` : "";
   const oldPriceOnImage = hasDiscount ? `<div class="product-old-price-on-image">${formatPriceString(oldPriceVal)} RSD</div>` : "";
-  const variantLabelsText = variantsList.length
-    ? variantsList.slice(0, 3).map(v => v.label).join(" / ")
-    : (Array.isArray(product.sizes) && product.sizes.length ? product.sizes.slice(0, 3).join(" / ") : "");
-  const brandLine = [product.brand || "", variantLabelsText].filter(Boolean).join(" • ");
+  const brandLine = product.brand || "Happy Animals";
+  const optionsHTML = typeof window.buildCardOptionsHTML === "function"
+    ? window.buildCardOptionsHTML(product)
+    : "";
   
   // Use slug from DB if present, else slugify product title
   const productSlug = product.slug || slugify(product.title);
@@ -197,11 +199,11 @@ function createProductCard(product) {
       <div class="product-image-error" style="display: none;">
         <div class="product-error-content">
           <span class="material-symbols-outlined product-error-icon">image_not_supported</span>
-          <h4 class="product-error-title">Image Failed to Load</h4>
-          <p class="product-error-message">We're having trouble loading this image. Please try again later.</p>
+          <h4 class="product-error-title">Slika se nije učitala</h4>
+          <p class="product-error-message">Imamo problema sa učitavanjem ove slike. Molimo pokušajte ponovo kasnije.</p>
           <button class="product-error-retry">
             <span class="material-symbols-outlined">refresh</span>
-            Try Again
+            Pokušaj ponovo
           </button>
         </div>
       </div>
@@ -218,6 +220,7 @@ function createProductCard(product) {
     <div class="product-info">
       <div class="product-brand">${brandLine}</div>
       <h3 class="product-title">${product.title}</h3>
+      ${optionsHTML}
       <div class="product-price">
         ${formatPriceForDisplay(product)}
       </div>
@@ -225,9 +228,9 @@ function createProductCard(product) {
       <div class="product-buttons">
         <button class="import-btn" data-product-url="${productUrl}" data-default-variant="${escVar}">
           <span class="material-symbols-outlined">shopping_bag</span>
-          Buy Now
+          Kupi sada
         </button>
-        <button class="cart-icon-btn" data-product-id="${product.id}" data-default-variant="${escVar}">
+        <button class="cart-icon-btn" data-product-id="${product.id}" data-default-variant="${escVar}" aria-label="Dodaj u korpu">
           <span class="material-symbols-outlined">add_shopping_cart</span>
         </button>
       </div>
@@ -236,24 +239,33 @@ function createProductCard(product) {
   
   // Add click handler to navigate to product page
   card.addEventListener("click", function(e) {
-    // Don't navigate if clicking on buttons or heart
-    if (e.target.closest(".import-btn") || e.target.closest(".cart-icon-btn") || e.target.closest(".heart-container")) {
+    // Don't navigate if clicking on buttons, heart, or variant/color pills
+    if (
+      e.target.closest(".import-btn") ||
+      e.target.closest(".cart-icon-btn") ||
+      e.target.closest(".heart-container") ||
+      e.target.closest(".card-options-wrap") ||
+      e.target.closest(".card-variant-pill") ||
+      e.target.closest(".card-color-dot")
+    ) {
       return;
     }
     window.location.href = productUrl;
   });
   
-  // Add click handler to Buy Now button
+  // Add click handler to Buy Now button -> open quick options modal
   const buyNowBtn = card.querySelector(".import-btn");
   if (buyNowBtn) {
     buyNowBtn.addEventListener("click", function(e) {
       e.stopPropagation();
+      if (typeof window.openProductModalFromCard === "function") {
+        window.openProductModalFromCard(card, "buy_now");
+        return;
+      }
       const defaultVar = buyNowBtn.getAttribute("data-default-variant") || "";
-      // Add product to cart
       if (typeof addToCart !== 'undefined') {
         addToCart(product.id, 1, defaultVar);
       }
-      // Redirect to shopping cart
       window.location.href = '/shopping-cart';
     });
   }
@@ -1327,7 +1339,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   `;
   document.head.appendChild(style);
 
-  // Add to cart animation - using event delegation for dynamically added products
+  // Add to cart -> open universal options modal so user picks package/size/color
   document.addEventListener("click", function (e) {
     const addToCartButton = e.target.closest(".cart-icon-btn");
     if (!addToCartButton) return;
@@ -1335,12 +1347,16 @@ document.addEventListener("DOMContentLoaded", async function () {
     // Prevent event bubbling
     e.stopPropagation();
     
-    // Get product ID & default variant
+    const card = addToCartButton.closest(".product-card");
+    if (card && typeof window.openProductModalFromCard === "function") {
+      window.openProductModalFromCard(card, "add_cart");
+      return;
+    }
+
+    // Legacy fallback if modal is unavailable
     const productId = addToCartButton.getAttribute("data-product-id");
     if (!productId) return;
     const defaultVar = addToCartButton.getAttribute("data-default-variant") || "";
-    
-    // Add to cart using localStorage
     if (typeof addToCart !== 'undefined') {
       addToCart(productId, 1, defaultVar);
     }

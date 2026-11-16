@@ -79,6 +79,198 @@ window.getDefaultVariantLabel = getDefaultVariantLabel;
 window.resolveProductVariant = resolveProductVariant;
 window.getProductPriceSummary = getProductPriceSummary;
 
+window.__productsRegistry = window.__productsRegistry || {};
+
+window.PET_COLOR_MAP = {
+  'crna': '#1a1a1a',
+  'bela': '#f5f5f5',
+  'siva': '#8c8c8c',
+  'crvena': '#e74c3c',
+  'plava': '#2980b9',
+  'zelena': '#27ae60',
+  'žuta': '#f1c40f',
+  'zuta': '#f1c40f',
+  'narandžasta': '#e67e22',
+  'narandzasta': '#e67e22',
+  'roze': '#ff8da1',
+  'ljubičasta': '#8e44ad',
+  'ljubicasta': '#8e44ad',
+  'braon': '#795548',
+  'bež': '#e8d8c8',
+  'bez': '#e8d8c8',
+  'teget': '#1b263b',
+  'zlatna': 'linear-gradient(135deg, #d4af37, #f3e5ab)',
+  'srebrna': 'linear-gradient(135deg, #bdc3c7, #eceeef)',
+  'šarena': 'linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #1dd1a1)',
+  'sarena': 'linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #1dd1a1)'
+};
+
+function getPetColorBackground(colorName) {
+  const key = String(colorName || '').trim().toLowerCase();
+  if (window.PET_COLOR_MAP[key]) return window.PET_COLOR_MAP[key];
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(key)) return key;
+  return '#777777';
+}
+window.getPetColorBackground = getPetColorBackground;
+
+function normalizeProductVariants(product) {
+  if (!product) return [];
+  const basePrice = parseFloat(formatPrice(product)) || 0;
+  const baseOld = product.oldPrice ? parseFloat(product.oldPrice) : null;
+  const defaultStock = typeof product.stock === 'number' ? product.stock : 10;
+
+  if (Array.isArray(product.variants) && product.variants.length > 0) {
+    return product.variants
+      .filter(v => v && v.label)
+      .map(v => {
+        const p = parseFloat(v.price);
+        const price = !isNaN(p) && p > 0 ? p : basePrice;
+        const oldRaw = v.oldPrice !== null && v.oldPrice !== undefined ? parseFloat(v.oldPrice) : baseOld;
+        const oldPrice = oldRaw && !isNaN(oldRaw) && oldRaw > price ? oldRaw : null;
+        const stock = typeof v.stock === 'number' ? v.stock : defaultStock;
+        return {
+          label: String(v.label).trim(),
+          price,
+          oldPrice,
+          stock
+        };
+      });
+  }
+
+  if (Array.isArray(product.sizes) && product.sizes.length > 0) {
+    return product.sizes
+      .filter(Boolean)
+      .map(s => ({
+        label: String(s).trim(),
+        price: basePrice,
+        oldPrice: baseOld && baseOld > basePrice ? baseOld : null,
+        stock: defaultStock
+      }));
+  }
+
+  return [];
+}
+window.normalizeProductVariants = normalizeProductVariants;
+
+function normalizeProductColors(product) {
+  if (!product || !Array.isArray(product.colors)) return [];
+  return product.colors
+    .filter(Boolean)
+    .map(c => {
+      if (typeof c === 'string') {
+        const name = c.trim();
+        return name ? { name, hex: getPetColorBackground(name) } : null;
+      }
+      if (typeof c === 'object') {
+        const name = String(c.name || c.label || '').trim();
+        if (!name) return null;
+        const hexRaw = String(c.code || c.hex || '').trim();
+        const mapped = getPetColorBackground(name);
+        const hex = (hexRaw && hexRaw !== '#2c2527') ? hexRaw : (mapped !== '#777777' ? mapped : (hexRaw || mapped));
+        return { name, hex };
+      }
+      return null;
+    })
+    .filter(Boolean);
+}
+window.normalizeProductColors = normalizeProductColors;
+
+function buildCardOptionsHTML(product) {
+  if (!product) return "";
+  if (product.id) {
+    window.__productsRegistry[String(product.id)] = product;
+  }
+  const variants = normalizeProductVariants(product);
+  const colors = normalizeProductColors(product);
+
+  if (variants.length === 0 && colors.length === 0) return "";
+
+  let colorsHtml = "";
+  if (colors.length > 0) {
+    const visibleColors = colors.slice(0, 4);
+    const extraCount = colors.length - visibleColors.length;
+    colorsHtml = `
+      <div class="card-colors-row" role="group" aria-label="Dostupne boje">
+        ${visibleColors.map(c => {
+          const safeC = escapeHtml(c.name);
+          const safeBg = escapeHtml(c.hex);
+          return `<span class="card-color-dot" role="button" tabindex="0" data-color="${safeC}" title="${safeC}" aria-label="Boja: ${safeC}" style="background: ${safeBg};"></span>`;
+        }).join("")}
+        ${extraCount > 0 ? `<span class="more-colors-badge">+${extraCount}</span>` : ""}
+      </div>
+    `;
+  }
+
+  let variantsHtml = "";
+  if (variants.length > 0) {
+    variantsHtml = `
+      <div class="card-variants-row" role="group" aria-label="Dostupna pakovanja ili veličine">
+        ${variants.slice(0, 5).map(v => {
+          const safeLbl = escapeHtml(v.label);
+          const isOos = v.stock <= 0;
+          return `<span class="card-variant-pill${isOos ? ' is-out-of-stock' : ''}" role="button" tabindex="${isOos ? '-1' : '0'}" data-variant-label="${safeLbl}" data-variant-price="${v.price}" data-variant-oldprice="${v.oldPrice || ''}" data-variant-stock="${v.stock}" title="${isOos ? `${safeLbl} (Rasprodato)` : `${safeLbl} — ${formatPriceString(v.price)} RSD`}" aria-label="${safeLbl}">${safeLbl}</span>`;
+        }).join("")}
+        ${variants.length > 5 ? `<span class="more-variants-badge">+${variants.length - 5}</span>` : ""}
+      </div>
+    `;
+  }
+
+  return `<div class="card-options-wrap">${colorsHtml}${variantsHtml}</div>`;
+}
+window.buildCardOptionsHTML = buildCardOptionsHTML;
+
+function showQuickToast(message) {
+  let toast = document.getElementById('haQuickToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'haQuickToast';
+    toast.className = 'ha-quick-toast';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `<span class="material-symbols-outlined">check_circle</span><span>${escapeHtml(message)}</span>`;
+  toast.classList.add('is-visible');
+  clearTimeout(window.__haQuickToastTimer);
+  window.__haQuickToastTimer = setTimeout(() => {
+    toast.classList.remove('is-visible');
+  }, 2600);
+}
+window.showQuickToast = showQuickToast;
+
+function flyToCartAnimation(sourceEl) {
+  const cartIcon = document.querySelector("#openCart");
+  if (!cartIcon) return;
+  if (sourceEl) {
+    const buttonRect = sourceEl.getBoundingClientRect();
+    const cartRect = cartIcon.getBoundingClientRect();
+    if (buttonRect.width > 0 && cartRect.width > 0) {
+      const flyingElement = document.createElement("div");
+      flyingElement.className = "flying-item";
+      flyingElement.innerHTML = '<span class="material-symbols-outlined cart-icon">add_shopping_cart</span>';
+      flyingElement.style.position = "fixed";
+      flyingElement.style.left = (buttonRect.left + buttonRect.width / 2) + "px";
+      flyingElement.style.top = (buttonRect.top + buttonRect.height / 2) + "px";
+      flyingElement.style.pointerEvents = "none";
+      flyingElement.style.zIndex = "100020";
+      document.body.appendChild(flyingElement);
+      setTimeout(() => {
+        flyingElement.style.transition = "all 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+        flyingElement.style.left = (cartRect.left + cartRect.width / 2) + "px";
+        flyingElement.style.top = (cartRect.top + cartRect.height / 2) + "px";
+        flyingElement.style.opacity = "0";
+        flyingElement.style.transform = "scale(0.3)";
+      }, 15);
+      setTimeout(() => flyingElement.remove(), 800);
+    }
+  }
+  cartIcon.style.animation = "cartNotify 0.6s ease";
+  setTimeout(() => {
+    cartIcon.style.animation = "";
+  }, 600);
+}
+window.flyToCartAnimation = flyToCartAnimation;
+
 function escapeHtml(str) {
   if (str === null || str === undefined) return "";
   return String(str)
@@ -311,6 +503,7 @@ function formatPriceString(price) {
   if (isNaN(num)) return price;
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+window.formatPriceString = formatPriceString;
 
 // Render cart drawer
 async function renderCartDrawer() {
@@ -715,13 +908,32 @@ async function renderSavedDrawer() {
       const productId = this.getAttribute('data-product-id');
       const savedCard = this.closest('.saved-item-card');
       
-      // Find the product to get its name and default variant
+      // Find the product to check variants and colors
       const product = allProducts.find(p => p.id === productId);
-      const productName = product ? product.title : 'Product';
-      const defaultVar = getDefaultVariantLabel(product);
+      const variants = product ? normalizeProductVariants(product) : [];
+      const colors = product ? normalizeProductColors(product) : [];
+      if (product && (variants.length > 1 || colors.length > 1) && typeof window.openProductOptionsModal === 'function') {
+        const sDrawer = document.querySelector('.saved-drawer');
+        const cOverlay = document.querySelector('.cart-overlay-bg');
+        if (sDrawer) sDrawer.classList.remove('active');
+        if (cOverlay) cOverlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        document.documentElement.classList.remove('no-scroll');
+        const savedImg = savedCard?.querySelector('.saved-img img');
+        const imgSrc = savedImg && savedImg.src && !savedImg.src.endsWith('/undefined') ? savedImg.src : '';
+        window.openProductOptionsModal(
+          { ...product, preselectedImage: imgSrc },
+          'add_cart',
+          { fromSavedDrawer: true, savedProductId: productId }
+        );
+        return;
+      }
+
+      const defaultVar = variants.length === 1 ? variants[0].label : getDefaultVariantLabel(product);
+      const defaultColor = colors.length === 1 ? colors[0].name : '';
       
       // Add to cart
-      addToCart(productId, 1, defaultVar);
+      addToCart(productId, 1, defaultVar, defaultColor);
       renderCartDrawer();
       
       // Add removing animation
@@ -735,8 +947,7 @@ async function renderSavedDrawer() {
             () => removeFromSavedItems(productId), // Update Data
             () => {
                 updateSavedCountOnly();
-                // Show Bootstrap toast notification after removal
-                showCartNotification(productName);
+                showQuickToast('Proizvod je premešten u korpu!');
             }
         );
       }, 300); // Match animation duration
@@ -1462,6 +1673,675 @@ document.addEventListener("DOMContentLoaded", async function () {
   } else {
     document.body.insertAdjacentHTML("beforeend", footerHTML);
   }
+
+  // ========== UNIVERSAL QUICK PRODUCT OPTIONS MODAL ==========
+  const quickModalHTML = `
+    <div id="productQuickModal" class="quick-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="quickModalTitle">
+      <div class="quick-modal-overlay" id="quickModalOverlay"></div>
+      <div class="quick-modal-dialog">
+        <button class="quick-modal-close" id="quickModalClose" type="button" aria-label="Zatvori izbor opcija">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="quick-modal-header">
+          <div class="quick-modal-thumb-wrap">
+            <img id="quickModalImg" src="/img/happy animal.png" alt="Proizvod" />
+          </div>
+          <div class="quick-modal-info">
+            <span class="quick-modal-brand" id="quickModalBrand"></span>
+            <h3 id="quickModalTitle" class="quick-modal-title">Naslov proizvoda</h3>
+            <div class="quick-modal-price-row">
+              <span id="quickModalPrice" class="quick-modal-price">0 RSD</span>
+              <span id="quickModalOldPrice" class="quick-modal-old-price" style="display: none;"></span>
+              <span id="quickModalDiscount" class="quick-modal-discount" style="display: none;"></span>
+            </div>
+            <div class="quick-modal-selected-summary" id="quickModalSummary" style="display: none;"></div>
+          </div>
+        </div>
+
+        <div id="quickModalAlert" class="quick-modal-alert" role="alert" style="display: none;">
+          <span class="material-symbols-outlined">error_outline</span>
+          <span id="quickModalAlertText">Molimo izaberite opcije</span>
+        </div>
+
+        <div class="quick-modal-body">
+          <div class="quick-option-section" id="quickModalColorSection" style="display: none;">
+            <label class="quick-option-label">Izaberite boju:</label>
+            <div id="quickModalColorsGrid" class="quick-color-options"></div>
+          </div>
+
+          <div class="quick-option-section" id="quickModalSizeSection" style="display: none;">
+            <label class="quick-option-label" id="quickModalSizeLabel">Izaberite pakovanje / veličinu:</label>
+            <div id="quickModalSizesGrid" class="quick-size-options"></div>
+          </div>
+
+          <div class="quick-option-section" id="quickModalQtySection">
+            <label class="quick-option-label">Količina:</label>
+            <div class="quick-qty-control">
+              <button type="button" class="quick-qty-btn" id="quickQtyMinus" aria-label="Smanji količinu">−</button>
+              <input type="text" id="quickQtyVal" value="1" readonly aria-label="Količina" />
+              <button type="button" class="quick-qty-btn" id="quickQtyPlus" aria-label="Povećaj količinu">+</button>
+            </div>
+            <p class="qty-stock-warning" id="quickModalStockNotice" style="display: none;"></p>
+          </div>
+        </div>
+
+        <div class="quick-modal-footer">
+          <button type="button" id="quickModalBtnAdd" class="quick-btn-primary">
+            <span class="material-symbols-outlined">add_shopping_cart</span>
+            Dodaj u korpu
+          </button>
+          <button type="button" id="quickModalBtnBuy" class="quick-btn-secondary" style="display: none;">
+            Nastavi na korpu &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML("beforeend", quickModalHTML);
+
+  function updateCardVariantDisplay(card, activePill) {
+    if (!card) return;
+    const productId = card.getAttribute('data-product-id') || card.getAttribute('data-id');
+    const product = productId ? window.__productsRegistry?.[productId] : null;
+    const isCustomCard = card.classList.contains('custom-card');
+    const isCatalogCard = card.classList.contains('product-card');
+    const isRecCard = card.classList.contains('recommended-card');
+
+    let displayPrice = 0;
+    let displayOldPrice = null;
+    let isRange = false;
+
+    if (activePill) {
+      const p = parseFloat(activePill.getAttribute('data-variant-price'));
+      const o = parseFloat(activePill.getAttribute('data-variant-oldprice'));
+      if (!isNaN(p) && p > 0) displayPrice = p;
+      if (!isNaN(o) && o > displayPrice) displayOldPrice = o;
+    } else if (product) {
+      const summary = getProductPriceSummary(product);
+      const variants = normalizeProductVariants(product);
+      const firstV = variants[0] || null;
+      displayPrice = summary.hasRange ? summary.minPrice : (firstV ? firstV.price : (parseFloat(formatPrice(product)) || 0));
+      isRange = summary.hasRange;
+      if (!isRange && firstV && firstV.oldPrice && firstV.oldPrice > displayPrice) {
+        displayOldPrice = firstV.oldPrice;
+      } else if (!isRange && product.oldPrice && Number(product.oldPrice) > displayPrice) {
+        displayOldPrice = Number(product.oldPrice);
+      }
+    } else {
+      return;
+    }
+
+    const formattedPrice = isRange
+      ? `od ${formatPriceString(displayPrice)} RSD`
+      : `${formatPriceString(displayPrice)} RSD`;
+    const hasDisc = Boolean(displayOldPrice && displayPrice > 0 && displayOldPrice > displayPrice);
+    const discPct = hasDisc ? Math.round(((displayOldPrice - displayPrice) / displayOldPrice) * 100) : 0;
+
+    if (isCustomCard) {
+      const priceEl = card.querySelector('.price');
+      if (priceEl) priceEl.textContent = formattedPrice;
+      const priceContainer = card.querySelector('.price-container');
+      if (priceContainer) {
+        let oldEl = priceContainer.querySelector('.price-old');
+        if (hasDisc) {
+          if (!oldEl) {
+            oldEl = document.createElement('div');
+            oldEl.className = 'price-old';
+            priceContainer.insertBefore(oldEl, priceContainer.firstChild);
+          }
+          oldEl.textContent = `${formatPriceString(displayOldPrice)} RSD`;
+        } else if (oldEl) {
+          oldEl.remove();
+        }
+      }
+      const imgWrap = card.querySelector('.image-c');
+      if (imgWrap) {
+        let badgeEl = imgWrap.querySelector('.discount-badge');
+        if (hasDisc) {
+          if (!badgeEl) {
+            badgeEl = document.createElement('div');
+            badgeEl.className = 'discount-badge';
+            imgWrap.appendChild(badgeEl);
+          }
+          badgeEl.textContent = `-${discPct}%`;
+        } else if (badgeEl) {
+          badgeEl.remove();
+        }
+      }
+    } else if (isCatalogCard) {
+      const priceEl = card.querySelector('.product-price');
+      if (priceEl) {
+        priceEl.innerHTML = `<div class="price-range">${escapeHtml(formattedPrice)}</div>`;
+      }
+      const imgWrap = card.querySelector('.product-image');
+      if (imgWrap) {
+        let oldEl = imgWrap.querySelector('.product-old-price-on-image');
+        let badgeEl = imgWrap.querySelector('.product-badge');
+        if (hasDisc) {
+          if (!badgeEl) {
+            badgeEl = document.createElement('div');
+            badgeEl.className = 'product-badge';
+            imgWrap.appendChild(badgeEl);
+          }
+          badgeEl.textContent = `-${discPct}%`;
+          if (!oldEl) {
+            oldEl = document.createElement('div');
+            oldEl.className = 'product-old-price-on-image';
+            imgWrap.appendChild(oldEl);
+          }
+          oldEl.textContent = `${formatPriceString(displayOldPrice)} RSD`;
+        } else {
+          if (badgeEl) badgeEl.remove();
+          if (oldEl) oldEl.remove();
+        }
+      }
+    } else if (isRecCard) {
+      const priceEl = card.querySelector('.recommended-price');
+      if (priceEl) priceEl.textContent = formattedPrice;
+      const priceContainer = card.querySelector('.recommended-price-container');
+      if (priceContainer) {
+        let oldEl = priceContainer.querySelector('.recommended-old-price');
+        if (hasDisc) {
+          if (!oldEl) {
+            oldEl = document.createElement('div');
+            oldEl.className = 'recommended-old-price';
+            priceContainer.insertBefore(oldEl, priceContainer.firstChild);
+          }
+          oldEl.textContent = `${formatPriceString(displayOldPrice)} RSD`;
+        } else if (oldEl) {
+          oldEl.remove();
+        }
+      }
+      const imgWrap = card.querySelector('.recommended-image-c');
+      if (imgWrap) {
+        let badgeEl = imgWrap.querySelector('.recommended-discount-badge');
+        if (hasDisc) {
+          if (!badgeEl) {
+            badgeEl = document.createElement('div');
+            badgeEl.className = 'recommended-discount-badge';
+            imgWrap.appendChild(badgeEl);
+          }
+          badgeEl.textContent = `-${discPct}%`;
+        } else if (badgeEl) {
+          badgeEl.remove();
+        }
+      }
+    }
+  }
+
+  function handleInlineOptionActivation(e) {
+    const colorDot = e.target.closest('.card-color-dot');
+    const variantPill = e.target.closest('.card-variant-pill');
+    if (!colorDot && !variantPill) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const card = e.target.closest('.custom-card, .product-card, .recommended-card');
+    if (!card) return;
+
+    if (colorDot) {
+      const row = colorDot.closest('.card-colors-row');
+      const allDots = row ? Array.from(row.querySelectorAll('.card-color-dot')) : [];
+      const wasActive = colorDot.classList.contains('active');
+      allDots.forEach(d => d.classList.remove('active'));
+      if (!wasActive) {
+        colorDot.classList.add('active');
+        card.setAttribute('data-selected-color', colorDot.getAttribute('data-color') || '');
+      } else {
+        card.removeAttribute('data-selected-color');
+      }
+      return;
+    }
+
+    if (variantPill) {
+      if (variantPill.classList.contains('is-out-of-stock')) return;
+      const row = variantPill.closest('.card-variants-row');
+      const allPills = row ? Array.from(row.querySelectorAll('.card-variant-pill')) : [];
+      const wasActive = variantPill.classList.contains('active');
+      allPills.forEach(p => p.classList.remove('active'));
+      if (!wasActive) {
+        variantPill.classList.add('active');
+        card.setAttribute('data-selected-variant', variantPill.getAttribute('data-variant-label') || '');
+        updateCardVariantDisplay(card, variantPill);
+      } else {
+        card.removeAttribute('data-selected-variant');
+        updateCardVariantDisplay(card, null);
+      }
+    }
+  }
+
+  document.addEventListener('click', handleInlineOptionActivation, true);
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const target = e.target.closest('.card-color-dot, .card-variant-pill');
+    if (target) {
+      handleInlineOptionActivation(e);
+    }
+  });
+
+  function initializeProductQuickModal() {
+    const modal = document.getElementById('productQuickModal');
+    if (!modal) return;
+
+    const overlay = document.getElementById('quickModalOverlay');
+    const closeBtn = document.getElementById('quickModalClose');
+    const imgEl = document.getElementById('quickModalImg');
+    const brandEl = document.getElementById('quickModalBrand');
+    const titleEl = document.getElementById('quickModalTitle');
+    const priceEl = document.getElementById('quickModalPrice');
+    const oldPriceEl = document.getElementById('quickModalOldPrice');
+    const discountEl = document.getElementById('quickModalDiscount');
+    const summaryEl = document.getElementById('quickModalSummary');
+    const alertEl = document.getElementById('quickModalAlert');
+    const alertTextEl = document.getElementById('quickModalAlertText');
+
+    const colorSection = document.getElementById('quickModalColorSection');
+    const colorsGrid = document.getElementById('quickModalColorsGrid');
+    const sizeSection = document.getElementById('quickModalSizeSection');
+    const sizeLabelEl = document.getElementById('quickModalSizeLabel');
+    const sizesGrid = document.getElementById('quickModalSizesGrid');
+
+    const qtyMinus = document.getElementById('quickQtyMinus');
+    const qtyPlus = document.getElementById('quickQtyPlus');
+    const qtyVal = document.getElementById('quickQtyVal');
+    const stockNoticeEl = document.getElementById('quickModalStockNotice');
+
+    const btnAdd = document.getElementById('quickModalBtnAdd');
+    const btnBuy = document.getElementById('quickModalBtnBuy');
+
+    let currentProduct = null;
+    let currentActionType = 'add_cart';
+    let currentExtraContext = {};
+    let currentVariants = [];
+    let currentColors = [];
+    let selectedColor = null;
+    let selectedVariant = null;
+    let selectedQty = 1;
+    let currentMaxStock = 99;
+    let variantRequired = false;
+    let colorRequired = false;
+    let stockWarnTimer = null;
+
+    function updateModalPricingUI() {
+      if (!currentProduct) return;
+      let priceNum = parseFloat(formatPrice(currentProduct)) || 0;
+      let oldNum = currentProduct.oldPrice ? parseFloat(currentProduct.oldPrice) : null;
+      let showRangePrefix = false;
+
+      if (selectedVariant) {
+        const matched = currentVariants.find(v => v.label === selectedVariant);
+        if (matched) {
+          priceNum = matched.price;
+          oldNum = matched.oldPrice;
+          currentMaxStock = Math.max(0, typeof matched.stock === 'number' ? matched.stock : 99);
+        }
+      } else if (currentVariants.length > 0) {
+        const inStockVars = currentVariants.filter(v => v.stock > 0);
+        const pool = inStockVars.length ? inStockVars : currentVariants;
+        const prices = pool.map(v => v.price).filter(n => !isNaN(n) && n > 0);
+        const minP = prices.length ? Math.min(...prices) : priceNum;
+        const maxP = prices.length ? Math.max(...prices) : minP;
+        priceNum = minP;
+        showRangePrefix = maxP > minP;
+        if (!showRangePrefix && pool.length === 1) {
+          oldNum = pool[0].oldPrice;
+        } else if (showRangePrefix) {
+          oldNum = null;
+        }
+        currentMaxStock = Math.max(...pool.map(v => typeof v.stock === 'number' ? v.stock : 99));
+      } else {
+        currentMaxStock = typeof currentProduct.stock === 'number' ? currentProduct.stock : 99;
+      }
+
+      if (selectedQty > currentMaxStock && currentMaxStock > 0) {
+        selectedQty = currentMaxStock;
+        qtyVal.value = selectedQty;
+      }
+
+      priceEl.textContent = `${showRangePrefix ? 'od ' : ''}${formatPriceString(priceNum)} RSD`;
+
+      if (oldNum && !isNaN(oldNum) && oldNum > priceNum && priceNum > 0) {
+        const pct = Math.round(((oldNum - priceNum) / oldNum) * 100);
+        oldPriceEl.textContent = `${formatPriceString(oldNum)} RSD`;
+        oldPriceEl.style.display = 'inline-block';
+        discountEl.textContent = `-${pct}%`;
+        discountEl.style.display = 'inline-block';
+      } else {
+        oldPriceEl.style.display = 'none';
+        discountEl.style.display = 'none';
+      }
+
+      // Summary line of chosen options
+      const chosenParts = [];
+      if (selectedVariant) chosenParts.push(selectedVariant);
+      if (selectedColor) chosenParts.push(selectedColor);
+      if (chosenParts.length > 0) {
+        summaryEl.textContent = `Izabrano: ${chosenParts.join(' • ')}`;
+        summaryEl.style.display = 'block';
+      } else {
+        summaryEl.style.display = 'none';
+      }
+
+      // Out of stock guard when selected or entire product unavailable
+      const isOutOfStock = currentVariants.length > 0
+        ? (selectedVariant ? currentMaxStock <= 0 : currentVariants.every(v => v.stock <= 0))
+        : currentMaxStock <= 0;
+
+      if (isOutOfStock) {
+        btnAdd.disabled = true;
+        btnBuy.disabled = true;
+        stockNoticeEl.textContent = 'Trenutno nema na stanju.';
+        stockNoticeEl.style.display = 'block';
+      } else {
+        btnAdd.disabled = false;
+        btnBuy.disabled = false;
+        if (currentMaxStock > 0 && currentMaxStock <= 5 && selectedVariant) {
+          stockNoticeEl.textContent = `Preostalo još samo ${currentMaxStock} kom.`;
+          stockNoticeEl.style.display = 'block';
+        } else {
+          stockNoticeEl.style.display = 'none';
+        }
+      }
+    }
+
+    function showStockLimitWarning() {
+      stockNoticeEl.textContent = `Maksimalna dostupna količina za ovu opciju je ${currentMaxStock}.`;
+      stockNoticeEl.style.display = 'block';
+      const ctrl = qtyPlus?.closest('.quick-qty-control');
+      if (ctrl) {
+        ctrl.classList.remove('input-shake');
+        void ctrl.offsetWidth;
+        ctrl.classList.add('input-shake');
+      }
+      clearTimeout(stockWarnTimer);
+      stockWarnTimer = setTimeout(() => {
+        if (!(currentMaxStock > 0 && currentMaxStock <= 5 && selectedVariant)) {
+          stockNoticeEl.style.display = 'none';
+        }
+      }, 2800);
+    }
+
+    function hideAlert() {
+      alertEl.style.display = 'none';
+    }
+
+    function showAlert(msg) {
+      alertTextEl.textContent = msg;
+      alertEl.style.display = 'flex';
+      alertEl.classList.remove('shake');
+      void alertEl.offsetWidth;
+      alertEl.classList.add('shake');
+    }
+
+    function closeQuickModal() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeQuickModal);
+    if (overlay) overlay.addEventListener('click', closeQuickModal);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+        closeQuickModal();
+      }
+    });
+
+    if (qtyMinus) {
+      qtyMinus.addEventListener('click', () => {
+        if (selectedQty > 1) {
+          selectedQty--;
+          qtyVal.value = selectedQty;
+          if (!(currentMaxStock > 0 && currentMaxStock <= 5 && selectedVariant)) {
+            stockNoticeEl.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    if (qtyPlus) {
+      qtyPlus.addEventListener('click', () => {
+        const effectiveMax = currentMaxStock > 0 ? currentMaxStock : 1;
+        if (selectedQty < effectiveMax) {
+          selectedQty++;
+          qtyVal.value = selectedQty;
+        } else {
+          showStockLimitWarning();
+        }
+      });
+    }
+
+    function handleModalConfirm(targetAction) {
+      if (!currentProduct) return;
+      hideAlert();
+
+      const missingVariant = variantRequired && !selectedVariant;
+      const missingColor = colorRequired && !selectedColor;
+
+      if (missingVariant && missingColor) {
+        showAlert('Molimo izaberite pakovanje / veličinu i boju pre nastavka.');
+        return;
+      }
+      if (missingVariant) {
+        showAlert('Molimo izaberite pakovanje / veličinu pre nastavka.');
+        return;
+      }
+      if (missingColor) {
+        showAlert('Molimo izaberite boju pre nastavka.');
+        return;
+      }
+
+      if (currentMaxStock <= 0) {
+        showAlert('Izabrana opcija je trenutno rasprodata.');
+        return;
+      }
+
+      const finalQty = Math.max(1, Math.min(selectedQty, currentMaxStock || 99));
+      addToCart(currentProduct.id, finalQty, selectedVariant || '', selectedColor || '');
+      if (typeof renderCartDrawer === 'function') renderCartDrawer();
+
+      if (currentExtraContext.fromSavedDrawer && currentExtraContext.savedProductId) {
+        removeFromSavedItems(currentExtraContext.savedProductId);
+        updateHeartIconsForProduct(currentExtraContext.savedProductId);
+        if (typeof renderSavedDrawer === 'function') renderSavedDrawer();
+      }
+
+      closeQuickModal();
+
+      if (targetAction === 'buy_now') {
+        window.location.href = '/shopping-cart';
+        return;
+      }
+
+      const sourceBtn = currentProduct.cardElement?.querySelector('.add-to-cart, .cart-icon-btn, .recommended-add-to-cart');
+      flyToCartAnimation(sourceBtn);
+      showQuickToast(`${currentProduct.title || 'Proizvod'} je dodat u korpu!`);
+    }
+
+    if (btnAdd) {
+      btnAdd.addEventListener('click', () => handleModalConfirm(currentActionType === 'buy_now' ? 'buy_now' : 'add_cart'));
+    }
+    if (btnBuy) {
+      btnBuy.addEventListener('click', () => handleModalConfirm('buy_now'));
+    }
+
+    window.openProductOptionsModal = function (product, actionType = 'add_cart', extraContext = {}) {
+      if (!product) return;
+      if (product.id) window.__productsRegistry[String(product.id)] = product;
+
+      currentProduct = product;
+      currentActionType = actionType;
+      currentExtraContext = extraContext || {};
+      selectedQty = 1;
+      qtyVal.value = 1;
+      hideAlert();
+      stockNoticeEl.style.display = 'none';
+
+      // Image thumbnail (use already-loaded card image first, else product array, else fallback)
+      const fallbackImg = (typeof pickImage === 'function') ? pickImage(product) : '/img/happy animal.png';
+      const initialImg = product.preselectedImage || (Array.isArray(product.images) && product.images[0]) || product.image || fallbackImg;
+      imgEl.src = initialImg;
+      imgEl.alt = product.title || 'Proizvod';
+
+      if ((!Array.isArray(product.images) || product.images.length === 0) && !product.preselectedImage && product.id && typeof fetchProductImagesBatch === 'function') {
+        fetchProductImagesBatch([product.id]).then(results => {
+          const imgs = results?.[product.id];
+          if (imgs && imgs[0]?.url && currentProduct?.id === product.id) {
+            imgEl.src = imgs[0].url;
+          }
+        }).catch(() => {});
+      }
+
+      brandEl.textContent = product.brand || 'Happy Animals';
+      titleEl.textContent = product.title || 'Proizvod';
+
+      currentVariants = normalizeProductVariants(product);
+      currentColors = normalizeProductColors(product);
+
+      // Determine pre-selected or single-choice defaults
+      const inStockVariants = currentVariants.filter(v => v.stock > 0);
+      variantRequired = currentVariants.length > 0;
+      selectedVariant = null;
+      if (product.preselectedVariant) {
+        const foundPre = inStockVariants.find(v => v.label.toLowerCase() === String(product.preselectedVariant).trim().toLowerCase());
+        if (foundPre) selectedVariant = foundPre.label;
+      } else if (currentVariants.length === 1 && inStockVariants.length === 1) {
+        selectedVariant = inStockVariants[0].label;
+      }
+
+      colorRequired = currentColors.length > 0;
+      selectedColor = null;
+      if (product.preselectedColor) {
+        const foundPreC = currentColors.find(c => c.name.toLowerCase() === String(product.preselectedColor).trim().toLowerCase());
+        if (foundPreC) selectedColor = foundPreC.name;
+      } else if (currentColors.length === 1) {
+        selectedColor = currentColors[0].name;
+      }
+
+      // Render Colors Grid
+      colorsGrid.innerHTML = '';
+      if (currentColors.length > 0) {
+        colorSection.style.display = 'block';
+        currentColors.forEach(colorObj => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'quick-color-option' + (selectedColor === colorObj.name ? ' active' : '');
+          btn.dataset.color = colorObj.name;
+
+          const circle = document.createElement('span');
+          circle.className = 'quick-color-circle';
+          circle.style.background = colorObj.hex;
+
+          const textSpan = document.createElement('span');
+          textSpan.textContent = colorObj.name;
+
+          btn.appendChild(circle);
+          btn.appendChild(textSpan);
+
+          btn.addEventListener('click', () => {
+            colorsGrid.querySelectorAll('.quick-color-option').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedColor = colorObj.name;
+            hideAlert();
+            updateModalPricingUI();
+          });
+
+          colorsGrid.appendChild(btn);
+        });
+      } else {
+        colorSection.style.display = 'none';
+      }
+
+      // Render Variants (Weights / Sizes) Grid
+      sizesGrid.innerHTML = '';
+      if (currentVariants.length > 0) {
+        sizeSection.style.display = 'block';
+        const looksLikeWeight = currentVariants.some(v => /\b\d+(?:[.,]\d+)?\s*(kg|g|gr|l|ml)\b/i.test(v.label) || /\d+(?:[.,]\d+)?(kg|g|gr|l|ml)\b/i.test(v.label));
+        sizeLabelEl.textContent = looksLikeWeight
+          ? 'Izaberite pakovanje / težinu:'
+          : 'Izaberite veličinu / opciju:';
+
+        currentVariants.forEach(variant => {
+          const isOos = variant.stock <= 0;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'quick-size-option' + (selectedVariant === variant.label ? ' active' : '') + (isOos ? ' is-out-of-stock' : '');
+          btn.dataset.variantLabel = variant.label;
+          btn.disabled = isOos;
+
+          const lblSpan = document.createElement('span');
+          lblSpan.className = 'quick-size-label';
+          lblSpan.textContent = variant.label;
+          btn.appendChild(lblSpan);
+
+          const priceSub = document.createElement('span');
+          priceSub.className = 'quick-size-subprice';
+          priceSub.textContent = isOos ? 'Rasprodato' : `${formatPriceString(variant.price)} RSD`;
+          btn.appendChild(priceSub);
+
+          btn.addEventListener('click', () => {
+            if (isOos) return;
+            sizesGrid.querySelectorAll('.quick-size-option').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedVariant = variant.label;
+            hideAlert();
+            updateModalPricingUI();
+          });
+
+          sizesGrid.appendChild(btn);
+        });
+      } else {
+        sizeSection.style.display = 'none';
+      }
+
+      // Button label / secondary action visibility
+      if (actionType === 'buy_now') {
+        btnAdd.innerHTML = '<span class="material-symbols-outlined">shopping_bag</span> Kupi odmah';
+        btnBuy.style.display = 'none';
+      } else {
+        btnAdd.innerHTML = '<span class="material-symbols-outlined">add_shopping_cart</span> Dodaj u korpu';
+        btnBuy.style.display = 'inline-flex';
+      }
+
+      updateModalPricingUI();
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.openProductModalFromCard = async function (cardElement, actionType = 'add_cart') {
+      if (!cardElement) return;
+      const productId = cardElement.getAttribute('data-product-id') || cardElement.getAttribute('data-id');
+      if (!productId) return;
+
+      let product = window.__productsRegistry?.[String(productId)];
+      if (!product) {
+        const allProducts = await loadProductsData();
+        product = allProducts.find(p => String(p.id) === String(productId));
+        if (product) window.__productsRegistry[String(productId)] = product;
+      }
+      if (!product) return;
+
+      const activeColorDot = cardElement.querySelector('.card-color-dot.active');
+      const activeVariantPill = cardElement.querySelector('.card-variant-pill.active');
+      const cardImg = cardElement.querySelector('img[data-product-id], .image-c img, .product-image img, .recommended-image-c img');
+      const loadedSrc = (cardImg && cardImg.src && !cardImg.src.startsWith('data:image/gif') && cardImg.style.display !== 'none')
+        ? cardImg.src
+        : '';
+
+      window.openProductOptionsModal({
+        ...product,
+        preselectedColor: activeColorDot ? (activeColorDot.getAttribute('data-color') || '') : '',
+        preselectedVariant: activeVariantPill ? (activeVariantPill.getAttribute('data-variant-label') || '') : '',
+        preselectedImage: loadedSrc,
+        cardElement
+      }, actionType);
+    };
+  }
+
+  initializeProductQuickModal();
 
   // Scroll effect za header
   const header = document.querySelector("header");
