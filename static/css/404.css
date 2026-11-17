@@ -1,4 +1,20 @@
 /* 404 Page Styles */
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap");
+
+*,
+*::before,
+*::after {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
 
 .not-found-page {
   min-height: 100vh;
@@ -37,19 +53,7 @@
   line-height: 1;
   margin-bottom: 20px;
   font-family: "Baloo 2", sans-serif;
-  /* text-shadow: 0 0 40px rgba(0, 153, 0, 0.3); */
-  /* animation: glow 2s ease-in-out infinite alternate; */
 }
-
-@keyframes glow {
-  from {
-    filter: drop-shadow(0 0 20px rgba(0, 153, 0, 0.3));
-  }
-  to {
-    filter: drop-shadow(0 0 30px rgba(0, 153, 0, 0.5));
-  }
-}
-
 
 .error-title {
   font-size: 2.5rem;

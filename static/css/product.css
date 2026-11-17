@@ -1,4 +1,20 @@
 /* Product Page Styles */
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap");
+
+*,
+*::before,
+*::after {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
 
 /* CRITICAL: All product images must always have opacity 1 - never 0 */
 .product-page img,
@@ -227,7 +243,7 @@
   background: linear-gradient(135deg, rgba(0, 153, 0, 0.3), rgba(0, 153, 0, 0.2));
   border-color: rgba(0, 153, 0, 0.6);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 153, 0, 0.2);
+  box-shadow: none;
 }
 
 .recommended-error-retry:active {
@@ -278,7 +294,7 @@
   background: linear-gradient(135deg, rgba(0, 153, 0, 0.3), rgba(0, 153, 0, 0.2));
   border-color: rgba(0, 153, 0, 0.6);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 153, 0, 0.2);
+  box-shadow: none;
 }
 
 .thumbnail-error-retry:active {
@@ -344,8 +360,7 @@
   background-position: center;
   pointer-events: none;
   z-index: 25;
-  backdrop-filter: blur(2px);
-  background-color: rgba(0, 0, 0, 0.55);
+  background-color: transparent;
   transition: opacity 0.15s ease;
   opacity: 0;
 }
@@ -450,7 +465,7 @@
   background: linear-gradient(135deg, rgba(0, 153, 0, 0.3), rgba(0, 153, 0, 0.2));
   border-color: #009900;
   transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 4px 15px rgba(0, 153, 0, 0.3);
+  box-shadow: none;
 }
 
 .image-arrow-left span,
@@ -1021,12 +1036,12 @@
 
 .color-btn:hover {
   transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 5px 15px rgba(0, 153, 0, 0.3);
+  box-shadow: none;
 }
 
 .color-btn.active {
   border-color: #009900;
-  box-shadow: 0 0 15px rgba(0, 153, 0, 0.5);
+  box-shadow: none;
 }
 
 .color-btn.is-out-of-stock {
@@ -1077,7 +1092,7 @@
   background: linear-gradient(135deg, #009900, #007700);
   border-color: #009900;
   color: white;
-  box-shadow: 0 4px 14px rgba(0, 153, 0, 0.28);
+  box-shadow: none;
 }
 
 .size-btn.is-out-of-stock {
@@ -1535,7 +1550,7 @@
   background: linear-gradient(135deg, rgba(0, 153, 0, 0.25), rgba(0, 153, 0, 0.15));
   border-color: #009900;
   transform: scale(1.1);
-  box-shadow: 0 4px 15px rgba(0, 153, 0, 0.3);
+  box-shadow: none;
 }
 
 .recommended-arrow-l:active,

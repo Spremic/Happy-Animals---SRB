@@ -1,4 +1,14 @@
 /* legal.css - Stilovi za legal stranicu */
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap");
+
+*,
+*::before,
+*::after {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 /* Svi stilovi počinju sa #legalContainer da se ne bi mešali sa clone.css */
 
 /* Osiguravamo da pozadina bude crna */
@@ -7,6 +17,9 @@
   background-color: #131111 !important;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 #legalContainer {
