@@ -1,5 +1,5 @@
 const Subscriber = require("../../db/subscriber");
-const { sendNewsletterCouponEmail } = require("../../utils/email");
+const { sendNewsletterWelcomeEmail } = require("../../utils/email");
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -16,16 +16,15 @@ async function subscribeNewsletter(req, res) {
       });
     }
 
-    const couponCode = "HA10";
-
     let subscriber = await Subscriber.findOne({ email });
     let isNew = false;
 
     if (!subscriber) {
+      const rawSource =
+        req.body && typeof req.body.source === "string" ? req.body.source : "";
       subscriber = await Subscriber.create({
         email,
-        couponCode,
-        source: req.body.source || "popup_modal",
+        source: rawSource.trim().slice(0, 50) || "popup_modal",
       });
       isNew = true;
     } else if (subscriber.status === "unsubscribed") {
@@ -33,17 +32,18 @@ async function subscribeNewsletter(req, res) {
       await subscriber.save();
     }
 
-    // Pošalji email sa kuponom u pozadini
-    sendNewsletterCouponEmail(email, couponCode).catch((err) =>
-      console.warn("Newsletter email warning:", err.message)
-    );
+    // Pošalji email dobrodošlice u pozadini (samo novim pretplatnicima)
+    if (isNew) {
+      sendNewsletterWelcomeEmail(email).catch((err) =>
+        console.warn("Newsletter email warning:", err.message)
+      );
+    }
 
     return res.status(200).json({
       success: true,
       message: isNew
-        ? "Uspešno ste se prijavili! Vaš promotivni kod HA10 za 10% popusta stiže na vašu email adresu."
-        : "Već ste prijavljeni na naš newsletter! Vaš promotivni kod je HA10 za 10% popusta.",
-      coupon: couponCode,
+        ? "Uspešno ste se prijavili na naš newsletter!"
+        : "Već ste prijavljeni na naš newsletter!",
       isNew,
     });
   } catch (err) {
@@ -56,4 +56,3 @@ async function subscribeNewsletter(req, res) {
 }
 
 module.exports = subscribeNewsletter;
-

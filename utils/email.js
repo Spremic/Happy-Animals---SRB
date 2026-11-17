@@ -66,20 +66,6 @@ async function sendOrderNotificationEmail(order) {
       })
       .join("");
 
-    const discountAmount = Number(order.discountAmount) || 0;
-    const discountHtml = discountAmount > 0
-      ? `
-        <tr>
-          <td colspan="3" style="padding: 8px 14px; text-align: right; color: #27ae60; font-size: 13px; font-weight: 600;">
-            Ostvareni popust (${escapeHtml(order.couponCode || "Kupon")}):
-          </td>
-          <td style="padding: 8px 14px; text-align: right; color: #27ae60; font-weight: 700; font-size: 14px; white-space: nowrap;">
-            -${discountAmount.toLocaleString("sr-RS")} RSD
-          </td>
-        </tr>
-      `
-      : "";
-
     const shippingAmount = Number(order.shippingAmount);
     const shippingText = shippingAmount === 0 
       ? '<span style="color: #27ae60; font-weight: 700;">Besplatna dostava</span>' 
@@ -203,7 +189,6 @@ async function sendOrderNotificationEmail(order) {
                         ${itemsHtml}
                       </tbody>
                       <tfoot>
-                        ${discountHtml}
                         <tr>
                           <td colspan="3" style="padding: 8px 14px; text-align: right; color: #6d6367; font-size: 13px;">
                             Troškovi dostave:
@@ -277,7 +262,7 @@ async function sendOrderNotificationEmail(order) {
   }
 }
 
-async function sendNewsletterCouponEmail(email, couponCode = "HA10") {
+async function sendNewsletterWelcomeEmail(email) {
   const providerMail = process.env.provider_mail;
   const providerPass = process.env.provider_pass;
 
@@ -319,7 +304,7 @@ async function sendNewsletterCouponEmail(email, couponCode = "HA10") {
                       Dobrodošli u naš klub!
                     </h1>
                     <p style="margin: 0; font-size: 14px; color: #fdf2f5; opacity: 0.95;">
-                      Vaš poklon dobrodošlice od 10% popusta je spreman
+                      Hvala Vam što ste se prijavili na naš newsletter
                     </p>
                   </td>
                 </tr>
@@ -328,24 +313,10 @@ async function sendNewsletterCouponEmail(email, couponCode = "HA10") {
                 <tr>
                   <td style="padding: 30px 24px; text-align: center;">
                     <p style="font-size: 15px; line-height: 1.6; color: #4a4043; margin: 0 0 20px;">
-                      Hvala Vam što ste se prijavili na naš newsletter! Kao znak pažnje i dobrodošlice, pripremili smo za Vas promo kod za <strong>10% popusta</strong> na Vašu sledeću porudžbinu.
+                      Od sada ćete prvi saznavati za nove proizvode, akcije i savete za brigu o Vašim ljubimcima.
                     </p>
 
-                    <!-- KUPON KARTICA -->
-                    <div style="margin: 20px auto 25px; padding: 20px 28px; background-color: #fdf8fa; border: 2px dashed #7c2e4b; border-radius: 12px; display: inline-block;">
-                      <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #756a6e; font-weight: 700; margin-bottom: 6px;">
-                        Vaš promotivni kod:
-                      </div>
-                      <div style="font-size: 30px; font-weight: 800; letter-spacing: 4px; color: #7c2e4b;">
-                        ${couponCode}
-                      </div>
-                      <div style="font-size: 12px; color: #27ae60; font-weight: 600; margin-top: 4px;">
-                        ✓ 10% popusta na kompletnu korpu
-                      </div>
-                    </div>
-
                     <p style="font-size: 13px; color: #6d6367; margin: 0 0 25px; line-height: 1.5;">
-                      Unesite ovaj kod na stranici za naručivanje da biste ostvarili popust.<br>
                       <em>Podsećamo Vas da je dostava <strong>besplatna</strong> za sve porudžbine od 3.000 RSD i više!</em>
                     </p>
 
@@ -377,7 +348,7 @@ async function sendNewsletterCouponEmail(email, couponCode = "HA10") {
     const info = await transporter.sendMail({
       from: `"Happy Animals" <${providerMail}>`,
       to: email,
-      subject: `Vaš kupon kod za 10% popusta u Happy Animals! (${couponCode})`,
+      subject: `Dobrodošli u Happy Animals newsletter!`,
       html: emailHtml,
     });
 
@@ -390,5 +361,5 @@ async function sendNewsletterCouponEmail(email, couponCode = "HA10") {
 
 module.exports = {
   sendOrderNotificationEmail,
-  sendNewsletterCouponEmail,
+  sendNewsletterWelcomeEmail,
 };

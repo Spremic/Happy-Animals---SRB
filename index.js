@@ -37,7 +37,6 @@ const deleteProduct = require("./routes/products/deleteProduct");
 const createOrder = require("./routes/orders/createOrder");
 const { getOrders, getOrderById, updateOrder, deleteOrder } = require("./routes/orders/getOrders");
 const subscribeNewsletter = require("./routes/newsletter/subscribe");
-const validateCoupon = require("./routes/coupons/validateCoupon");
 const validateCart = require("./routes/cart/validateCart");
 
 try {
@@ -393,7 +392,7 @@ app.get("/api/cloudinary/all/:folder", checkPermission("proizvodi"), getAllImage
 app.post("/api/upload-local", checkPermission("proizvodi"), upload.any(), uploadLocal);
 app.post("/api/cloudinary/upload-local", checkPermission("proizvodi"), upload.any(), uploadLocal);
 
-// Porudžbine, korpa, kuponi i newsletter
+// Porudžbine, korpa i newsletter
 app.post("/api/send-order", orderLimiter, createOrder);
 app.get("/api/orders", checkPermission("narudzbine"), getOrders);
 app.get("/api/orders/:id", checkPermission("narudzbine"), getOrderById);
@@ -403,8 +402,6 @@ app.delete("/api/orders/:id", checkPermission("narudzbine"), deleteOrder);
 app.post("/api/newsletter/subscribe", subscribeNewsletter);
 app.post("/api/newsletter", subscribeNewsletter);
 
-app.get("/api/coupons/validate", validateCoupon);
-app.post("/api/coupons/validate", validateCoupon);
 
 app.post("/api/cart/validate", validateCart);
 app.post("/api/cart", validateCart);

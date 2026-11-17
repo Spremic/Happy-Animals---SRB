@@ -908,58 +908,59 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Responsive hero title: uvek u dva reda ispod 500px širine
+  // Responsive hero title: UVEK tačno u dva reda na svim širinama ekrana.
+  // Svaki red (.hero-title-line) je nowrap; ako red ne staje u širinu naslova,
+  // font se smanjuje (binarnom pretragom) dok oba reda ne stanu.
   function adjustHeroTitle() {
     const heroTitle = document.getElementById('hero-main-title');
     if (!heroTitle) return;
+    const lines = heroTitle.querySelectorAll('.hero-title-line');
+    if (!lines.length) return;
 
-    const isSmallScreen = window.innerWidth <= 500;
+    // Vrati na CSS vrednost da bi se dobila maksimalna (dizajnirana) veličina
+    heroTitle.style.removeProperty('font-size');
+    heroTitle.style.removeProperty('line-height');
 
-    // Reset na default vrednosti za veće ekrane
-    if (!isSmallScreen) {
-      heroTitle.style.fontSize = '';
-      heroTitle.style.lineHeight = '';
-      return;
-    }
+    const maxFont = parseFloat(window.getComputedStyle(heroTitle).fontSize) || 40;
+    const minFont = 16;
 
-    // Ograničenja font-size
-    const minFont = 18; // px
-    const maxFont = 40; // px
+    const fits = () => {
+      const available = heroTitle.clientWidth;
+      for (const line of lines) {
+        if (line.getBoundingClientRect().width > available + 1) return false;
+      }
+      return true;
+    };
 
-    // Binarna pretraga najvećeg font-size-a koji staje u 2 reda
+    if (fits()) return;
+
+    heroTitle.style.setProperty('line-height', '1.15', 'important');
     let low = minFont;
     let high = maxFont;
     let best = minFont;
-
-    // Osiguraj da je line-height relativan
-    heroTitle.style.lineHeight = '1.15';
-
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 12; i++) {
       const mid = (low + high) / 2;
-      heroTitle.style.fontSize = mid + 'px';
-
-      const styles = window.getComputedStyle(heroTitle);
-      const lineHeightPx = parseFloat(styles.lineHeight);
-      const maxHeight = lineHeightPx * 2 + 1; // mala tolerancija
-
-      const totalHeight = heroTitle.scrollHeight;
-
-      if (totalHeight <= maxHeight) {
+      heroTitle.style.setProperty('font-size', mid + 'px', 'important');
+      if (fits()) {
         best = mid;
-        low = mid; // pokušaj veće
+        low = mid;
       } else {
         high = mid;
       }
     }
-
-    heroTitle.style.fontSize = best + 'px';
+    heroTitle.style.setProperty('font-size', Math.floor(best) + 'px', 'important');
   }
 
-  // Inicijalno i na resize
+  // Inicijalno, nakon učitavanja fonta i na resize
   adjustHeroTitle();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(adjustHeroTitle).catch(() => {});
+  }
+  window.addEventListener('load', adjustHeroTitle);
+  let heroTitleResizeTimer;
   window.addEventListener('resize', () => {
-    // debounce je već gore za slider, ovde je jeftina operacija pa ide direktno
-    adjustHeroTitle();
+    clearTimeout(heroTitleResizeTimer);
+    heroTitleResizeTimer = setTimeout(adjustHeroTitle, 60);
   });
 
   // Lightbox Functionality

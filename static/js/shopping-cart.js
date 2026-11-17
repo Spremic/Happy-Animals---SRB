@@ -37,8 +37,6 @@ function slugify(value) {
 
 // Store productMap globally for use in event handlers
 let productMap = {};
-let activeCouponCode = "";
-let activeDiscountPercent = 0;
 
 function safeEscHtml(val) {
   if (typeof escapeHtml === "function") return escapeHtml(val);
@@ -184,23 +182,19 @@ async function renderCartItems() {
   
   orderDetails.innerHTML = html;
   
-  const discountAmount = activeDiscountPercent > 0 ? Math.round(total * (activeDiscountPercent / 100)) : 0;
   const shippingAmount = total >= 3000 || total === 0 ? 0 : 350;
-  const grandTotal = Math.max(0, total - discountAmount) + shippingAmount;
+  const grandTotal = Math.max(0, total) + shippingAmount;
 
-  // Update totals - show number of different products, plus server-matching shipping & discount
+  // Update totals - show number of different products, plus server-matching shipping
   if (productCount) productCount.textContent = uniqueProducts;
   if (orderTotal) {
     orderTotal.textContent = `Ukupno: ${formatPriceNumber(grandTotal)} RSD`;
   }
-  const couponFeedback = document.getElementById('couponFeedback');
-  if (couponFeedback && total > 0) {
-    const parts = [`Dostava: ${shippingAmount === 0 ? 'Besplatna (0.00 RSD)' : `${formatPriceNumber(shippingAmount)} RSD`}`];
-    if (discountAmount > 0 && activeCouponCode) {
-      parts.push(`Kupon ${activeCouponCode}: -${formatPriceNumber(discountAmount)} RSD`);
-    }
-    couponFeedback.textContent = parts.join(' • ');
-    couponFeedback.style.color = discountAmount > 0 ? '#4ade80' : '#a0a0a0';
+  const shippingInfo = document.getElementById('shippingInfo');
+  if (shippingInfo) {
+    shippingInfo.textContent = total > 0
+      ? `Dostava: ${shippingAmount === 0 ? 'Besplatna (0.00 RSD)' : `${formatPriceNumber(shippingAmount)} RSD`}`
+      : '';
   }
   
   // Use local images already present in API product data, fallback to batch only if missing
@@ -432,51 +426,8 @@ async function loadShoppingCartImagesFromCloudinary(cartItems, productMap) {
   });
 }
 
-// Initialize coupon button and checkout form submission via /api/send-order
+// Initialize checkout form submission via /api/send-order
 function setupCheckoutSubmission() {
-  const applyCouponBtn = document.getElementById('applyCouponBtn');
-  if (applyCouponBtn && !applyCouponBtn.dataset.bound) {
-    applyCouponBtn.dataset.bound = '1';
-    applyCouponBtn.addEventListener('click', async function () {
-      const codeInput = document.getElementById('couponCode');
-      const feedbackEl = document.getElementById('couponFeedback');
-      const codeVal = (codeInput?.value || '').trim();
-      if (!codeVal) {
-        activeCouponCode = '';
-        activeDiscountPercent = 0;
-        if (feedbackEl) {
-          feedbackEl.textContent = 'Molimo unesite kupon kod.';
-          feedbackEl.style.color = '#f87171';
-        }
-        renderCartItems();
-        return;
-      }
-      try {
-        const res = await fetch('/api/coupons/validate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code: codeVal })
-        });
-        const data = await res.json();
-        if (res.ok && data.valid) {
-          activeCouponCode = data.code || codeVal.toUpperCase();
-          activeDiscountPercent = parseFloat(data.discountPercent) || 0;
-          renderCartItems();
-        } else {
-          activeCouponCode = '';
-          activeDiscountPercent = 0;
-          if (feedbackEl) {
-            feedbackEl.textContent = data.message || 'Neispravan kupon kod.';
-            feedbackEl.style.color = '#f87171';
-          }
-          renderCartItems();
-        }
-      } catch (err) {
-        console.error('Coupon validation error:', err);
-      }
-    });
-  }
-
   const paymentBtns = document.querySelectorAll('.payment-btn');
   if (!paymentBtns.length) return;
 
@@ -543,7 +494,6 @@ function setupCheckoutSubmission() {
             postalCode,
             note,
             paymentMethod: selectedPayment,
-            couponCode: activeCouponCode || (document.getElementById('couponCode')?.value || '').trim(),
             items: payloadItems,
             acceptTerms: true
           })
@@ -557,8 +507,6 @@ function setupCheckoutSubmission() {
         }
 
         localStorage.setItem('cart', JSON.stringify([]));
-        activeCouponCode = '';
-        activeDiscountPercent = 0;
         if (typeof updateCartBadge === 'function') updateCartBadge();
 
         const orderDetails = document.querySelector('.order-details');

@@ -30,7 +30,7 @@ async function createAdmin() {
       console.log(`Administrator sa emailom "${email}" već postoji. Ažuriram lozinku i privilegije...`);
       existingAdmin.password = hashedPassword;
       existingAdmin.adminType = "main";
-      existingAdmin.permissions = ["proizvodi", "narudzbine", "admini", "kuponi", "statistika"];
+      existingAdmin.permissions = ["proizvodi", "narudzbine", "admini", "statistika"];
       if (!existingAdmin.name) existingAdmin.name = name;
       await existingAdmin.save();
       console.log(`Uspešno ažuriran postojeći nalog "${email}" (adminType: main, pun pristup)!`);
@@ -41,7 +41,7 @@ async function createAdmin() {
         mail: email,
         password: hashedPassword,
         adminType: "main",
-        permissions: ["proizvodi", "narudzbine", "admini", "kuponi", "statistika"]
+        permissions: ["proizvodi", "narudzbine", "admini", "statistika"]
       });
       console.log(`Uspešno kreiran novi admin nalog: ${newAdmin.mail} (ID: ${newAdmin._id}, adminType: ${newAdmin.adminType})`);
     }

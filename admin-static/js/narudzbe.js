@@ -298,8 +298,7 @@ function viewOrderDetails(orderOrId) {
     ? `${String(createdDate.getDate()).padStart(2, "0")}.${String(createdDate.getMonth() + 1).padStart(2, "0")}.${createdDate.getFullYear()} ${String(createdDate.getHours()).padStart(2, "0")}:${String(createdDate.getMinutes()).padStart(2, "0")}`
     : "-";
 
-  const couponCode = escapeHtml(o.couponCode || "");
-  const discountAmount = Number(o.discountAmount || 0);
+  const shippingAmountNum = Number(o.shippingAmount || 0);
 
   const orderIdDisplayEl = document.getElementById("orderIdDisplay");
   if (orderIdDisplayEl) {
@@ -396,10 +395,6 @@ function viewOrderDetails(orderOrId) {
               </p>
             </div>
             <div class="mb-2">
-              <span class="text-muted small d-block">Kupon kod:</span>
-              ${couponCode ? `<span class="badge badge-success font-weight-bold">${couponCode}</span>` : '<span class="text-muted small">Nije unet kupon</span>'}
-            </div>
-            <div>
               <span class="text-muted small d-block">Datum i vreme kreiranja:</span>
               <span class="text-dark font-weight-bold small">${dateFormatted}</span>
             </div>
@@ -447,13 +442,8 @@ function viewOrderDetails(orderOrId) {
                 <span class="font-weight-bold" style="color: #1e293b;">Standardna kurirska dostava</span>
               </div>
               <div class="col-md-4 mb-2 mb-md-0 text-md-center">
-                ${discountAmount > 0 ? `
-                  <span class="text-muted small d-block">Ostvareni popust:</span>
-                  <span class="text-danger font-weight-bold">-${discountAmount.toLocaleString("sr-RS")} RSD</span>
-                ` : `
-                  <span class="text-muted small d-block">Popust:</span>
-                  <span class="text-muted small">0 RSD</span>
-                `}
+                <span class="text-muted small d-block">Troškovi dostave:</span>
+                <span class="font-weight-bold" style="color: #1e293b;">${shippingAmountNum > 0 ? `${shippingAmountNum.toLocaleString("sr-RS")} RSD` : "Besplatna dostava"}</span>
               </div>
               <div class="col-md-4 text-md-right">
                 <span class="text-muted small d-block">Ukupan iznos za naplatu:</span>

@@ -94,7 +94,6 @@ const PUBLIC_GET_API_PREFIXES = [
   "/api/categories",
   "/api/featured",
   "/api/bestsellers",
-  "/api/coupons/validate",
   "/api/product-images",
 ];
 
@@ -106,7 +105,6 @@ const PUBLIC_POST_API_ROUTES = new Set([
   "/api/cart/validate",
   "/api/newsletter/subscribe",
   "/api/newsletter",
-  "/api/coupons/validate",
   "/api/product-images/batch",
 ]);
 

@@ -15,10 +15,6 @@ const SubscriberSchema = new mongoose.Schema(
       enum: ["active", "unsubscribed"],
       default: "active",
     },
-    couponCode: {
-      type: String,
-      default: "HA10",
-    },
     source: {
       type: String,
       default: "popup_modal",

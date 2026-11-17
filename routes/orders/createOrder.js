@@ -33,7 +33,6 @@ async function createOrder(req, res) {
       note,
       paymentMethod,
       items,
-      couponCode,
       acceptTerms,
     } = req.body;
 
@@ -135,8 +134,6 @@ async function createOrder(req, res) {
 
     const unavailableItems = [];
 
-    let discount = 0;
-    let cleanCoupon = "";
     let shipping = 0;
     let totalAmount = 0;
     const deductedProducts = [];
@@ -389,24 +386,11 @@ async function createOrder(req, res) {
     }
 
     // =========================================================================
-    // SERVERSKI PRORAČUN KUPONA I POPUSTA
-    // =========================================================================
-    cleanCoupon = String(couponCode || "").trim().toUpperCase();
-    if (cleanCoupon === "HA10" || cleanCoupon === "MIA10") {
-      discount = Math.round(calculatedTotal * 0.1);
-    } else if (cleanCoupon) {
-      return res.status(400).json({
-        success: false,
-        message: "Uneti kupon kod nije validan ili je istekao.",
-      });
-    }
-
-    // =========================================================================
     // SERVERSKI PRORAČUN DOSTAVE (POTPUNO IGNORIŠE KLIJENTSKI shippingAmount!)
     // Pravilo sajta: Besplatna dostava za porudžbine >= 3.000 RSD, inače 350 RSD
     // =========================================================================
     shipping = calculatedTotal >= 3000 ? 0 : 350;
-    totalAmount = Math.max(0, calculatedTotal - discount) + shipping;
+    totalAmount = Math.max(0, calculatedTotal) + shipping;
 
     // =========================================================================
     // ATOMSKO AŽURIRANJE ZALIHA (LAGERA) U BAZI PRE UPISA PORUDŽBINE
@@ -608,8 +592,6 @@ async function createOrder(req, res) {
         paymentStatus: "pending",
         status: "na_cekanju",
         items: verifiedItems,
-        couponCode: cleanCoupon,
-        discountAmount: discount,
         shippingAmount: shipping,
         totalAmount,
       });
@@ -632,7 +614,6 @@ async function createOrder(req, res) {
       orderNumber: newOrder.orderNumber,
       orderId: newOrder._id,
       subtotal: calculatedTotal,
-      discountAmount: discount,
       shippingAmount: shipping,
       totalAmount,
     });
