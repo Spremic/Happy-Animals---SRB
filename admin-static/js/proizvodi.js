@@ -731,15 +731,13 @@ function renderProductsSkeleton(count = 8) {
         <td><div class="skeleton skeleton-img"></div></td>
         <td><div class="skeleton skeleton-text" style="width: 70px;"></div></td>
         <td>
-          <div class="skeleton skeleton-text" style="width: 75%; height: 16px; margin-bottom: 6px;"></div>
-          <div class="skeleton skeleton-text" style="width: 45%; height: 12px;"></div>
+          <div class="skeleton skeleton-text" style="width: 65%; height: 16px; margin-bottom: 6px;"></div>
+          <div class="skeleton skeleton-text" style="width: 30%; height: 12px;"></div>
         </td>
-        <td><div class="skeleton skeleton-badge" style="width: 75px;"></div></td>
+        <td><div class="skeleton skeleton-badge" style="width: 90px;"></div></td>
         <td><div class="skeleton skeleton-text" style="width: 85px; height: 15px;"></div></td>
-        <td><div class="skeleton skeleton-text" style="width: 60px;"></div></td>
-        <td><div class="skeleton skeleton-text" style="width: 50px;"></div></td>
-        <td><div class="skeleton skeleton-badge" style="width: 70px;"></div></td>
-        <td style="text-align: center; white-space: nowrap; width: 160px; min-width: 160px;">
+        <td><div class="skeleton skeleton-badge" style="width: 75px;"></div></td>
+        <td style="text-align: center; white-space: nowrap; width: 150px; min-width: 150px;">
           <div class="table-action-btns" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
             <div class="skeleton skeleton-btn" style="flex: 0 0 34px; width: 34px; height: 34px;"></div>
             <div class="skeleton skeleton-btn" style="flex: 0 0 34px; width: 34px; height: 34px;"></div>
@@ -916,7 +914,7 @@ async function loadProducts(page = 1) {
     if (!products.length) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="9" class="text-center py-5 text-muted">
+          <td colspan="7" class="text-center py-5 text-muted">
             <i class="fas fa-boxes fa-3x mb-3 text-muted"></i>
             <p>${currentScope === "stock_alerts" ? "Odlično! Svi artikli, boje i pakovanja imaju dovoljno zaliha." : "Nema pronađenih artikala za zadate kriterijume."}</p>
           </td>
@@ -933,7 +931,6 @@ async function loadProducts(page = 1) {
         const prodId = escapeHtml(p._id);
         const code = escapeHtml(p.code);
         const title = escapeHtml(p.title);
-        const material = escapeHtml(p.material || "");
         const rawThumb = p.imageUrl || "";
         const thumbUrl = (rawThumb.startsWith("/uploads/") || rawThumb.startsWith("/img/") || rawThumb.startsWith("http://") || rawThumb.startsWith("https://"))
           ? escapeHtml(rawThumb)
@@ -943,45 +940,26 @@ async function loadProducts(page = 1) {
         const stockNum = typeof p.stock === "number" ? p.stock : 10;
 
         const catStr = (p.category || []).map(escapeHtml).join(", ") || "-";
-        const subcatStr = (p.subcategory || []).map(escapeHtml).join(", ");
-        const subcat2Str = (p.subcategory2 || []).map(escapeHtml).join(", ");
         const variantsList = Array.isArray(p.variants) && p.variants.length
           ? p.variants
           : (p.sizes || []).map((s) => ({ label: s, price: p.price, stock: stockNum }));
 
         const stockIssues = [];
-
-        const sizesStr = variantsList
-          .map((v) => {
-            const vP = Number(v.price);
-            const vStk = typeof v.stock === "number" ? v.stock : stockNum;
-            const isOosVar = vStk <= 0;
-            if (isOosVar) {
-              stockIssues.push(`Pakovanje ${escapeHtml(v.label)} (0 kom)`);
-            }
-            const priceTip = !isNaN(vP) && variantsList.length > 1 ? ` · ${vP.toLocaleString("sr-RS")} RSD` : "";
-            return `<span class="size-pill-sm${isOosVar ? " is-oos" : ""}" title="${escapeHtml(v.label)}${priceTip} — Lager: ${vStk} kom">${escapeHtml(v.label)} (${vStk} kom)</span>`;
-          })
-          .join("");
+        variantsList.forEach((v) => {
+          const vStk = typeof v.stock === "number" ? v.stock : stockNum;
+          if (vStk <= 0) {
+            stockIssues.push(`Pakovanje ${escapeHtml(v.label)} (0 kom)`);
+          }
+        });
 
         const colorsList = Array.isArray(p.colors) ? p.colors : [];
-        const colorsHtml = colorsList
-          .map((c) => {
-            const cName = typeof c === "string" ? c : (c.name || "Boja");
-            const cHex = typeof c === "object" ? (c.hex || c.code || "#ccc") : "#ccc";
-            const cStk = typeof c === "object" && typeof c.stock === "number" ? c.stock : stockNum;
-            const isOosCol = cStk <= 0;
-            if (isOosCol) {
-              stockIssues.push(`Boja ${escapeHtml(cName)} (0 kom)`);
-            }
-            return `
-              <span class="color-stock-chip${isOosCol ? " is-oos" : ""}" title="${escapeHtml(cName)}: ${cStk} kom">
-                <span class="color-dot-sm" style="background-color: ${escapeHtml(cHex)};"></span>
-                <span>${escapeHtml(cName)} (${cStk})</span>
-              </span>
-            `;
-          })
-          .join("");
+        colorsList.forEach((c) => {
+          const cName = typeof c === "string" ? c : (c.name || "Boja");
+          const cStk = typeof c === "object" && typeof c.stock === "number" ? c.stock : stockNum;
+          if (cStk <= 0) {
+            stockIssues.push(`Boja ${escapeHtml(cName)} (0 kom)`);
+          }
+        });
 
         if (stockNum <= 0 || statusRaw === "rasprodato") {
           if (stockIssues.length === 0) {
@@ -989,7 +967,7 @@ async function loadProducts(page = 1) {
           }
         }
 
-        const issueAlertHtml = stockIssues.length > 0
+        const issueAlertHtml = stockIssues.length > 0 && currentScope === "stock_alerts"
           ? `<div class="stock-issues-alert" onclick="editProduct('${prodId}')" title="Kliknite da izmenite i dopunite zalihe">
               <i class="fas fa-exclamation-triangle"></i>
               <span><strong>Potrošeno:</strong> ${stockIssues.join(", ")} — <u>Izmeni</u></span>
@@ -1011,9 +989,8 @@ async function loadProducts(page = 1) {
         const minVarPrice = varPrices.length ? Math.min(...varPrices) : (Number(p.price) || 0);
         const maxVarPrice = varPrices.length ? Math.max(...varPrices) : minVarPrice;
         const priceFormatted = minVarPrice !== maxVarPrice
-          ? `${minVarPrice.toLocaleString("sr-RS")} - ${maxVarPrice.toLocaleString("sr-RS")}`
+          ? `od ${minVarPrice.toLocaleString("sr-RS")}`
           : (Number(p.price) || 0).toLocaleString("sr-RS");
-        const oldPriceFormatted = p.oldPrice ? (Number(p.oldPrice) || 0).toLocaleString("sr-RS") : null;
         const slug = p.slug || p.code || p.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
         return `
@@ -1024,7 +1001,6 @@ async function loadProducts(page = 1) {
             <td class="font-weight-bold text-uppercase" style="color: #009900; font-size: 0.88rem;">${code}</td>
             <td>
               <div class="font-weight-bold" style="color: #1e293b;">${title}</div>
-              <small class="text-muted d-block mb-1">${material}</small>
               <div class="product-flags-row">
                 <button type="button" class="flag-toggle-btn ${p.isFeatured ? 'active-featured' : ''}" 
                         onclick="toggleProductFlag('${prodId}', 'isFeatured', event)" 
@@ -1036,20 +1012,15 @@ async function loadProducts(page = 1) {
             </td>
             <td>
               <span class="badge badge-light border text-capitalize">${catStr}</span>
-              ${subcatStr ? `<div class="small text-muted mt-1 text-capitalize"><i class="fas fa-angle-right mr-1"></i>${subcatStr}</div>` : ""}
-              ${subcat2Str ? `<div class="small text-muted text-capitalize" style="padding-left: 8px;"><i class="fas fa-angle-double-right mr-1"></i>${subcat2Str}</div>` : ""}
             </td>
             <td>
               <strong style="color: #1e293b;">${priceFormatted} RSD</strong>
-              ${oldPriceFormatted ? `<br><small class="text-muted text-decoration-line-through" style="text-decoration: line-through;">${oldPriceFormatted} RSD</small>` : ""}
             </td>
-            <td>${sizesStr || '<span class="text-muted small">-</span>'}</td>
-            <td>${colorsHtml || '<span class="text-muted small">-</span>'}</td>
             <td>
               <span class="${statusClass}">${statusDisplay}</span>
               <div class="small text-muted mt-1">Lager: <strong>${stockNum}</strong></div>
             </td>
-            <td style="text-align: center; white-space: nowrap; min-width: 160px; width: 160px;">
+            <td style="text-align: center; white-space: nowrap; min-width: 150px; width: 150px;">
               <div class="table-action-btns" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
                 <a href="/${encodeURIComponent(slug)}" target="_blank" class="btn btn-sm btn-outline-secondary" style="flex: 0 0 34px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; padding: 0;" title="Pogledaj na sajtu">
                   <i class="fas fa-eye"></i>
@@ -1069,7 +1040,7 @@ async function loadProducts(page = 1) {
 
     renderPagination(page, totalPages, count);
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger py-4">${escapeHtml(err.message)}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">${escapeHtml(err.message)}</td></tr>`;
   }
 }
 
