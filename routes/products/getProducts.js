@@ -38,9 +38,7 @@ function transformProduct(p, images) {
     variantType: p.variantType || "kg",
     variants: variantsArr,
     petType: Array.isArray(p.petType) ? p.petType : [],
-    lifeStage: p.lifeStage || "",
     flavor: p.flavor || "",
-    specialDiet: Array.isArray(p.specialDiet) ? p.specialDiet : [],
     category: p.category || [],
     subcategory: p.subcategory || [],
     subcategory2: p.subcategory2 || [],
@@ -275,12 +273,9 @@ function filterAndSortCachedProducts(allProducts, options = {}) {
       if (searchRegex.test(p.code || "")) return true;
       if (searchRegex.test(p.brand || "")) return true;
       if (searchRegex.test(p.flavor || "")) return true;
-      if (searchRegex.test(p.lifeStage || "")) return true;
       if (searchRegex.test(p.description || "")) return true;
       const petArr = Array.isArray(p.petType) ? p.petType : [p.petType];
       if (petArr.some((pt) => pt && searchRegex.test(String(pt)))) return true;
-      const dietArr = Array.isArray(p.specialDiet) ? p.specialDiet : [p.specialDiet];
-      if (dietArr.some((d) => d && searchRegex.test(String(d)))) return true;
       const cats = Array.isArray(p.category) ? p.category : [p.category];
       return cats.some((c) => c && searchRegex.test(String(c)));
     });

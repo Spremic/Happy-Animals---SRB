@@ -89,22 +89,11 @@ const ProductSchema = new mongoose.Schema(
         trim: true,
       },
     ],
-    lifeStage: {
-      type: String,
-      trim: true,
-      default: "",
-    },
     flavor: {
       type: String,
       trim: true,
       default: "",
     },
-    specialDiet: [
-      {
-        type: String,
-        trim: true,
-      },
-    ],
     colors: [
       {
         name: { type: String, trim: true },

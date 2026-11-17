@@ -16,7 +16,7 @@
 
     <!-- Classic Admin Styles (0 SCSS, 0 Frameworks) -->
     <link href="/admin/css/admin.css?v=4.0" rel="stylesheet" />
-    <link href="/admin/css/proizvodi.css?v=5.0" rel="stylesheet" />
+    <link href="/admin/css/proizvodi.css?v=5.4" rel="stylesheet" />
   </head>
 
   <body id="page-top">
@@ -195,9 +195,73 @@
             <div class="modal-body p-4" style="max-height: 80vh; overflow-y: auto;">
               <input type="hidden" id="productId" />
               <input type="hidden" id="productMainImages" />
+              <input type="hidden" id="selectedProductType" value="food" />
 
-              <!-- 1. Osnovni podaci -->
-              <div class="card modal-info-card mb-4">
+              <!-- 0. Šta prodajete? (Pametno prilagođavanje forme) -->
+              <div class="card modal-info-card mb-4 step-select-mode" id="productTypeSelectorCard">
+                <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+                  <h6 id="productTypeCardTitle"><i class="fas fa-layer-group"></i> <span>Šta želite da dodate?</span></h6>
+                  <small class="text-muted" id="productTypeCardSubtitle">Izaberite vrstu artikla kako bismo vam pripremili odgovarajuća polja za unos</small>
+                </div>
+                <div class="card-body">
+                  <div class="product-type-grid" id="productTypeGrid">
+                    <button type="button" class="product-type-pill" data-type="food">
+                      <span class="type-icon"><i class="fas fa-drumstick-bite"></i></span>
+                      <span class="type-text">
+                        <strong>Hrana i poslastice</strong>
+                        <small>Kilaže, pakovanja, ukusi, sastav</small>
+                      </span>
+                    </button>
+                    <button type="button" class="product-type-pill" data-type="equipment">
+                      <span class="type-icon"><i class="fas fa-vest"></i></span>
+                      <span class="type-text">
+                        <strong>Oprema i odeća</strong>
+                        <small>Veličine (S/M/L...), boje, materijal</small>
+                      </span>
+                    </button>
+                    <button type="button" class="product-type-pill" data-type="toys">
+                      <span class="type-icon"><i class="fas fa-baseball-ball"></i></span>
+                      <span class="type-text">
+                        <strong>Igračke</strong>
+                        <small>Boje, materijal, komadi</small>
+                      </span>
+                    </button>
+                    <button type="button" class="product-type-pill" data-type="hygiene">
+                      <span class="type-icon"><i class="fas fa-soap"></i></span>
+                      <span class="type-text">
+                        <strong>Higijena i nega</strong>
+                        <small>Zapremine (ml/L), sastav, pakovanja</small>
+                      </span>
+                    </button>
+                    <button type="button" class="product-type-pill" data-type="housing">
+                      <span class="type-icon"><i class="fas fa-home"></i></span>
+                      <span class="type-text">
+                        <strong>Kreveti, kavezi i akvaristika</strong>
+                        <small>Dimenzije, boje, materijali</small>
+                      </span>
+                    </button>
+                    <button type="button" class="product-type-pill" data-type="pharmacy">
+                      <span class="type-icon"><i class="fas fa-pills"></i></span>
+                      <span class="type-text">
+                        <strong>Apoteka i suplementi</strong>
+                        <small>Doze, aktivne supstance, pakovanja</small>
+                      </span>
+                    </button>
+                    <button type="button" class="product-type-pill" data-type="all">
+                      <span class="type-icon"><i class="fas fa-boxes"></i></span>
+                      <span class="type-text">
+                        <strong>Prikaži sva polja</strong>
+                        <small>Univerzalni prikaz svih opcija</small>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- POLJA ZA UNOS ARTIKLA (Prikazuju se nakon odabira kategorije) -->
+              <div id="productFormFieldsWrapper" style="display: none;">
+                <!-- 1. Osnovni podaci -->
+                <div class="card modal-info-card mb-4">
                 <div class="card-header">
                   <h6><i class="fas fa-info-circle"></i> Osnovni podaci artikla</h6>
                 </div>
@@ -267,13 +331,14 @@
                       <small class="text-muted">Automatski prati najnižu cenu varijante ako postoje varijante</small>
                     </div>
                     <div class="col-md-3 form-group mb-3 mb-md-0">
-                      <label class="font-weight-bold" style="font-size: 0.88rem;">Stara cena</label>
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Stara cena <span class="text-muted font-weight-normal" style="font-size: 0.8rem;">(opciono)</span></label>
                       <div class="input-group">
-                        <input type="number" class="form-control" id="productOldPrice" placeholder="2290" min="0" style="border-radius: 8px 0 0 8px;" />
+                        <input type="number" class="form-control" id="productOldPrice" placeholder="npr. 2290" min="0" style="border-radius: 8px 0 0 8px;" />
                         <div class="input-group-append">
                           <span class="input-group-text" style="border-radius: 0 8px 8px 0; background: #eef8ee; font-size: 0.85rem;">RSD</span>
                         </div>
                       </div>
+                      <small class="text-muted">Popunjava se samo za sniženi artikal</small>
                     </div>
                     <div class="col-md-3 form-group mb-3 mb-md-0">
                       <label class="font-weight-bold" style="font-size: 0.88rem;">Na stanju ukupno (kom) <span class="text-danger">*</span></label>
@@ -354,62 +419,40 @@
                       </div>
                       <small class="text-muted">Slobodan unos ili izbor iz baze</small>
                     </div>
-                    <div class="col-lg-3 col-md-6 form-group mb-0">
-                      <label class="font-weight-bold" style="font-size: 0.88rem;">Sastav / Materijal</label>
+                    <div class="col-lg-3 col-md-6 form-group mb-0" id="productMaterialGroup">
+                      <label class="font-weight-bold" id="productMaterialLabel" style="font-size: 0.88rem;">Sastav / Materijal</label>
                       <input type="text" class="form-control" id="productMaterial" placeholder="npr. Losos 35%, pirinač" style="border-radius: 8px;" />
-                      <small class="text-muted">Glavni sastojci ili materijal izrade</small>
+                      <small class="text-muted" id="productMaterialHelp">Glavni sastojci ili materijal izrade</small>
                     </div>
                   </div>
 
                   <hr class="my-3" />
 
-                  <div class="row">
-                    <div class="col-lg-5 form-group mb-3 mb-lg-0">
-                      <label class="font-weight-bold" style="font-size: 0.88rem;">Vrsta ljubimca</label>
-                      <div class="size-chips-wrapper" id="petTypeWrapper">
-                        <label class="size-chip"><input type="checkbox" value="Psi" /><span>Psi</span></label>
-                        <label class="size-chip"><input type="checkbox" value="Mačke" /><span>Mačke</span></label>
-                        <label class="size-chip"><input type="checkbox" value="Ptice" /><span>Ptice</span></label>
-                        <label class="size-chip"><input type="checkbox" value="Glodari i zečevi" /><span>Glodari</span></label>
-                        <label class="size-chip"><input type="checkbox" value="Ribice" /><span>Ribice</span></label>
-                        <label class="size-chip"><input type="checkbox" value="Reptili" /><span>Reptili</span></label>
-                      </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 form-group mb-3 mb-lg-0">
-                      <label class="font-weight-bold" style="font-size: 0.88rem;">Uzrast ljubimca</label>
-                      <select class="form-control" id="productLifeStage" style="border-radius: 8px;">
-                        <option value="">Svi uzrasti</option>
-                        <option value="Štenci / Mačići (Junior)">Štenci / Mačići (Junior)</option>
-                        <option value="Odrasli (Adult)">Odrasli (Adult)</option>
-                        <option value="Seniori (Senior)">Seniori (Senior)</option>
-                        <option value="Osetljivi / Sterilisani">Osetljivi / Sterilisani</option>
-                      </select>
-                    </div>
-                    <div class="col-lg-4 col-md-6 form-group mb-0">
-                      <label class="font-weight-bold" style="font-size: 0.88rem;">Ukus / Aroma</label>
-                      <input type="text" class="form-control" id="productFlavor" placeholder="npr. Piletina i pirinač, Losos, Jagnjetina..." style="border-radius: 8px;" />
+                  <div class="form-group mb-3" id="productPetTypeGroup">
+                    <label class="font-weight-bold" style="font-size: 0.88rem;">Vrsta ljubimca</label>
+                    <div class="size-chips-wrapper" id="petTypeWrapper">
+                      <label class="size-chip"><input type="checkbox" value="Psi" /><span>Psi</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Mačke" /><span>Mačke</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Ptice" /><span>Ptice</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Glodari i zečevi" /><span>Glodari</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Ribice" /><span>Ribice</span></label>
+                      <label class="size-chip"><input type="checkbox" value="Reptili" /><span>Reptili</span></label>
                     </div>
                   </div>
 
-                  <div class="mt-3">
-                    <label class="font-weight-bold d-block" style="font-size: 0.88rem;">Posebne osobine i dijete</label>
-                    <div class="size-chips-wrapper" id="specialDietWrapper">
-                      <label class="size-chip"><input type="checkbox" value="Bez žitarica (Grain-Free)" /><span>Bez žitarica</span></label>
-                      <label class="size-chip"><input type="checkbox" value="Hipoalergeno" /><span>Hipoalergeno</span></label>
-                      <label class="size-chip"><input type="checkbox" value="Sterilisani ljubimci" /><span>Sterilisani</span></label>
-                      <label class="size-chip"><input type="checkbox" value="Osetljivo varenje" /><span>Osetljivo varenje</span></label>
-                      <label class="size-chip"><input type="checkbox" value="Podrška zglobovima" /><span>Podrška zglobovima</span></label>
-                      <label class="size-chip"><input type="checkbox" value="Prirodni sastojci" /><span>Prirodni sastojci</span></label>
-                    </div>
+                  <div class="form-group mb-0" id="productFlavorGroup">
+                    <label class="font-weight-bold" style="font-size: 0.88rem;">Ukus / Aroma</label>
+                    <input type="text" class="form-control" id="productFlavor" placeholder="npr. Piletina i pirinač, Losos, Jagnjetina..." style="border-radius: 8px; width: 100%;" />
+                    <small class="text-muted">Aroma ili primarni ukus artikla</small>
                   </div>
                 </div>
               </div>
 
               <!-- 5. Varijante (kilogrami / veličine / zapremina) sa cenom i količinom + boje sa količinom -->
-              <div class="card modal-info-card mb-4">
+              <div class="card modal-info-card mb-4" id="variantsAndColorsCard">
                 <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
-                  <h6 class="mb-0"><i class="fas fa-weight-hanging"></i> Pakovanja / Veličine, boje i količine</h6>
-                  <small class="text-muted">Svaka težina/veličina i svaka boja imaju sopstvenu količinu na stanju</small>
+                  <h6 class="mb-0" id="variantsCardTitle"><i class="fas fa-weight-hanging mr-1" id="variantsCardIcon"></i> <span>Pakovanja / Veličine, cene i zalihe</span></h6>
+                  <small class="text-muted" id="variantsCardSubtitle">Svaka varijanta ima sopstvenu cenu i količinu na stanju</small>
                 </div>
                 <div class="card-body">
                   <div class="row mb-3">
@@ -439,8 +482,8 @@
                       <input type="number" id="newVariantPrice" class="form-control" placeholder="1890" min="0" style="border-radius: 8px;" />
                     </div>
                     <div class="col-md-2 form-group mb-2 mb-md-0">
-                      <label class="small font-weight-bold mb-1">Stara cena</label>
-                      <input type="number" id="newVariantOldPrice" class="form-control" placeholder="2290" min="0" style="border-radius: 8px;" />
+                      <label class="small font-weight-bold mb-1">Stara cena <span class="text-muted font-weight-normal">(opciono)</span></label>
+                      <input type="number" id="newVariantOldPrice" class="form-control" placeholder="npr. 2290" min="0" style="border-radius: 8px;" />
                     </div>
                     <div class="col-md-2 form-group mb-2 mb-md-0">
                       <label class="small font-weight-bold mb-1">Količina (kom)</label>
@@ -455,27 +498,29 @@
 
                   <div id="variantsListContainer" class="mb-3"></div>
 
-                  <hr class="my-3" />
-                  <div class="form-group mb-0">
-                    <label class="font-weight-bold d-block" style="font-size: 0.88rem;">Dostupne boje i količine po boji (opciono za opremu, krevete, igračke)</label>
-                    <div id="colorsContainer" class="mb-2"></div>
-                    <div class="row align-items-end p-3 rounded" style="background: #f8faf8; border: 1px dashed var(--color-border); margin-left: 0; margin-right: 0;">
-                      <div class="col-md-2 form-group mb-2 mb-md-0 px-1">
-                        <label class="small font-weight-bold mb-1">Boja</label>
-                        <input type="color" id="newColorHex" value="#009900" class="form-control p-1" style="height: 38px; border-radius: 8px; cursor: pointer;" />
-                      </div>
-                      <div class="col-md-5 form-group mb-2 mb-md-0 px-1">
-                        <label class="small font-weight-bold mb-1">Naziv boje</label>
-                        <input type="text" id="newColorName" class="form-control" placeholder="npr. Zelena, Crna, Plava" style="height: 38px; border-radius: 8px;" />
-                      </div>
-                      <div class="col-md-2 form-group mb-2 mb-md-0 px-1">
-                        <label class="small font-weight-bold mb-1">Količina (kom)</label>
-                        <input type="number" id="newColorStock" class="form-control" value="10" min="0" placeholder="10" style="height: 38px; border-radius: 8px;" />
-                      </div>
-                      <div class="col-md-3 px-1">
-                        <button class="btn btn-outline-primary btn-block font-weight-bold" type="button" onclick="addColor()" style="height: 38px; border-radius: 8px;">
-                          <i class="fas fa-plus mr-1"></i> Dodaj boju
-                        </button>
+                  <div id="productColorsSection">
+                    <hr class="my-3" />
+                    <div class="form-group mb-0">
+                      <label class="font-weight-bold d-block" style="font-size: 0.88rem;">Dostupne boje i količine po boji (za opremu, krevete, igračke)</label>
+                      <div id="colorsContainer" class="mb-2"></div>
+                      <div class="row align-items-end p-3 rounded" style="background: #f8faf8; border: 1px dashed var(--color-border); margin-left: 0; margin-right: 0;">
+                        <div class="col-md-2 form-group mb-2 mb-md-0 px-1">
+                          <label class="small font-weight-bold mb-1">Boja</label>
+                          <input type="color" id="newColorHex" value="#009900" class="form-control p-1" style="height: 38px; border-radius: 8px; cursor: pointer;" />
+                        </div>
+                        <div class="col-md-5 form-group mb-2 mb-md-0 px-1">
+                          <label class="small font-weight-bold mb-1">Naziv boje</label>
+                          <input type="text" id="newColorName" class="form-control" placeholder="npr. Zelena, Crna, Plava" style="height: 38px; border-radius: 8px;" />
+                        </div>
+                        <div class="col-md-2 form-group mb-2 mb-md-0 px-1">
+                          <label class="small font-weight-bold mb-1">Količina (kom)</label>
+                          <input type="number" id="newColorStock" class="form-control" value="10" min="0" placeholder="10" style="height: 38px; border-radius: 8px;" />
+                        </div>
+                        <div class="col-md-3 px-1">
+                          <button class="btn btn-outline-primary btn-block font-weight-bold" type="button" onclick="addColor()" style="height: 38px; border-radius: 8px;">
+                            <i class="fas fa-plus mr-1"></i> Dodaj boju
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -514,10 +559,12 @@
                 </div>
               </div>
 
+              </div><!-- Kraj #productFormFieldsWrapper -->
+
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="productModalFooter">
               <button type="button" class="btn btn-secondary px-4" data-dismiss="modal">Otkaži</button>
-              <button type="submit" class="btn btn-primary px-4" id="saveProductBtn">
+              <button type="submit" class="btn btn-primary px-4" id="saveProductBtn" style="display: none;">
                 <span id="saveBtnText">Sačuvaj artikal</span>
                 <span id="saveBtnSpinner" class="spinner-border spinner-border-sm ml-2" style="display: none;" role="status"></span>
               </button>
@@ -529,6 +576,6 @@
 
     <!-- Pure Classic JS (0 Dependencies) -->
     <script src="/admin/js/clone.js?v=2.4"></script>
-    <script src="/admin/js/proizvodi.js?v=4.1"></script>
+    <script src="/admin/js/proizvodi.js?v=4.4"></script>
   </body>
 </html>

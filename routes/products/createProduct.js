@@ -68,9 +68,7 @@ async function createProduct(req, res) {
       variantType,
       variants,
       petType,
-      lifeStage,
       flavor,
-      specialDiet,
       colors,
       material,
       brand,
@@ -87,7 +85,6 @@ async function createProduct(req, res) {
     const trimmedSubcategory2 = safeParseArray(subcategory2);
     const trimmedSizes = safeParseArray(sizes);
     const trimmedPetType = normalizeStringArray(safeParseArray(petType));
-    const trimmedSpecialDiet = normalizeStringArray(safeParseArray(specialDiet));
 
     if (!code || !title) {
       return res.status(400).json({
@@ -168,9 +165,7 @@ async function createProduct(req, res) {
       variantType: resolveVariantType(variantType),
       variants: variantData.variants,
       petType: trimmedPetType,
-      lifeStage: lifeStage ? String(lifeStage).trim() : "",
       flavor: flavor ? String(flavor).trim() : "",
-      specialDiet: trimmedSpecialDiet,
       colors: colorData.colors,
       material: material ? String(material).trim() : "",
       brand: brand ? String(brand).trim() : "",

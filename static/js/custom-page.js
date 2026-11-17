@@ -813,8 +813,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         p.type,
         ...toValArray(p.petType),
         p.flavor,
-        p.lifeStage,
-        ...toValArray(p.specialDiet),
         ...toValArray(p.sizes)
       ]
         .filter(Boolean)

@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCustomTooltip();
   setupCategoryComboInputs();
   syncAdminCategoryOptions();
+  setupProductTypeSelector();
   loadProducts(1);
   setupUploader();
   setupStockStatusSync();
@@ -1383,8 +1384,8 @@ function renderVariantsList() {
         <thead class="thead-light">
           <tr>
             <th>Pakovanje / Veličina</th>
-            <th style="width: 150px;">Cena (RSD)</th>
-            <th style="width: 150px;">Stara cena (RSD)</th>
+            <th style="width: 145px;">Cena (RSD)</th>
+            <th style="width: 165px;">Stara cena (opciono)</th>
             <th style="width: 120px;">Lager (kom)</th>
             <th style="width: 55px;" class="text-center">Ukloni</th>
           </tr>
@@ -1404,7 +1405,7 @@ function renderVariantsList() {
                 <input type="number" class="form-control form-control-sm var-price-input" min="0" value="${Number(v.price) || 0}" data-idx="${idx}" />
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm var-oldprice-input" min="0" placeholder="-" value="${v.oldPrice ? Number(v.oldPrice) : ""}" data-idx="${idx}" />
+                <input type="number" class="form-control form-control-sm var-oldprice-input" min="0" placeholder="Opciono" value="${v.oldPrice ? Number(v.oldPrice) : ""}" data-idx="${idx}" />
               </td>
               <td>
                 <input type="number" class="form-control form-control-sm var-stock-input" min="0" value="${vStock}" data-idx="${idx}" />
@@ -1937,6 +1938,206 @@ function renderImagesPreview() {
 }
 
 /* ==========================================================================
+   PAMETNI IZBOR TIPA ARTIKLA (Hrana, Oprema, Igračke, Higijena...)
+   ========================================================================== */
+function setupProductTypeSelector() {
+  document.querySelectorAll("#productTypeGrid .product-type-pill").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const type = btn.dataset.type || "food";
+      setProductFormType(type, { autoSetVariantType: true });
+    });
+  });
+}
+
+function setProductFormType(type, options = { autoSetVariantType: true }) {
+  if (!type) return;
+  const hiddenInput = document.getElementById("selectedProductType");
+  if (hiddenInput) hiddenInput.value = type;
+
+  // Ako su polja bila sakrivena na početku modala, prikaži ih sada
+  const fieldsWrapper = document.getElementById("productFormFieldsWrapper");
+  if (fieldsWrapper && fieldsWrapper.style.display === "none") {
+    fieldsWrapper.style.display = "block";
+    renderVariantPresets();
+    renderVariantsList();
+    renderTechSpecs();
+  }
+
+  const saveBtn = document.getElementById("saveProductBtn");
+  if (saveBtn) saveBtn.style.display = "inline-flex";
+
+  const card = document.getElementById("productTypeSelectorCard");
+  if (card) {
+    card.classList.remove("step-select-mode");
+    card.classList.add("compact-mode");
+  }
+
+  const typeNames = {
+    food: "Hrana i poslastice",
+    equipment: "Oprema i odeća",
+    toys: "Igračke",
+    hygiene: "Higijena i nega",
+    housing: "Kreveti, kavezi i akvaristika",
+    pharmacy: "Apoteka i suplementi",
+    all: "Sve opcije (Univerzalno)",
+  };
+
+  const titleEl = document.getElementById("productTypeCardTitle");
+  if (titleEl) {
+    titleEl.innerHTML = `<i class="fas fa-layer-group text-success mr-2"></i> <span>Kategorija: <strong style="color: #009900;">${typeNames[type] || type}</strong></span>`;
+  }
+  const subEl = document.getElementById("productTypeCardSubtitle");
+  if (subEl) {
+    subEl.textContent = "Kliknite na drugu kategoriju ako želite da promenite vrstu artikla i polja:";
+  }
+
+  // Obeleži aktivnu pilulu
+  document.querySelectorAll("#productTypeGrid .product-type-pill").forEach((pill) => {
+    pill.classList.toggle("active", pill.dataset.type === type);
+  });
+
+  const flavorGroup = document.getElementById("productFlavorGroup");
+  const colorsSection = document.getElementById("productColorsSection");
+  const materialLabel = document.getElementById("productMaterialLabel");
+  const materialInput = document.getElementById("productMaterial");
+  const materialHelp = document.getElementById("productMaterialHelp");
+  const vtEl = document.getElementById("productVariantType");
+  const variantsTitle = document.getElementById("variantsCardTitle");
+  const variantsSubtitle = document.getElementById("variantsCardSubtitle");
+
+  switch (type) {
+    case "food":
+      if (flavorGroup) flavorGroup.style.display = "";
+      if (colorsSection) colorsSection.style.display = "none";
+      if (materialLabel) materialLabel.textContent = "Sastav hrane";
+      if (materialInput) materialInput.placeholder = "npr. Losos 35%, pirinač, grašak, riblje ulje...";
+      if (materialHelp) materialHelp.textContent = "Glavni sastojci, analitički sastav i sirovine";
+      if (variantsTitle) variantsTitle.innerHTML = '<i class="fas fa-weight-hanging mr-1" id="variantsCardIcon"></i> <span>Pakovanja i kilaže (cene i zalihe)</span>';
+      if (variantsSubtitle) variantsSubtitle.textContent = "Pakovanja hrane (npr. 400g, 2kg, 12kg) sa cenom i količinom na stanju";
+      if (options.autoSetVariantType && vtEl && !currentVariants.length) {
+        vtEl.value = "kg";
+        renderVariantPresets();
+      }
+      break;
+
+    case "equipment":
+      if (flavorGroup) flavorGroup.style.display = "none";
+      if (colorsSection) colorsSection.style.display = "";
+      if (materialLabel) materialLabel.textContent = "Materijal izrade";
+      if (materialInput) materialInput.placeholder = "npr. Ojačani najlon, neopren, nerđajući čelik...";
+      if (materialHelp) materialHelp.textContent = "Materijali izrade opreme/odeće";
+      if (variantsTitle) variantsTitle.innerHTML = '<i class="fas fa-ruler-combined mr-1" id="variantsCardIcon"></i> <span>Veličine opreme i zalihe</span>';
+      if (variantsSubtitle) variantsSubtitle.textContent = "Veličine (XS, S, M, L, XL...) i količine po veličini";
+      if (options.autoSetVariantType && vtEl && !currentVariants.length) {
+        vtEl.value = "size";
+        renderVariantPresets();
+      }
+      break;
+
+    case "toys":
+      if (flavorGroup) flavorGroup.style.display = "none";
+      if (colorsSection) colorsSection.style.display = "";
+      if (materialLabel) materialLabel.textContent = "Materijal igračke";
+      if (materialInput) materialInput.placeholder = "npr. Prirodna guma, pamučni konopac, pliš...";
+      if (materialHelp) materialHelp.textContent = "Bezbednost i vrsta materijala igračke";
+      if (variantsTitle) variantsTitle.innerHTML = '<i class="fas fa-shapes mr-1" id="variantsCardIcon"></i> <span>Dimenzije / Varijante igračke</span>';
+      if (variantsSubtitle) variantsSubtitle.textContent = "Dimenzije ili komadi ako igračka ima više opcija";
+      if (options.autoSetVariantType && vtEl && !currentVariants.length) {
+        vtEl.value = "pieces";
+        renderVariantPresets();
+      }
+      break;
+
+    case "hygiene":
+      if (flavorGroup) flavorGroup.style.display = "none";
+      if (colorsSection) colorsSection.style.display = "none";
+      if (materialLabel) materialLabel.textContent = "Sastav i ekstrakti";
+      if (materialInput) materialInput.placeholder = "npr. Ekstrakt aloe vere, ulje makadamije...";
+      if (materialHelp) materialHelp.textContent = "Aktivne komponente i sastojci preparata";
+      if (variantsTitle) variantsTitle.innerHTML = '<i class="fas fa-flask mr-1" id="variantsCardIcon"></i> <span>Zapremine i pakovanja sa lagerom</span>';
+      if (variantsSubtitle) variantsSubtitle.textContent = "Zapremina (250ml, 500ml, 1L) ili pakovanje sa količinom na stanju";
+      if (options.autoSetVariantType && vtEl && !currentVariants.length) {
+        vtEl.value = "volume";
+        renderVariantPresets();
+      }
+      break;
+
+    case "housing":
+      if (flavorGroup) flavorGroup.style.display = "none";
+      if (colorsSection) colorsSection.style.display = "";
+      if (materialLabel) materialLabel.textContent = "Materijal i punjenje";
+      if (materialInput) materialInput.placeholder = "npr. Vodootporni pliš, memorijska pena, drvo...";
+      if (materialHelp) materialHelp.textContent = "Konstrukcija, materijal navlake i punjenja";
+      if (variantsTitle) variantsTitle.innerHTML = '<i class="fas fa-ruler mr-1" id="variantsCardIcon"></i> <span>Dimenzije / Veličine sa zalihama</span>';
+      if (variantsSubtitle) variantsSubtitle.textContent = "Dimenzije (npr. S - 60x40cm, M - 80x60cm) sa cenom i lagerom";
+      if (options.autoSetVariantType && vtEl && !currentVariants.length) {
+        vtEl.value = "size";
+        renderVariantPresets();
+      }
+      break;
+
+    case "pharmacy":
+      if (flavorGroup) flavorGroup.style.display = "none";
+      if (colorsSection) colorsSection.style.display = "none";
+      if (materialLabel) materialLabel.textContent = "Aktivne supstance / Sastav";
+      if (materialInput) materialInput.placeholder = "npr. Fipronil 67mg, Glukozamin 500mg...";
+      if (materialHelp) materialHelp.textContent = "Aktivne materije, doza i sastav";
+      if (variantsTitle) variantsTitle.innerHTML = '<i class="fas fa-pills mr-1" id="variantsCardIcon"></i> <span>Pakovanja, doze i zalihe</span>';
+      if (variantsSubtitle) variantsSubtitle.textContent = "Doze i pakovanja (npr. 1 ampula, 30 tableta) sa lagerom";
+      if (options.autoSetVariantType && vtEl && !currentVariants.length) {
+        vtEl.value = "pieces";
+        renderVariantPresets();
+      }
+      break;
+
+    case "all":
+    default:
+      if (flavorGroup) flavorGroup.style.display = "";
+      if (colorsSection) colorsSection.style.display = "";
+      if (materialLabel) materialLabel.textContent = "Sastav / Materijal";
+      if (materialInput) materialInput.placeholder = "npr. Losos 35%, pirinač ili Najlon...";
+      if (materialHelp) materialHelp.textContent = "Glavni sastojci ili materijal izrade";
+      if (variantsTitle) variantsTitle.innerHTML = '<i class="fas fa-weight-hanging mr-1" id="variantsCardIcon"></i> <span>Pakovanja / Veličine, cene i zalihe</span>';
+      if (variantsSubtitle) variantsSubtitle.textContent = "Svaka varijanta ima sopstvenu cenu i količinu na stanju";
+      break;
+  }
+}
+
+function detectProductFormType(p) {
+  if (!p) return "food";
+  const catParts = [
+    ...(Array.isArray(p.category) ? p.category : [p.category]),
+    ...(Array.isArray(p.subcategory) ? p.subcategory : [p.subcategory]),
+    ...(Array.isArray(p.subcategory2) ? p.subcategory2 : [p.subcategory2]),
+    p.title || "",
+  ];
+  const catStr = catParts.filter(Boolean).join(" ").toLowerCase();
+
+  if (/amovi|am\b|povoci|povodac|ogrlica|ogrlice|odeca|odeća|odelo|kabanic|prsluk|cizmic|obuć/.test(catStr)) {
+    return "equipment";
+  }
+  if (/igrack|igračk|lopt|kanap|pliš|plis|frizbi/.test(catStr)) {
+    return "toys";
+  }
+  if (/sampon|šampon|balzam|posip|maramic|četk|cetk|češalj|cesalj|pelene|pasta za zube|dezodorans/.test(catStr)) {
+    return "hygiene";
+  }
+  if (/krevet|ležaj|lezaj|jastuk|kavez|akvarijum|terarijum|grebalic|kućica|kucica|transporter/.test(catStr)) {
+    return "housing";
+  }
+  if (/apotek|ampul|vitamin|suplement|tablete|kapi|parazit|zastit|zaštit/.test(catStr)) {
+    return "pharmacy";
+  }
+  if (/hrana|poslast|granul|sos|konzerv|keks|biskvit|pasta|pire/.test(catStr) || p.flavor) {
+    return "food";
+  }
+  if (Array.isArray(p.colors) && p.colors.length > 0) {
+    return "equipment";
+  }
+  return "food";
+}
+
+/* ==========================================================================
    4. OTVARANJE MODALA I ČUVANJE (DODAVANJE / IZMENA)
    ========================================================================== */
 function openAddModal() {
@@ -1963,7 +2164,9 @@ function openAddModal() {
   closeAllComboDropdowns();
   syncAdminCategoryOptions();
 
-  document.getElementById("productModalTitle").innerHTML = '<i class="fas fa-plus-circle mr-2"></i><span>Dodaj novi Pet Shop artikal</span>';
+  document.getElementById("productModalTitle").innerHTML = '<i class="fas fa-plus-circle mr-2"></i><span>Dodaj novi artikal</span>';
+  const saveBtnText = document.getElementById("saveBtnText");
+  if (saveBtnText) saveBtnText.textContent = "Sačuvaj artikal";
 
   currentColors = [];
   currentVariants = [];
@@ -1971,16 +2174,41 @@ function openAddModal() {
   renderColors();
   renderImagesPreview();
 
-  const vtEl = document.getElementById("productVariantType");
-  if (vtEl) vtEl.value = "kg";
-  const lsEl = document.getElementById("productLifeStage");
-  if (lsEl) lsEl.value = "";
   const flEl = document.getElementById("productFlavor");
   if (flEl) flEl.value = "";
 
-  document.querySelectorAll("#petTypeWrapper input[type='checkbox'], #specialDietWrapper input[type='checkbox']").forEach((chk) => {
+  document.querySelectorAll("#petTypeWrapper input[type='checkbox']").forEach((chk) => {
     chk.checked = false;
   });
+
+  // Početni ekran pri dodavanju novog: prikazuju se SAMO kategorije!
+  const fieldsWrapper = document.getElementById("productFormFieldsWrapper");
+  if (fieldsWrapper) fieldsWrapper.style.display = "none";
+
+  const saveBtn = document.getElementById("saveProductBtn");
+  if (saveBtn) saveBtn.style.display = "none";
+
+  const card = document.getElementById("productTypeSelectorCard");
+  if (card) {
+    card.classList.add("step-select-mode");
+    card.classList.remove("compact-mode");
+  }
+
+  const titleEl = document.getElementById("productTypeCardTitle");
+  if (titleEl) {
+    titleEl.innerHTML = '<i class="fas fa-layer-group text-success mr-2"></i> <span>Šta želite da dodate?</span>';
+  }
+  const subEl = document.getElementById("productTypeCardSubtitle");
+  if (subEl) {
+    subEl.textContent = "Izaberite kategoriju artikla kako bismo vam pripremili odgovarajuća polja:";
+  }
+
+  // Deaktiviraj pilule dok korisnik ne izabere
+  document.querySelectorAll("#productTypeGrid .product-type-pill").forEach((pill) => {
+    pill.classList.remove("active");
+  });
+  const hiddenInput = document.getElementById("selectedProductType");
+  if (hiddenInput) hiddenInput.value = "";
 
   renderVariantPresets();
   renderVariantsList();
@@ -2035,25 +2263,6 @@ async function editProduct(idOrProduct) {
   // Pet Shop opcije i varijante
   const vtEl = document.getElementById("productVariantType");
   if (vtEl) vtEl.value = p.variantType || "kg";
-  const lsEl = document.getElementById("productLifeStage");
-  if (lsEl) {
-    const rawLs = String(p.lifeStage || "").trim();
-    const lsAliases = {
-      "Adult (Odrasli)": "Odrasli (Adult)",
-      "Junior / Štenci": "Junior / Štenci / Mačići",
-      "Junior / Mačići": "Junior / Štenci / Mačići",
-      "Senior (Stariji)": "Senior (7+ god)",
-      "Svi uzrasti (All Life Stages)": "Svi uzrasti",
-    };
-    const mappedLs = lsAliases[rawLs] || rawLs;
-    if (mappedLs && !Array.from(lsEl.options).some((opt) => opt.value === mappedLs)) {
-      const customOpt = document.createElement("option");
-      customOpt.value = mappedLs;
-      customOpt.textContent = mappedLs;
-      lsEl.appendChild(customOpt);
-    }
-    lsEl.value = mappedLs;
-  }
   const flEl = document.getElementById("productFlavor");
   if (flEl) flEl.value = p.flavor || "";
 
@@ -2077,32 +2286,23 @@ async function editProduct(idOrProduct) {
     chk.checked = normalizedPets.has(chk.value) || petTypes.includes(chk.value);
   });
 
-  const specialDiets = Array.isArray(p.specialDiet) ? p.specialDiet : [];
-  const dietAliases = {
-    "Grain Free": "Grain-Free (Bez žitarica)",
-    Hipoalergena: "Sensitive / Hipoalergeno",
-    "Za kožu i dlaku": "Derma / Dlaka i koža",
-    "Visokoproteinska": "Visokoproteinska",
-    "Urinary Care": "Urinary Care",
-  };
-  const sdWrapper = document.getElementById("specialDietWrapper");
-  const normalizedDiets = new Set(specialDiets.map((sd) => dietAliases[String(sd).trim()] || String(sd).trim()));
-  if (sdWrapper) {
-    const existingVals = new Set(
-      Array.from(sdWrapper.querySelectorAll("input[type='checkbox']")).map((c) => c.value)
-    );
-    normalizedDiets.forEach((dVal) => {
-      if (dVal && !existingVals.has(dVal)) {
-        const lbl = document.createElement("label");
-        lbl.className = "size-chip";
-        lbl.innerHTML = `<input type="checkbox" value="${escapeHtml(dVal)}" checked /><span>${escapeHtml(dVal)}</span>`;
-        sdWrapper.appendChild(lbl);
-      }
-    });
-    sdWrapper.querySelectorAll("input[type='checkbox']").forEach((chk) => {
-      chk.checked = normalizedDiets.has(chk.value) || specialDiets.includes(chk.value);
-    });
+  // U edit modu polja su odmah vidljiva i birač je u kompaktnom modu
+  const fieldsWrapper = document.getElementById("productFormFieldsWrapper");
+  if (fieldsWrapper) fieldsWrapper.style.display = "block";
+
+  const saveBtn = document.getElementById("saveProductBtn");
+  if (saveBtn) saveBtn.style.display = "inline-flex";
+  const saveBtnText = document.getElementById("saveBtnText");
+  if (saveBtnText) saveBtnText.textContent = "Sačuvaj izmene";
+
+  const card = document.getElementById("productTypeSelectorCard");
+  if (card) {
+    card.classList.remove("step-select-mode");
+    card.classList.add("compact-mode");
   }
+
+  const detectedType = detectProductFormType(p);
+  setProductFormType(detectedType, { autoSetVariantType: false });
 
   if (Array.isArray(p.variants) && p.variants.length > 0) {
     currentVariants = JSON.parse(JSON.stringify(p.variants));
@@ -2205,17 +2405,11 @@ async function handleProductSave(e) {
   const isFeatured = document.getElementById("productIsFeatured").checked;
 
   const variantType = document.getElementById("productVariantType")?.value || "kg";
-  const lifeStage = document.getElementById("productLifeStage")?.value || "";
   const flavor = document.getElementById("productFlavor")?.value.trim() || "";
 
   const petType = [];
   document.querySelectorAll("#petTypeWrapper input[type='checkbox']:checked").forEach((chk) => {
     petType.push(chk.value);
-  });
-
-  const specialDiet = [];
-  document.querySelectorAll("#specialDietWrapper input[type='checkbox']:checked").forEach((chk) => {
-    specialDiet.push(chk.value);
   });
 
   const cleanVariants = currentVariants
@@ -2390,9 +2584,7 @@ async function handleProductSave(e) {
       variants: cleanVariants,
       sizes,
       petType,
-      lifeStage,
       flavor,
-      specialDiet,
       colors: cleanColors,
       material,
       brand,

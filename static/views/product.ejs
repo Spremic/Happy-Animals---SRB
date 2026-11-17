@@ -154,7 +154,6 @@
                 ? activeVariant.stock
                 : (Number(product.stock) || 0);
               const petTypesList = Array.isArray(product.petType) ? product.petType.filter(Boolean) : [];
-              const specialDietList = Array.isArray(product.specialDiet) ? product.specialDiet.filter(Boolean) : [];
               const colorHexMap = {
                 crvena: '#d32f2f', plava: '#1976d2', zelena: '#2e7d32', crna: '#1c1c1c',
                 bela: '#f5f5f5', zuta: '#fbc02d', 'žuta': '#fbc02d', roze: '#ec407a',
@@ -167,20 +166,14 @@
               
               <h1 class="product-title reveal delay-100"><%= product.title %></h1>
 
-              <% if (petTypesList.length || product.lifeStage || product.flavor || specialDietList.length) { %>
+              <% if (petTypesList.length || product.flavor) { %>
                 <div class="pet-meta-badges reveal delay-100">
                   <% if (petTypesList.length) { %>
                     <span class="pet-meta-badge">Ljubimac: <%= petTypesList.join(', ') %></span>
                   <% } %>
-                  <% if (product.lifeStage) { %>
-                    <span class="pet-meta-badge">Uzrast: <%= product.lifeStage %></span>
-                  <% } %>
                   <% if (product.flavor) { %>
                     <span class="pet-meta-badge">Ukus: <%= product.flavor %></span>
                   <% } %>
-                  <% specialDietList.forEach((diet) => { %>
-                    <span class="pet-meta-badge diet"><%= diet %></span>
-                  <% }); %>
                 </div>
               <% } %>
               
@@ -327,7 +320,6 @@
           <% if (product) { %>
             <%
               const specPetTypes = Array.isArray(product.petType) ? product.petType.filter(Boolean).join(', ') : '';
-              const specSpecialDiet = Array.isArray(product.specialDiet) ? product.specialDiet.filter(Boolean).join(', ') : '';
               const specVariants = Array.isArray(product.variants) && product.variants.length > 0
                 ? product.variants.map(v => `${v.label} (${formatPriceString(v.price)} RSD)`).join(' • ')
                 : (Array.isArray(product.sizes) && product.sizes.length > 0 ? product.sizes.join(', ') : '');
@@ -355,16 +347,6 @@
                 </div>
               </div>
             <% } %>
-            <% if (product.lifeStage) { %>
-              <div class="spec-item reveal delay-100">
-                <div class="spec-label-wrapper">
-                  <span class="spec-label">Uzrast ljubimca:</span>
-                </div>
-                <div class="spec-value-wrapper">
-                  <span class="spec-value"><%= product.lifeStage %></span>
-                </div>
-              </div>
-            <% } %>
             <% if (product.flavor) { %>
               <div class="spec-item reveal delay-100">
                 <div class="spec-label-wrapper">
@@ -372,16 +354,6 @@
                 </div>
                 <div class="spec-value-wrapper">
                   <span class="spec-value"><%= product.flavor %></span>
-                </div>
-              </div>
-            <% } %>
-            <% if (specSpecialDiet) { %>
-              <div class="spec-item reveal delay-200">
-                <div class="spec-label-wrapper">
-                  <span class="spec-label">Posebne karakteristike:</span>
-                </div>
-                <div class="spec-value-wrapper">
-                  <span class="spec-value"><%= specSpecialDiet %></span>
                 </div>
               </div>
             <% } %>

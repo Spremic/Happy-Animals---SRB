@@ -76,9 +76,7 @@ async function updateProduct(req, res) {
       variantType,
       variants,
       petType,
-      lifeStage,
       flavor,
-      specialDiet,
       colors,
       material,
       brand,
@@ -196,14 +194,8 @@ async function updateProduct(req, res) {
     if (petType !== undefined) {
       existingProduct.petType = normalizeStringArray(safeParseArray(petType));
     }
-    if (lifeStage !== undefined) {
-      existingProduct.lifeStage = String(lifeStage || "").trim();
-    }
     if (flavor !== undefined) {
       existingProduct.flavor = String(flavor || "").trim();
-    }
-    if (specialDiet !== undefined) {
-      existingProduct.specialDiet = normalizeStringArray(safeParseArray(specialDiet));
     }
 
     if (colors !== undefined) {

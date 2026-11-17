@@ -138,8 +138,6 @@ async function searchProductsWithEngine(ProductModel, options = {}) {
       { brand: searchRegex },
       { flavor: searchRegex },
       { petType: searchRegex },
-      { lifeStage: searchRegex },
-      { specialDiet: searchRegex },
       { description: searchRegex },
       { category: searchRegex },
     ];
