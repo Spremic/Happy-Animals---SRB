@@ -132,7 +132,7 @@ async function searchProductsWithEngine(ProductModel, options = {}) {
   if (searchQuery) {
     const rawPattern = buildDiacriticPattern(searchQuery);
     const searchRegex = new RegExp(rawPattern, "i");
-    mongoQuery.$or = [
+    const searchOr = [
       { title: searchRegex },
       { code: searchRegex },
       { brand: searchRegex },
@@ -143,6 +143,12 @@ async function searchProductsWithEngine(ProductModel, options = {}) {
       { description: searchRegex },
       { category: searchRegex },
     ];
+    if (mongoQuery.$or) {
+      mongoQuery.$and = mongoQuery.$and || [];
+      mongoQuery.$and.push({ $or: searchOr });
+    } else {
+      mongoQuery.$or = searchOr;
+    }
   }
 
   let sortOption = { createdAt: -1 };

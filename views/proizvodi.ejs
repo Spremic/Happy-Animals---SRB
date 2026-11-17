@@ -15,8 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
 
     <!-- Classic Admin Styles (0 SCSS, 0 Frameworks) -->
-    <link href="/admin/css/admin.css?v=3.0" rel="stylesheet" />
-    <link href="/admin/css/proizvodi.css?v=4.0" rel="stylesheet" />
+    <link href="/admin/css/admin.css?v=4.0" rel="stylesheet" />
+    <link href="/admin/css/proizvodi.css?v=5.0" rel="stylesheet" />
   </head>
 
   <body id="page-top">
@@ -52,15 +52,15 @@
             <!-- Header red -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
               <div>
-                <h1 class="h3 mb-1" style="color: #ffffff; font-weight: 800; font-family: var(--font-heading);">Svi Pet Shop artikli</h1>
-                <p class="text-muted small mb-0">Pregled, unos i ažuriranje artikala i njihovih zaliha</p>
+                <h1 class="h3 mb-1" style="color: #1e293b; font-weight: 800; font-family: var(--font-heading);">Svi Pet Shop artikli</h1>
+                <p class="text-muted small mb-0">Pregled, unos i ažuriranje artikala, boja, pakovanja i njihovih zaliha</p>
               </div>
               <button class="btn btn-primary" onclick="openAddModal()">
-                <i class="fas fa-plus fa-sm text-white-50 mr-1"></i> Dodaj novi proizvod
+                <i class="fas fa-plus fa-sm mr-1"></i> Dodaj novi proizvod
               </button>
             </div>
 
-            <!-- Segmentirani filter slajder: Svi artikli / Istaknuto na početnoj / Bestseller / Van lagera -->
+            <!-- Segmentirani filter slajder: Svi artikli / Istaknuto na početnoj / Obaveštenja o zalihama / Van lagera -->
             <div class="product-scope-slider-wrapper mb-3">
               <div class="product-scope-slider" id="productScopeSlider">
                 <button type="button" class="scope-slider-btn active" data-scope="all" onclick="setProductScope('all')">
@@ -71,14 +71,23 @@
                   <i class="fas fa-star mr-1 text-warning"></i> Istaknuto na početnoj
                   <span class="scope-count-badge" id="scopeCountFeatured"><span class="skeleton skeleton-badge-num"></span></span>
                 </button>
-                <button type="button" class="scope-slider-btn" data-scope="bestseller" onclick="setProductScope('bestseller')">
-                  <i class="fas fa-fire mr-1 text-danger"></i> Bestseller
-                  <span class="scope-count-badge" id="scopeCountBestseller"><span class="skeleton skeleton-badge-num"></span></span>
+                <button type="button" class="scope-slider-btn" data-scope="stock_alerts" onclick="setProductScope('stock_alerts')">
+                  <i class="fas fa-exclamation-triangle mr-1 text-danger"></i> Obaveštenja o zalihama
+                  <span class="scope-count-badge" id="scopeCountStockAlerts"><span class="skeleton skeleton-badge-num"></span></span>
                 </button>
                 <button type="button" class="scope-slider-btn" data-scope="out_of_stock" onclick="setProductScope('out_of_stock')">
                   <i class="fas fa-box-open mr-1 text-secondary"></i> Van lagera
                   <span class="scope-count-badge" id="scopeCountOutOfStock"><span class="skeleton skeleton-badge-num"></span></span>
                 </button>
+              </div>
+            </div>
+
+            <div id="stockAlertsBanner" class="alert alert-danger mb-3" style="display: none;">
+              <div class="d-flex align-items-center justify-content-between flex-wrap" style="gap: 10px;">
+                <div>
+                  <i class="fas fa-exclamation-triangle mr-2"></i>
+                  <strong>Obaveštenje o zalihama:</strong> Ovde su prikazani artikli kod kojih je određena kilaža, veličina, boja ili ceo artikal potrošen (0 kom). Kliknite na artikal ili dugme <strong>Izmeni</strong> da dopunite zalihe.
+                </div>
               </div>
             </div>
 
@@ -271,8 +280,9 @@
                       </div>
                     </div>
                     <div class="col-md-3 form-group mb-3 mb-md-0">
-                      <label class="font-weight-bold" style="font-size: 0.88rem;">Na stanju (kom) <span class="text-danger">*</span></label>
+                      <label class="font-weight-bold" style="font-size: 0.88rem;">Na stanju ukupno (kom) <span class="text-danger">*</span></label>
                       <input type="number" class="form-control" id="productStock" placeholder="15" min="0" value="15" required style="border-radius: 8px;" />
+                      <small class="text-muted">Automatski prati zbir varijanti / boja</small>
                     </div>
                     <div class="col-md-3 form-group mb-0">
                       <label class="font-weight-bold" style="font-size: 0.88rem;">Status</label>
@@ -399,11 +409,11 @@
                 </div>
               </div>
 
-              <!-- 5. Varijante (kilogrami / veličine / zapremina) sa cenom po varijanti + boje -->
+              <!-- 5. Varijante (kilogrami / veličine / zapremina) sa cenom i količinom + boje sa količinom -->
               <div class="card modal-info-card mb-4">
                 <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
-                  <h6 class="mb-0"><i class="fas fa-weight-hanging"></i> Pakovanja / Veličine i cene po varijanti</h6>
-                  <small class="text-muted">Svaka težina ili veličina može imati sopstvenu cenu</small>
+                  <h6 class="mb-0"><i class="fas fa-weight-hanging"></i> Pakovanja / Veličine, boje i količine</h6>
+                  <small class="text-muted">Svaka težina/veličina i svaka boja imaju sopstvenu količinu na stanju</small>
                 </div>
                 <div class="card-body">
                   <div class="row mb-3">
@@ -423,18 +433,22 @@
                     </div>
                   </div>
 
-                  <div class="row align-items-end mb-3 p-3 rounded" style="background: #181515; border: 1px dashed var(--color-border);">
-                    <div class="col-md-4 form-group mb-2 mb-md-0">
+                  <div class="row align-items-end mb-3 p-3 rounded" style="background: #f8faf8; border: 1px dashed var(--color-border);">
+                    <div class="col-md-3 form-group mb-2 mb-md-0">
                       <label class="small font-weight-bold mb-1">Oznaka varijante</label>
-                      <input type="text" id="newVariantLabel" class="form-control" placeholder="npr. 2.5kg, L (80x60cm), 500ml" style="border-radius: 8px;" />
+                      <input type="text" id="newVariantLabel" class="form-control" placeholder="npr. 2.5kg, L" style="border-radius: 8px;" />
                     </div>
                     <div class="col-md-3 form-group mb-2 mb-md-0">
-                      <label class="small font-weight-bold mb-1">Cena za ovu varijantu (RSD)</label>
+                      <label class="small font-weight-bold mb-1">Cena (RSD)</label>
                       <input type="number" id="newVariantPrice" class="form-control" placeholder="1890" min="0" style="border-radius: 8px;" />
                     </div>
-                    <div class="col-md-3 form-group mb-2 mb-md-0">
-                      <label class="small font-weight-bold mb-1">Stara cena (opciono)</label>
+                    <div class="col-md-2 form-group mb-2 mb-md-0">
+                      <label class="small font-weight-bold mb-1">Stara cena</label>
                       <input type="number" id="newVariantOldPrice" class="form-control" placeholder="2290" min="0" style="border-radius: 8px;" />
+                    </div>
+                    <div class="col-md-2 form-group mb-2 mb-md-0">
+                      <label class="small font-weight-bold mb-1">Količina (kom)</label>
+                      <input type="number" id="newVariantStock" class="form-control" placeholder="10" min="0" value="10" style="border-radius: 8px;" />
                     </div>
                     <div class="col-md-2">
                       <button type="button" class="btn btn-outline-primary btn-block font-weight-bold" id="addVariantBtn" style="border-radius: 8px; height: 38px;">
@@ -447,13 +461,23 @@
 
                   <hr class="my-3" />
                   <div class="form-group mb-0">
-                    <label class="font-weight-bold" style="font-size: 0.88rem;">Dostupne boje (opciono za povodce, amove, krevete, igračke)</label>
+                    <label class="font-weight-bold d-block" style="font-size: 0.88rem;">Dostupne boje i količine po boji (opciono za opremu, krevete, igračke)</label>
                     <div id="colorsContainer" class="mb-2"></div>
-                    <div class="input-group">
-                      <input type="color" id="newColorHex" value="#009900" class="form-control p-1" style="max-width: 50px; height: 38px; border-radius: 8px 0 0 8px; cursor: pointer;" />
-                      <input type="text" id="newColorName" class="form-control" placeholder="Naziv boje (npr. Zelena, Crna, Plava)" style="height: 38px;" />
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-primary" type="button" onclick="addColor()" style="border-radius: 0 8px 8px 0;">
+                    <div class="row align-items-end p-3 rounded" style="background: #f8faf8; border: 1px dashed var(--color-border); margin-left: 0; margin-right: 0;">
+                      <div class="col-md-2 form-group mb-2 mb-md-0 px-1">
+                        <label class="small font-weight-bold mb-1">Boja</label>
+                        <input type="color" id="newColorHex" value="#009900" class="form-control p-1" style="height: 38px; border-radius: 8px; cursor: pointer;" />
+                      </div>
+                      <div class="col-md-5 form-group mb-2 mb-md-0 px-1">
+                        <label class="small font-weight-bold mb-1">Naziv boje</label>
+                        <input type="text" id="newColorName" class="form-control" placeholder="npr. Zelena, Crna, Plava" style="height: 38px; border-radius: 8px;" />
+                      </div>
+                      <div class="col-md-2 form-group mb-2 mb-md-0 px-1">
+                        <label class="small font-weight-bold mb-1">Količina (kom)</label>
+                        <input type="number" id="newColorStock" class="form-control" value="10" min="0" placeholder="10" style="height: 38px; border-radius: 8px;" />
+                      </div>
+                      <div class="col-md-3 px-1">
+                        <button class="btn btn-outline-primary btn-block font-weight-bold" type="button" onclick="addColor()" style="height: 38px; border-radius: 8px;">
                           <i class="fas fa-plus mr-1"></i> Dodaj boju
                         </button>
                       </div>
@@ -473,7 +497,7 @@
                     <textarea class="form-control" id="productDescription" rows="3" placeholder="Detaljan opis sastava, namene, doziranja i prednosti za ljubimca..." style="border-radius: 8px;"></textarea>
                   </div>
 
-                  <div class="mb-3 p-3 rounded" style="background: #181515; border: 1px solid var(--color-border);">
+                  <div class="mb-3 p-3 rounded" style="background: #f8faf8; border: 1px solid var(--color-border);">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                       <label class="font-weight-bold mb-0" style="font-size: 0.88rem;">Dodatne specifikacije (npr. Proteini: 28%, Masti: 16%, Zemlja porekla)</label>
                       <button type="button" class="btn btn-sm btn-outline-primary" id="addTechSpecBtn" style="border-radius: 6px;">
@@ -488,12 +512,6 @@
                       <input type="checkbox" class="custom-control-input" id="productIsFeatured" />
                       <label class="custom-control-label font-weight-bold text-dark" for="productIsFeatured" style="cursor: pointer;">
                         <i class="fas fa-star text-warning mr-1"></i> Istaknuto na početnoj (Noviteti)
-                      </label>
-                    </div>
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" id="productIsBestseller" />
-                      <label class="custom-control-label font-weight-bold text-dark" for="productIsBestseller" style="cursor: pointer;">
-                        <i class="fas fa-fire text-danger mr-1"></i> Bestseller (Najtraženije)
                       </label>
                     </div>
                   </div>
@@ -515,6 +533,6 @@
 
     <!-- Pure Classic JS (0 Dependencies) -->
     <script src="/admin/js/clone.js?v=2.4"></script>
-    <script src="/admin/js/proizvodi.js?v=3.5"></script>
+    <script src="/admin/js/proizvodi.js?v=4.0"></script>
   </body>
 </html>

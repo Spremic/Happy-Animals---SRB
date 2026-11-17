@@ -47,14 +47,17 @@ function transformProduct(p, images) {
     type: Array.isArray(p.subcategory2) && p.subcategory2.length ? p.subcategory2[0] : "",
     sizes: baseSizes,
     colors: (p.colors || []).map((c) => {
+      const fallbackStk = typeof p.stock === "number" ? p.stock : 10;
       if (typeof c === "string") {
-        return { name: c, code: "#2c2527", hex: "#2c2527" };
+        return { name: c, code: "#2c2527", hex: "#2c2527", stock: fallbackStk };
       }
       const colHex = c.code || c.hex || "#2c2527";
+      const colStock = typeof c.stock === "number" ? c.stock : fallbackStk;
       return {
         name: c.name || "Boja",
         code: colHex,
         hex: colHex,
+        stock: colStock,
       };
     }),
     material: p.material || "",
@@ -350,8 +353,8 @@ async function getProducts(req, res) {
           return s > 0;
         }).length,
         featured: allActive.filter((p) => Boolean(p.isFeatured)).length,
-        bestseller: allActive.filter((p) => Boolean(p.isBestseller)).length,
         outOfStock: 0,
+        stockAlerts: 0,
       };
 
       return res.json({
@@ -376,8 +379,19 @@ async function getProducts(req, res) {
         ? req.query.scope.trim().toLowerCase()
         : "";
 
+    const stockAlertsQuery = {
+      $or: [
+        { status: "rasprodato" },
+        { stock: { $lte: 0 } },
+        { variants: { $elemMatch: { stock: { $lte: 0 } } } },
+        { colors: { $elemMatch: { stock: { $lte: 0 } } } },
+      ],
+    };
+
     let baseFilter = {};
-    if (requestedScope === "out_of_stock") {
+    if (requestedScope === "stock_alerts") {
+      baseFilter = stockAlertsQuery;
+    } else if (requestedScope === "out_of_stock") {
       baseFilter = { $or: [{ status: "rasprodato" }, { stock: { $lte: 0 } }] };
     } else if (requestedStatus && requestedStatus !== "sve" && requestedStatus !== "all") {
       baseFilter = { status: requestedStatus };
@@ -394,8 +408,8 @@ async function getProducts(req, res) {
       countAll,
       countActiveInStock,
       countFeatured,
-      countBestseller,
       countOutOfStock,
+      countStockAlerts,
     ] = await Promise.all([
       searchProductsWithEngine(Product, {
         searchQuery,
@@ -415,16 +429,16 @@ async function getProducts(req, res) {
       Product.countDocuments({}),
       Product.countDocuments(activeInStockQuery),
       Product.countDocuments({ isFeatured: true }),
-      Product.countDocuments({ isBestseller: true }),
       Product.countDocuments(outOfStockQuery),
+      Product.countDocuments(stockAlertsQuery),
     ]);
 
     const scopeCounts = {
       all: countAll,
       active: countActiveInStock,
       featured: countFeatured,
-      bestseller: countBestseller,
       outOfStock: countOutOfStock,
+      stockAlerts: countStockAlerts,
     };
 
     const transformedProducts = await Promise.all(

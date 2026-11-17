@@ -1,6 +1,6 @@
 let currentPage = 1;
-let currentScope = "all"; // "all" | "featured" | "bestseller"
-let currentColors = [];
+let currentScope = "all"; // "all" | "featured" | "stock_alerts" | "out_of_stock"
+let currentColors = []; // Array of { name, hex, code, stock }
 let currentVariants = []; // Array of { label, price, oldPrice, stock }
 let currentTechSpecs = []; // Array of { label, value }
 let uploadedImages = []; // Array of { id, file, url, name, isExisting, isRemoteUrl }
@@ -709,13 +709,13 @@ function initCustomTooltip() {
 function renderScopeCountsSkeleton() {
   const allEl = document.getElementById("scopeCountAll");
   const featEl = document.getElementById("scopeCountFeatured");
-  const bestEl = document.getElementById("scopeCountBestseller");
+  const alertsEl = document.getElementById("scopeCountStockAlerts");
   const oosEl = document.getElementById("scopeCountOutOfStock");
   const totalEl = document.getElementById("productTotalCount");
   const skel = '<span class="skeleton skeleton-badge-num"></span>';
   if (allEl) allEl.innerHTML = '<span class="skeleton skeleton-badge-num" style="width: 18px;"></span> <span class="skeleton skeleton-badge-num" style="width: 18px;"></span>';
   if (featEl) featEl.innerHTML = skel;
-  if (bestEl) bestEl.innerHTML = skel;
+  if (alertsEl) alertsEl.innerHTML = skel;
   if (oosEl) oosEl.innerHTML = skel;
   if (totalEl) totalEl.innerHTML = `Ukupno: <span class="skeleton skeleton-badge-num" style="width: 32px; height: 13px;"></span>`;
 }
@@ -758,6 +758,10 @@ function setProductScope(scope) {
   document.querySelectorAll(".scope-slider-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.scope === scope);
   });
+  const banner = document.getElementById("stockAlertsBanner");
+  if (banner) {
+    banner.style.display = scope === "stock_alerts" ? "block" : "none";
+  }
   loadProducts(1);
 }
 
@@ -765,7 +769,7 @@ function updateScopeCounts(counts) {
   if (!counts) return;
   const allEl = document.getElementById("scopeCountAll");
   const featEl = document.getElementById("scopeCountFeatured");
-  const bestEl = document.getElementById("scopeCountBestseller");
+  const alertsEl = document.getElementById("scopeCountStockAlerts");
   const oosEl = document.getElementById("scopeCountOutOfStock");
 
   if (allEl && typeof counts.all === "number") {
@@ -781,11 +785,12 @@ function updateScopeCounts(counts) {
   if (featEl && typeof counts.featured === "number") {
     featEl.innerHTML = `<span class="count-num-item" data-tooltip="Istaknuto na početnoj: ${counts.featured}">${counts.featured}</span>`;
   }
-  if (bestEl && typeof counts.bestseller === "number") {
-    bestEl.innerHTML = `<span class="count-num-item" data-tooltip="Najtraženiji artikli (Bestseller): ${counts.bestseller}">${counts.bestseller}</span>`;
+  if (alertsEl && typeof counts.stockAlerts === "number") {
+    alertsEl.classList.toggle("has-alerts", counts.stockAlerts > 0);
+    alertsEl.innerHTML = `<span class="count-num-item" data-tooltip="Artikli sa potrošenom bojom, kilažom ili lagerom: ${counts.stockAlerts}">${counts.stockAlerts}</span>`;
   }
   if (oosEl && typeof counts.outOfStock === "number") {
-    oosEl.innerHTML = `<span class="count-num-item" data-tooltip="Rasprodati artikli (van lagera): ${counts.outOfStock}">${counts.outOfStock}</span>`;
+    oosEl.innerHTML = `<span class="count-num-item" data-tooltip="Potpuno rasprodati artikli (van lagera): ${counts.outOfStock}">${counts.outOfStock}</span>`;
   }
 }
 
@@ -814,26 +819,23 @@ async function toggleProductFlag(id, flagName, event) {
   const newVal = !currentVal;
   const btn = event ? event.currentTarget : null;
 
-  // 1. Instant klijentska promena izgleda bez ikakvog osvežavanja tabele
   p[flagName] = newVal;
   productsMap.set(String(id), p);
 
-  const activeClass = flagName === "isFeatured" ? "active-featured" : "active-bestseller";
+  const activeClass = "active-featured";
   if (btn) {
     btn.classList.toggle(activeClass, newVal);
   }
 
-  // 2. Klijentsko ažuriranje brojača na slajderu (+1 ili -1)
-  const countElId = flagName === "isFeatured" ? "scopeCountFeatured" : "scopeCountBestseller";
-  const countEl = document.getElementById(countElId);
+  const countEl = document.getElementById("scopeCountFeatured");
   if (countEl) {
     const currentNum = parseInt(countEl.textContent, 10);
     if (!isNaN(currentNum)) {
-      countEl.textContent = Math.max(0, currentNum + (newVal ? 1 : -1));
+      const nextNum = Math.max(0, currentNum + (newVal ? 1 : -1));
+      countEl.innerHTML = `<span class="count-num-item" data-tooltip="Istaknuto na početnoj: ${nextNum}">${nextNum}</span>`;
     }
   }
 
-  // 3. Tiho čuvanje u bazi u pozadini
   try {
     const res = await fetch(`/api/products/${encodeURIComponent(id)}`, {
       method: "PUT",
@@ -849,7 +851,6 @@ async function toggleProductFlag(id, flagName, event) {
       throw new Error(data.message || "Greška pri promeni statusa.");
     }
   } catch (err) {
-    // Vraćanje stanja u slučaju greške
     p[flagName] = currentVal;
     productsMap.set(String(id), p);
     if (btn) {
@@ -858,7 +859,8 @@ async function toggleProductFlag(id, flagName, event) {
     if (countEl) {
       const currentNum = parseInt(countEl.textContent, 10);
       if (!isNaN(currentNum)) {
-        countEl.textContent = Math.max(0, currentNum + (currentVal ? 1 : -1));
+        const revertedNum = Math.max(0, currentNum + (currentVal ? 1 : -1));
+        countEl.innerHTML = `<span class="count-num-item" data-tooltip="Istaknuto na početnoj: ${revertedNum}">${revertedNum}</span>`;
       }
     }
     alert("Greška pri čuvanju u bazi: " + err.message);
@@ -884,8 +886,13 @@ async function loadProducts(page = 1) {
     if (category) url += `&category=${encodeURIComponent(category)}`;
     if (status) url += `&status=${encodeURIComponent(status)}`;
     if (currentScope === "featured") url += `&tag=featured`;
-    if (currentScope === "bestseller") url += `&tag=bestseller`;
+    if (currentScope === "stock_alerts") url += `&scope=stock_alerts`;
     if (currentScope === "out_of_stock") url += `&scope=out_of_stock`;
+
+    const banner = document.getElementById("stockAlertsBanner");
+    if (banner) {
+      banner.style.display = currentScope === "stock_alerts" ? "block" : "none";
+    }
 
     const res = await fetch(url);
     const data = await res.json();
@@ -910,8 +917,8 @@ async function loadProducts(page = 1) {
       tbody.innerHTML = `
         <tr>
           <td colspan="9" class="text-center py-5 text-muted">
-            <i class="fas fa-boxes fa-3x mb-3 text-gray-300"></i>
-            <p>Nema pronađenih artikala za zadate kriterijume.</p>
+            <i class="fas fa-boxes fa-3x mb-3 text-muted"></i>
+            <p>${currentScope === "stock_alerts" ? "Odlično! Svi artikli, boje i pakovanja imaju dovoljno zaliha." : "Nema pronađenih artikala za zadate kriterijume."}</p>
           </td>
         </tr>`;
       renderPagination(1, 1, 0);
@@ -932,28 +939,63 @@ async function loadProducts(page = 1) {
           ? escapeHtml(rawThumb)
           : "/img/customPageBcg.png";
 
+        const statusRaw = (p.status || "aktivan").toLowerCase();
+        const stockNum = typeof p.stock === "number" ? p.stock : 10;
+
         const catStr = (p.category || []).map(escapeHtml).join(", ") || "-";
         const subcatStr = (p.subcategory || []).map(escapeHtml).join(", ");
         const subcat2Str = (p.subcategory2 || []).map(escapeHtml).join(", ");
         const variantsList = Array.isArray(p.variants) && p.variants.length
           ? p.variants
-          : (p.sizes || []).map((s) => ({ label: s, price: p.price }));
+          : (p.sizes || []).map((s) => ({ label: s, price: p.price, stock: stockNum }));
+
+        const stockIssues = [];
+
         const sizesStr = variantsList
           .map((v) => {
             const vP = Number(v.price);
-            const priceTip = !isNaN(vP) && variantsList.length > 1 ? ` · ${vP.toLocaleString("sr-RS")}` : "";
-            return `<span class="size-pill-sm" title="${escapeHtml(v.label)}${priceTip} RSD">${escapeHtml(v.label)}${priceTip ? ` (${vP.toLocaleString("sr-RS")})` : ""}</span>`;
+            const vStk = typeof v.stock === "number" ? v.stock : stockNum;
+            const isOosVar = vStk <= 0;
+            if (isOosVar) {
+              stockIssues.push(`Pakovanje ${escapeHtml(v.label)} (0 kom)`);
+            }
+            const priceTip = !isNaN(vP) && variantsList.length > 1 ? ` · ${vP.toLocaleString("sr-RS")} RSD` : "";
+            return `<span class="size-pill-sm${isOosVar ? " is-oos" : ""}" title="${escapeHtml(v.label)}${priceTip} — Lager: ${vStk} kom">${escapeHtml(v.label)} (${vStk} kom)</span>`;
           })
           .join("");
-        const colorsHtml = (p.colors || [])
-          .map(
-            (c) =>
-              `<span class="color-dot-sm" style="background-color: ${escapeHtml(c.hex || c.code || "#ccc")};" title="${escapeHtml(c.name || "")}"></span>`
-          )
+
+        const colorsList = Array.isArray(p.colors) ? p.colors : [];
+        const colorsHtml = colorsList
+          .map((c) => {
+            const cName = typeof c === "string" ? c : (c.name || "Boja");
+            const cHex = typeof c === "object" ? (c.hex || c.code || "#ccc") : "#ccc";
+            const cStk = typeof c === "object" && typeof c.stock === "number" ? c.stock : stockNum;
+            const isOosCol = cStk <= 0;
+            if (isOosCol) {
+              stockIssues.push(`Boja ${escapeHtml(cName)} (0 kom)`);
+            }
+            return `
+              <span class="color-stock-chip${isOosCol ? " is-oos" : ""}" title="${escapeHtml(cName)}: ${cStk} kom">
+                <span class="color-dot-sm" style="background-color: ${escapeHtml(cHex)};"></span>
+                <span>${escapeHtml(cName)} (${cStk})</span>
+              </span>
+            `;
+          })
           .join("");
 
-        const statusRaw = (p.status || "aktivan").toLowerCase();
-        const stockNum = typeof p.stock === "number" ? p.stock : 10;
+        if (stockNum <= 0 || statusRaw === "rasprodato") {
+          if (stockIssues.length === 0) {
+            stockIssues.push("Ceo artikal van lagera (0 kom)");
+          }
+        }
+
+        const issueAlertHtml = stockIssues.length > 0
+          ? `<div class="stock-issues-alert" onclick="editProduct('${prodId}')" title="Kliknite da izmenite i dopunite zalihe">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span><strong>Potrošeno:</strong> ${stockIssues.join(", ")} — <u>Izmeni</u></span>
+            </div>`
+          : "";
+
         const isOutOfStock = statusRaw === "rasprodato" || stockNum <= 0;
         const statusClass = isOutOfStock
           ? "badge-status-rasprodato"
@@ -975,13 +1017,13 @@ async function loadProducts(page = 1) {
         const slug = p.slug || p.code || p.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
         return `
-          <tr>
+          <tr${stockIssues.length > 0 && currentScope === "stock_alerts" ? ' class="table-danger-soft"' : ""}>
             <td>
               <img src="${thumbUrl}" alt="${title}" class="product-thumb-table" onerror="this.src='/img/customPageBcg.png'" />
             </td>
             <td class="font-weight-bold text-uppercase" style="color: #009900; font-size: 0.88rem;">${code}</td>
             <td>
-              <div class="font-weight-bold" style="color: #ffffff;">${title}</div>
+              <div class="font-weight-bold" style="color: #1e293b;">${title}</div>
               <small class="text-muted d-block mb-1">${material}</small>
               <div class="product-flags-row">
                 <button type="button" class="flag-toggle-btn ${p.isFeatured ? 'active-featured' : ''}" 
@@ -989,12 +1031,8 @@ async function loadProducts(page = 1) {
                         title="Kliknite da uključite/isključite prikaz u Novitetima na početnoj">
                   <i class="fas fa-star"></i> Istaknuto
                 </button>
-                <button type="button" class="flag-toggle-btn ${p.isBestseller ? 'active-bestseller' : ''}" 
-                        onclick="toggleProductFlag('${prodId}', 'isBestseller', event)" 
-                        title="Kliknite da uključite/isključite prikaz u Bestsellerima na početnoj">
-                  <i class="fas fa-fire"></i> Bestseller
-                </button>
               </div>
+              ${issueAlertHtml}
             </td>
             <td>
               <span class="badge badge-light border text-capitalize">${catStr}</span>
@@ -1002,7 +1040,7 @@ async function loadProducts(page = 1) {
               ${subcat2Str ? `<div class="small text-muted text-capitalize" style="padding-left: 8px;"><i class="fas fa-angle-double-right mr-1"></i>${subcat2Str}</div>` : ""}
             </td>
             <td>
-              <strong style="color: #ffffff;">${priceFormatted} RSD</strong>
+              <strong style="color: #1e293b;">${priceFormatted} RSD</strong>
               ${oldPriceFormatted ? `<br><small class="text-muted text-decoration-line-through" style="text-decoration: line-through;">${oldPriceFormatted} RSD</small>` : ""}
             </td>
             <td>${sizesStr || '<span class="text-muted small">-</span>'}</td>
@@ -1071,43 +1109,108 @@ function renderPagination(page, totalPages, totalCount) {
    2. BOJE I VELIČINE (MODAL CONTROLS)
    ========================================================================== */
 function addColor() {
-  const hex = document.getElementById("newColorHex").value;
+  const hex = document.getElementById("newColorHex")?.value || "#009900";
   const nameInput = document.getElementById("newColorName");
-  const name = nameInput.value.trim();
+  const stockInput = document.getElementById("newColorStock");
+  const name = (nameInput?.value || "").trim();
+  const parsedStock = parseInt(stockInput?.value, 10);
+  const stock = !isNaN(parsedStock) && parsedStock >= 0 ? parsedStock : 10;
 
   if (!name) {
     alert("Unesite naziv boje (npr. Crna, Puder roze).");
     return;
   }
 
-  currentColors.push({ name, hex });
-  nameInput.value = "";
+  const existingIdx = currentColors.findIndex(
+    (c) => String(c.name || "").trim().toLowerCase() === name.toLowerCase()
+  );
+  if (existingIdx > -1) {
+    currentColors[existingIdx] = { name, hex, code: hex, stock };
+  } else {
+    currentColors.push({ name, hex, code: hex, stock });
+  }
+
+  if (nameInput) nameInput.value = "";
+  if (stockInput) stockInput.value = "10";
   renderColors();
+  syncBasePriceFromVariants();
 }
 
 function removeColor(idx) {
   currentColors.splice(idx, 1);
   renderColors();
+  syncBasePriceFromVariants();
 }
 
 function renderColors() {
   const container = document.getElementById("colorsContainer");
+  if (!container) return;
+
   if (!currentColors.length) {
-    container.innerHTML = '<span class="text-muted small">Nema unetih boja.</span>';
+    container.innerHTML = '<div class="text-muted small py-2">Nema unetih boja.</div>';
     return;
   }
 
-  container.innerHTML = currentColors
-    .map(
-      (c, idx) => `
-    <span class="color-tag-item">
-      <span class="color-dot-sm" style="background-color: ${escapeHtml(c.hex || "#ccc")};"></span>
-      <span>${escapeHtml(c.name || "")}</span>
-      <span class="btn-remove-color" onclick="removeColor(${idx})">&times;</span>
-    </span>
-  `
-    )
-    .join("");
+  container.innerHTML = `
+    <div class="table-responsive">
+      <table class="table table-sm table-bordered mb-0">
+        <thead class="thead-light">
+          <tr>
+            <th>Boja</th>
+            <th style="width: 140px;">Lager (kom)</th>
+            <th style="width: 60px;" class="text-center">Ukloni</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${currentColors
+            .map((c, idx) => {
+              const cStock = typeof c.stock === "number" && !isNaN(c.stock) ? c.stock : 10;
+              const isOos = cStock <= 0;
+              return `
+                <tr data-color-idx="${idx}" class="${isOos ? "table-danger-soft" : ""}">
+                  <td class="align-middle font-weight-bold">
+                    <span class="color-dot-sm mr-2" style="background-color: ${escapeHtml(c.hex || c.code || "#ccc")};"></span>
+                    <span>${escapeHtml(c.name || "")}</span>
+                    <span class="color-oos-badge badge badge-status-rasprodato ml-2" style="${isOos ? "" : "display:none;"}">Potrošeno!</span>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm color-stock-input" min="0" value="${cStock}" data-idx="${idx}" />
+                  </td>
+                  <td class="text-center align-middle">
+                    <button type="button" class="btn btn-sm btn-outline-danger color-remove-btn" data-idx="${idx}" title="Ukloni">&times;</button>
+                  </td>
+                </tr>
+              `;
+            })
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  container.querySelectorAll(".color-stock-input").forEach((inp) => {
+    inp.addEventListener("input", () => {
+      const idx = parseInt(inp.dataset.idx, 10);
+      const val = parseInt(inp.value, 10);
+      if (!isNaN(val) && val >= 0 && currentColors[idx]) {
+        currentColors[idx].stock = val;
+        const row = inp.closest("tr");
+        if (row) {
+          row.classList.toggle("table-danger-soft", val <= 0);
+          const badge = row.querySelector(".color-oos-badge");
+          if (badge) badge.style.display = val <= 0 ? "inline-block" : "none";
+        }
+        syncBasePriceFromVariants();
+      }
+    });
+  });
+
+  container.querySelectorAll(".color-remove-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.idx, 10);
+      removeColor(idx);
+    });
+  });
 }
 
 /* ==========================================================================
@@ -1161,22 +1264,54 @@ function renderVariantPresets() {
 }
 
 function syncBasePriceFromVariants() {
-  if (!currentVariants.length) return;
-  const valid = currentVariants.filter((v) => !isNaN(Number(v.price)) && Number(v.price) >= 0);
-  if (valid.length) {
-    valid.sort((a, b) => Number(a.price) - Number(b.price));
-    const lowest = valid[0];
-    const priceEl = document.getElementById("productPrice");
-    const oldPriceEl = document.getElementById("productOldPrice");
-    if (priceEl) priceEl.value = lowest.price;
-    if (oldPriceEl) oldPriceEl.value = lowest.oldPrice || "";
+  if (currentVariants.length) {
+    const valid = currentVariants.filter((v) => !isNaN(Number(v.price)) && Number(v.price) >= 0);
+    if (valid.length) {
+      valid.sort((a, b) => Number(a.price) - Number(b.price));
+      const lowest = valid[0];
+      const priceEl = document.getElementById("productPrice");
+      const oldPriceEl = document.getElementById("productOldPrice");
+      if (priceEl) priceEl.value = lowest.price;
+      if (oldPriceEl) oldPriceEl.value = lowest.oldPrice || "";
+    }
   }
-  const totalVariantStock = currentVariants.reduce((sum, v) => {
-    const s = parseInt(v.stock, 10);
-    return sum + (!isNaN(s) && s >= 0 ? s : 0);
-  }, 0);
+
+  const hasVars = currentVariants.length > 0;
+  const hasCols = currentColors.length > 0;
+  const varTotal = hasVars
+    ? currentVariants.reduce((sum, v) => {
+        const s = parseInt(v.stock, 10);
+        return sum + (!isNaN(s) && s >= 0 ? s : 0);
+      }, 0)
+    : null;
+  const colTotal = hasCols
+    ? currentColors.reduce((sum, c) => {
+        const s = parseInt(c.stock, 10);
+        return sum + (!isNaN(s) && s >= 0 ? s : 0);
+      }, 0)
+    : null;
+
+  let effectiveTotalStock = null;
+  if (varTotal !== null && colTotal !== null) {
+    effectiveTotalStock = (varTotal <= 0 || colTotal <= 0) ? 0 : varTotal;
+  } else if (varTotal !== null) {
+    effectiveTotalStock = varTotal;
+  } else if (colTotal !== null) {
+    effectiveTotalStock = colTotal;
+  }
+
   const stockEl = document.getElementById("productStock");
-  if (stockEl) stockEl.value = totalVariantStock;
+  const statusEl = document.getElementById("productStatus");
+  if (effectiveTotalStock !== null) {
+    if (stockEl) stockEl.value = effectiveTotalStock;
+    if (statusEl) {
+      if (effectiveTotalStock === 0 && statusEl.value === "aktivan") {
+        statusEl.value = "rasprodato";
+      } else if (effectiveTotalStock > 0 && statusEl.value === "rasprodato") {
+        statusEl.value = "aktivan";
+      }
+    }
+  }
 }
 
 function togglePresetVariant(label, isChecked) {
@@ -1188,13 +1323,18 @@ function togglePresetVariant(label, isChecked) {
     const basePrice = parseFloat(document.getElementById("productPrice")?.value) || 0;
     const baseOldPriceVal = document.getElementById("productOldPrice")?.value;
     const baseOldPrice = baseOldPriceVal ? parseFloat(baseOldPriceVal) : null;
-    const baseStock = parseInt(document.getElementById("productStock")?.value, 10);
+    const newVarStkEl = document.getElementById("newVariantStock");
+    const preferredStock = parseInt(newVarStkEl?.value, 10);
+    const fallbackProdStock = parseInt(document.getElementById("productStock")?.value, 10);
+    const initVarStock = !isNaN(preferredStock) && preferredStock >= 0
+      ? preferredStock
+      : (!isNaN(fallbackProdStock) && fallbackProdStock >= 0 ? fallbackProdStock : 10);
 
     currentVariants.push({
       label: cleanLabel,
       price: basePrice,
       oldPrice: baseOldPrice && baseOldPrice > basePrice ? baseOldPrice : null,
-      stock: !isNaN(baseStock) && baseStock >= 0 ? baseStock : 10,
+      stock: initVarStock,
     });
   } else if (!isChecked && idx > -1) {
     currentVariants.splice(idx, 1);
@@ -1209,12 +1349,17 @@ function addVariantFromInputs() {
   const lblEl = document.getElementById("newVariantLabel");
   const priceEl = document.getElementById("newVariantPrice");
   const oldPriceEl = document.getElementById("newVariantOldPrice");
+  const varStockEl = document.getElementById("newVariantStock");
 
   const label = (lblEl?.value || "").trim();
   const basePrice = parseFloat(document.getElementById("productPrice")?.value) || 0;
   const parsedPrice = priceEl?.value !== "" ? parseFloat(priceEl.value) : basePrice;
   const parsedOld = oldPriceEl?.value !== "" ? parseFloat(oldPriceEl.value) : null;
-  const baseStock = parseInt(document.getElementById("productStock")?.value, 10);
+  const parsedVarStock = varStockEl && varStockEl.value !== "" ? parseInt(varStockEl.value, 10) : NaN;
+  const fallbackProdStock = parseInt(document.getElementById("productStock")?.value, 10);
+  const stock = !isNaN(parsedVarStock) && parsedVarStock >= 0
+    ? parsedVarStock
+    : (!isNaN(fallbackProdStock) && fallbackProdStock >= 0 ? fallbackProdStock : 10);
 
   if (!label) {
     alert("Unesite oznaku varijante (npr. 2.5kg, L, 500ml).");
@@ -1232,7 +1377,7 @@ function addVariantFromInputs() {
     label,
     price: parsedPrice,
     oldPrice: parsedOld && !isNaN(parsedOld) && parsedOld > parsedPrice ? parsedOld : null,
-    stock: !isNaN(baseStock) && baseStock >= 0 ? baseStock : 10,
+    stock,
   };
 
   if (existingIdx > -1) {
@@ -1244,6 +1389,7 @@ function addVariantFromInputs() {
   if (lblEl) lblEl.value = "";
   if (priceEl) priceEl.value = "";
   if (oldPriceEl) oldPriceEl.value = "";
+  if (varStockEl) varStockEl.value = "10";
 
   renderVariantsList();
   renderVariantPresets();
@@ -1256,28 +1402,33 @@ function renderVariantsList() {
 
   if (!currentVariants.length) {
     container.innerHTML =
-      '<div class="text-muted small py-2">Nema odabranih varijanti pakovanja/veličina. Označite gore opciju ili dodajte novu varijantu sa cenom.</div>';
+      '<div class="text-muted small py-2">Nema odabranih varijanti pakovanja/veličina. Označite gore opciju ili dodajte novu varijantu sa cenom i količinom.</div>';
     return;
   }
 
   container.innerHTML = `
     <div class="table-responsive">
-      <table class="table table-sm table-bordered bg-white mb-0">
+      <table class="table table-sm table-bordered mb-0">
         <thead class="thead-light">
           <tr>
             <th>Pakovanje / Veličina</th>
-            <th style="width: 160px;">Cena (RSD)</th>
-            <th style="width: 160px;">Stara cena (RSD)</th>
-            <th style="width: 110px;">Lager (kom)</th>
-            <th style="width: 50px;" class="text-center">Ukloni</th>
+            <th style="width: 150px;">Cena (RSD)</th>
+            <th style="width: 150px;">Stara cena (RSD)</th>
+            <th style="width: 120px;">Lager (kom)</th>
+            <th style="width: 55px;" class="text-center">Ukloni</th>
           </tr>
         </thead>
         <tbody>
           ${currentVariants
-            .map(
-              (v, idx) => `
-            <tr data-variant-idx="${idx}">
-              <td class="align-middle font-weight-bold">${escapeHtml(v.label)}</td>
+            .map((v, idx) => {
+              const vStock = typeof v.stock === "number" && !isNaN(v.stock) ? v.stock : 10;
+              const isOos = vStock <= 0;
+              return `
+            <tr data-variant-idx="${idx}" class="${isOos ? "table-danger-soft" : ""}">
+              <td class="align-middle font-weight-bold">
+                <span>${escapeHtml(v.label)}</span>
+                <span class="var-oos-badge badge badge-status-rasprodato ml-2" style="${isOos ? "" : "display:none;"}">Potrošeno!</span>
+              </td>
               <td>
                 <input type="number" class="form-control form-control-sm var-price-input" min="0" value="${Number(v.price) || 0}" data-idx="${idx}" />
               </td>
@@ -1285,14 +1436,14 @@ function renderVariantsList() {
                 <input type="number" class="form-control form-control-sm var-oldprice-input" min="0" placeholder="-" value="${v.oldPrice ? Number(v.oldPrice) : ""}" data-idx="${idx}" />
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm var-stock-input" min="0" value="${typeof v.stock === "number" ? v.stock : 10}" data-idx="${idx}" />
+                <input type="number" class="form-control form-control-sm var-stock-input" min="0" value="${vStock}" data-idx="${idx}" />
               </td>
               <td class="text-center align-middle">
                 <button type="button" class="btn btn-sm btn-outline-danger var-remove-btn" data-idx="${idx}" title="Ukloni">&times;</button>
               </td>
             </tr>
-          `
-            )
+          `;
+            })
             .join("")}
         </tbody>
       </table>
@@ -1327,6 +1478,12 @@ function renderVariantsList() {
       const val = parseInt(inp.value, 10);
       if (!isNaN(val) && val >= 0 && currentVariants[idx]) {
         currentVariants[idx].stock = val;
+        const row = inp.closest("tr");
+        if (row) {
+          row.classList.toggle("table-danger-soft", val <= 0);
+          const badge = row.querySelector(".var-oos-badge");
+          if (badge) badge.style.display = val <= 0 ? "inline-block" : "none";
+        }
         syncBasePriceFromVariants();
       }
     });
@@ -1824,6 +1981,10 @@ function openAddModal() {
   const brandEl = document.getElementById("productBrand");
   if (brandEl) brandEl.value = "";
   document.getElementById("productStock").value = 10;
+  const newVarStkEl = document.getElementById("newVariantStock");
+  if (newVarStkEl) newVarStkEl.value = 10;
+  const newColStkEl = document.getElementById("newColorStock");
+  if (newColStkEl) newColStkEl.value = 10;
   document.getElementById("productCategory").value = "";
   document.getElementById("productSubcategory").value = "";
   const sub2El = document.getElementById("productSubcategory2");
@@ -1894,8 +2055,11 @@ async function editProduct(idOrProduct) {
   document.getElementById("productMaterial").value = p.material || "";
   document.getElementById("productDescription").value = p.description || "";
   document.getElementById("productIsFeatured").checked = Boolean(p.isFeatured);
-  document.getElementById("productIsBestseller").checked = Boolean(p.isBestseller);
   document.getElementById("productMainImages").value = p.mainImages || p.code;
+  const newVarStkEl = document.getElementById("newVariantStock");
+  if (newVarStkEl) newVarStkEl.value = 10;
+  const newColStkEl = document.getElementById("newColorStock");
+  if (newColStkEl) newColStkEl.value = 10;
 
   // Pet Shop opcije i varijante
   const vtEl = document.getElementById("productVariantType");
@@ -1992,8 +2156,23 @@ async function editProduct(idOrProduct) {
     .filter((s) => s.label || s.value);
   renderTechSpecs();
 
-  // Boje
-  currentColors = p.colors ? JSON.parse(JSON.stringify(p.colors)) : [];
+  // Boje (normalizovane sa lagerom po boji)
+  const fallbackProdStk = typeof p.stock === "number" ? p.stock : 10;
+  currentColors = Array.isArray(p.colors)
+    ? p.colors
+        .filter(Boolean)
+        .map((c) => {
+          if (typeof c === "string") {
+            return { name: c, hex: "#2c2527", code: "#2c2527", stock: fallbackProdStk };
+          }
+          return {
+            name: c.name || c.label || "Boja",
+            hex: c.hex || c.code || "#2c2527",
+            code: c.code || c.hex || "#2c2527",
+            stock: typeof c.stock === "number" ? c.stock : fallbackProdStk,
+          };
+        })
+    : [];
   renderColors();
 
   // Učitavanje postojećih slika iz /api/cloudinary/all/:folder (ili fallback na p.images)
@@ -2053,7 +2232,6 @@ async function handleProductSave(e) {
   const brand = brandEl ? brandEl.value.trim() : "";
   const description = document.getElementById("productDescription").value.trim();
   const isFeatured = document.getElementById("productIsFeatured").checked;
-  const isBestseller = document.getElementById("productIsBestseller").checked;
 
   const variantType = document.getElementById("productVariantType")?.value || "kg";
   const lifeStage = document.getElementById("productLifeStage")?.value || "";
@@ -2078,15 +2256,38 @@ async function handleProductSave(e) {
     }))
     .filter((v) => Boolean(v.label));
 
+  const cleanColors = currentColors
+    .map((c) => ({
+      name: String(c.name || "").trim(),
+      hex: c.hex || c.code || "#2c2527",
+      code: c.code || c.hex || "#2c2527",
+      stock: typeof c.stock === "number" && !isNaN(c.stock) && c.stock >= 0 ? c.stock : stock,
+    }))
+    .filter((c) => Boolean(c.name));
+
   const sizes = cleanVariants.map((v) => v.label);
   const effectivePrice =
     cleanVariants.length > 0
       ? Math.min(...cleanVariants.map((v) => v.price))
       : price;
-  const effectiveStock =
-    cleanVariants.length > 0
-      ? cleanVariants.reduce((sum, v) => sum + (typeof v.stock === "number" && !isNaN(v.stock) ? v.stock : 0), 0)
-      : stock;
+
+  let effectiveStock = stock;
+  if (cleanVariants.length > 0 && cleanColors.length > 0) {
+    const varSum = cleanVariants.reduce((sum, v) => sum + (typeof v.stock === "number" && !isNaN(v.stock) ? v.stock : 0), 0);
+    const colSum = cleanColors.reduce((sum, c) => sum + (typeof c.stock === "number" && !isNaN(c.stock) ? c.stock : 0), 0);
+    effectiveStock = (varSum <= 0 || colSum <= 0) ? 0 : varSum;
+  } else if (cleanVariants.length > 0) {
+    effectiveStock = cleanVariants.reduce((sum, v) => sum + (typeof v.stock === "number" && !isNaN(v.stock) ? v.stock : 0), 0);
+  } else if (cleanColors.length > 0) {
+    effectiveStock = cleanColors.reduce((sum, c) => sum + (typeof c.stock === "number" && !isNaN(c.stock) ? c.stock : 0), 0);
+  }
+
+  let finalStatus = status;
+  if (effectiveStock === 0 && finalStatus !== "neaktivan") {
+    finalStatus = "rasprodato";
+  } else if (effectiveStock > 0 && finalStatus === "rasprodato") {
+    finalStatus = "aktivan";
+  }
 
   const techLabels = [];
   const techFeatures = [];
@@ -2210,7 +2411,7 @@ async function handleProductSave(e) {
       price: effectivePrice,
       oldPrice,
       stock: effectiveStock,
-      status,
+      status: finalStatus,
       category: parsedCategories,
       subcategory: subcategoryVal ? subcategoryVal.split(",").map((s) => s.trim()).filter(Boolean) : [],
       subcategory2: subcategory2Val ? subcategory2Val.split(",").map((s) => s.trim()).filter(Boolean) : [],
@@ -2221,7 +2422,7 @@ async function handleProductSave(e) {
       lifeStage,
       flavor,
       specialDiet,
-      colors: currentColors,
+      colors: cleanColors,
       material,
       brand,
       technicalData: {
@@ -2230,7 +2431,6 @@ async function handleProductSave(e) {
       },
       description,
       isFeatured,
-      isBestseller,
       mainImages: isEditMode ? productFolder : code,
       imagesChanged: isEditMode ? imagesChanged : true,
       finalImageUrls,

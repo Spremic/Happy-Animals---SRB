@@ -81,20 +81,35 @@ async function validateCart(req, res) {
         continue;
       }
 
-      // 2. Proizvod ili izabrana varijanta su rasprodati ili nema lagera
+      // 2. Proizvod, izabrana varijanta ili izabrana boja su rasprodati ili nema lagera
       const resolvedVariant = resolveVariantForItem(product, item);
       const verifiedPrice = resolvedVariant.price;
       const resolvedVariantLabel = resolvedVariant.variantLabel || itemSize;
+      const resolvedColorName = resolvedVariant.hasColors ? (resolvedVariant.colorName || itemColor) : itemColor;
       const currentStock = typeof product.stock === "number" ? product.stock : 10;
-      const variantStock = typeof resolvedVariant.stock === "number" ? resolvedVariant.stock : currentStock;
-      const effectiveStock = Math.min(currentStock, variantStock);
+      const variantStock = resolvedVariant.hasVariants && typeof resolvedVariant.stock === "number"
+        ? resolvedVariant.stock
+        : currentStock;
+      const colorStock = resolvedVariant.hasColors && typeof resolvedVariant.colorStock === "number"
+        ? resolvedVariant.colorStock
+        : currentStock;
+      const effectiveStock = Math.min(currentStock, variantStock, colorStock);
       const prodKey = String(product._id);
-      const varKey = `${prodKey}::${String(resolvedVariantLabel).toLowerCase()}`;
+      const varKey = `${prodKey}::v::${String(resolvedVariantLabel).toLowerCase()}`;
+      const colKey = `${prodKey}::c::${String(resolvedColorName).toLowerCase()}`;
       const alreadyUsedTotal = usedStockMap.get(prodKey) || 0;
-      const alreadyUsedVar = usedStockMap.get(varKey) || 0;
-      const remainingStock = Math.max(0, Math.min(currentStock - alreadyUsedTotal, variantStock - alreadyUsedVar));
+      const alreadyUsedVar = resolvedVariant.hasVariants ? (usedStockMap.get(varKey) || 0) : 0;
+      const alreadyUsedCol = resolvedVariant.hasColors ? (usedStockMap.get(colKey) || 0) : 0;
+      const remainingStock = Math.max(
+        0,
+        Math.min(
+          currentStock - alreadyUsedTotal,
+          resolvedVariant.hasVariants ? (variantStock - alreadyUsedVar) : currentStock,
+          resolvedVariant.hasColors ? (colorStock - alreadyUsedCol) : currentStock
+        )
+      );
 
-      if (product.status === "rasprodato" || currentStock <= 0 || variantStock <= 0) {
+      if (product.status === "rasprodato" || currentStock <= 0 || variantStock <= 0 || colorStock <= 0) {
         unavailableItems.push({
           id: item.id !== undefined ? item.id : `unavail-${idx}`,
           productId: prodKey,
@@ -103,7 +118,7 @@ async function validateCart(req, res) {
           title: product.title || item.title || "Artikal",
           variant: resolvedVariantLabel,
           size: resolvedVariantLabel,
-          color: itemColor,
+          color: resolvedColorName,
           quantity: itemQty,
           price: verifiedPrice || parseFloat(product.price) || itemPrice,
           img: (product.imageUrl || (Array.isArray(product.images) && product.images[0])) || itemImg,
@@ -122,7 +137,7 @@ async function validateCart(req, res) {
           title: product.title || item.title || "Artikal",
           variant: resolvedVariantLabel,
           size: resolvedVariantLabel,
-          color: itemColor,
+          color: resolvedColorName,
           quantity: itemQty,
           price: verifiedPrice || parseFloat(product.price) || itemPrice,
           img: (product.imageUrl || (Array.isArray(product.images) && product.images[0])) || itemImg,
@@ -135,7 +150,8 @@ async function validateCart(req, res) {
       // 3. Proizvod je dostupan
       const verifiedQty = Math.min(itemQty, remainingStock);
       usedStockMap.set(prodKey, alreadyUsedTotal + verifiedQty);
-      usedStockMap.set(varKey, alreadyUsedVar + verifiedQty);
+      if (resolvedVariant.hasVariants) usedStockMap.set(varKey, alreadyUsedVar + verifiedQty);
+      if (resolvedVariant.hasColors) usedStockMap.set(colKey, alreadyUsedCol + verifiedQty);
       const verifiedImg = (product.imageUrl || (Array.isArray(product.images) && product.images[0])) || itemImg;
 
       adjustedSubtotal += verifiedPrice * verifiedQty;
@@ -155,7 +171,7 @@ async function validateCart(req, res) {
         img: verifiedImg,
         variant: resolvedVariantLabel,
         size: resolvedVariantLabel,
-        color: itemColor,
+        color: resolvedColorName,
       });
     }
 

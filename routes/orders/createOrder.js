@@ -235,15 +235,21 @@ async function createOrder(req, res) {
         continue;
       }
 
-      // 4. STVARNA CENA I LAGER PO VARIJANTI IZ BAZE (IGNORIŠU SE KLIJENTSKE CENE!)
+      // 4. STVARNA CENA I LAGER PO VARIJANTI I BOJI IZ BAZE (IGNORIŠU SE KLIJENTSKE CENE!)
       const resolvedVariant = resolveVariantForItem(product, item);
       const verifiedPrice = resolvedVariant.price;
       const resolvedVariantLabel = resolvedVariant.variantLabel || itemSize;
+      const resolvedColorName = resolvedVariant.hasColors ? (resolvedVariant.colorName || itemColor) : itemColor;
       const currentStock = typeof product.stock === "number" ? product.stock : 10;
-      const variantStock = typeof resolvedVariant.stock === "number" ? resolvedVariant.stock : currentStock;
-      const effectiveStock = Math.min(currentStock, variantStock);
+      const variantStock = resolvedVariant.hasVariants && typeof resolvedVariant.stock === "number"
+        ? resolvedVariant.stock
+        : currentStock;
+      const colorStock = resolvedVariant.hasColors && typeof resolvedVariant.colorStock === "number"
+        ? resolvedVariant.colorStock
+        : currentStock;
+      const effectiveStock = Math.min(currentStock, variantStock, colorStock);
 
-      if (product.status === "rasprodato" || currentStock <= 0 || variantStock <= 0) {
+      if (product.status === "rasprodato" || currentStock <= 0 || variantStock <= 0 || colorStock <= 0) {
         unavailableItems.push({
           id: resolvedItemId,
           productId: String(product._id),
@@ -252,7 +258,7 @@ async function createOrder(req, res) {
           title: product.title,
           variant: resolvedVariantLabel,
           size: resolvedVariantLabel,
-          color: itemColor,
+          color: resolvedColorName,
           quantity: qty,
           price: verifiedPrice || parseFloat(product.price) || (parseFloat(item.price) || 0),
           img: product.imageUrl || (Array.isArray(product.images) && product.images[0]) || itemImg,
@@ -267,9 +273,17 @@ async function createOrder(req, res) {
       const cumulativeQty = (existingEntry ? existingEntry.deductQty : 0) + qty;
       const varMap = existingEntry && existingEntry.variantDeductions ? new Map(existingEntry.variantDeductions) : new Map();
       const varKeyLower = String(resolvedVariantLabel).trim().toLowerCase();
-      const cumulativeVarQty = (varMap.get(varKeyLower) || 0) + qty;
+      const cumulativeVarQty = resolvedVariant.hasVariants ? ((varMap.get(varKeyLower) || 0) + qty) : 0;
 
-      if (cumulativeQty > currentStock || cumulativeVarQty > variantStock) {
+      const colMap = existingEntry && existingEntry.colorDeductions ? new Map(existingEntry.colorDeductions) : new Map();
+      const colKeyLower = String(resolvedColorName).trim().toLowerCase();
+      const cumulativeColQty = resolvedVariant.hasColors ? ((colMap.get(colKeyLower) || 0) + qty) : 0;
+
+      if (
+        cumulativeQty > currentStock ||
+        (resolvedVariant.hasVariants && cumulativeVarQty > variantStock) ||
+        (resolvedVariant.hasColors && cumulativeColQty > colorStock)
+      ) {
         unavailableItems.push({
           id: resolvedItemId,
           productId: String(product._id),
@@ -278,7 +292,7 @@ async function createOrder(req, res) {
           title: product.title,
           variant: resolvedVariantLabel,
           size: resolvedVariantLabel,
-          color: itemColor,
+          color: resolvedColorName,
           quantity: qty,
           price: verifiedPrice || parseFloat(product.price) || (parseFloat(item.price) || 0),
           img: product.imageUrl || (Array.isArray(product.images) && product.images[0]) || itemImg,
@@ -313,7 +327,7 @@ async function createOrder(req, res) {
         title: product.title,
         variant: resolvedVariantLabel,
         size: resolvedVariantLabel,
-        color: itemColor,
+        color: resolvedColorName,
         price: verifiedPrice, // Autoritativna cena varijante iz MongoDB
         quantity: qty,
         image: verifiedImg,
@@ -330,20 +344,22 @@ async function createOrder(req, res) {
         price: verifiedPrice,
         priceFormatted: verifiedPrice.toLocaleString("sr-RS") + " RSD",
         quantity: qty,
-        stock: currentStock,
+        stock: effectiveStock,
         status: product.status || "aktivan",
         img: verifiedImg,
         variant: resolvedVariantLabel,
         size: resolvedVariantLabel,
-        color: itemColor,
+        color: resolvedColorName,
       });
 
-      varMap.set(varKeyLower, cumulativeVarQty);
+      if (resolvedVariant.hasVariants) varMap.set(varKeyLower, cumulativeVarQty);
+      if (resolvedVariant.hasColors) colMap.set(colKeyLower, cumulativeColQty);
       productOrderMap.set(prodKey, {
         productDoc: product,
         deductQty: cumulativeQty,
         currentStock,
         variantDeductions: varMap,
+        colorDeductions: colMap,
       });
     }
 
@@ -404,17 +420,33 @@ async function createOrder(req, res) {
             { $inc: { stock: prev.deductQty } },
             { new: true }
           );
-          if (restored && prev.variantDeductions && prev.variantDeductions.size > 0 && Array.isArray(restored.variants)) {
-            let varChanged = false;
-            restored.variants.forEach((v) => {
-              const vKey = String(v.label || "").trim().toLowerCase();
-              const vAdd = prev.variantDeductions.get(vKey);
-              if (vAdd) {
-                v.stock = Math.max(0, (typeof v.stock === "number" ? v.stock : 0) + vAdd);
-                varChanged = true;
-              }
-            });
-            if (varChanged) await restored.save();
+          if (restored) {
+            let subChanged = false;
+            if (prev.variantDeductions && prev.variantDeductions.size > 0 && Array.isArray(restored.variants)) {
+              restored.variants.forEach((v) => {
+                const vKey = String(v.label || "").trim().toLowerCase();
+                const vAdd = prev.variantDeductions.get(vKey);
+                if (vAdd) {
+                  v.stock = Math.max(0, (typeof v.stock === "number" ? v.stock : 0) + vAdd);
+                  subChanged = true;
+                }
+              });
+            }
+            if (prev.colorDeductions && prev.colorDeductions.size > 0 && Array.isArray(restored.colors)) {
+              restored.colors.forEach((c) => {
+                const cKey = String(c.name || "").trim().toLowerCase();
+                const cAdd = prev.colorDeductions.get(cKey);
+                if (cAdd && typeof c === "object") {
+                  c.stock = Math.max(0, (typeof c.stock === "number" ? c.stock : 0) + cAdd);
+                  subChanged = true;
+                }
+              });
+            }
+            if (typeof prev.prevStock === "number") {
+              restored.stock = Math.max(restored.stock || 0, prev.prevStock);
+              subChanged = true;
+            }
+            if (subChanged) await restored.save();
           }
           if (restored && restored.stock > 0 && restored.status === "rasprodato") {
             await Product.updateOne(
@@ -458,8 +490,8 @@ async function createOrder(req, res) {
         });
       }
 
+      let subUpdated = false;
       if (updateInfo.variantDeductions && updateInfo.variantDeductions.size > 0 && Array.isArray(updatedProd.variants) && updatedProd.variants.length > 0) {
-        let varChanged = false;
         let variantInsufficient = false;
         updatedProd.variants.forEach((v) => {
           const vKey = String(v.label || "").trim().toLowerCase();
@@ -470,7 +502,7 @@ async function createOrder(req, res) {
               variantInsufficient = true;
             } else {
               v.stock = avail - vSub;
-              varChanged = true;
+              subUpdated = true;
             }
           }
         });
@@ -482,22 +514,67 @@ async function createOrder(req, res) {
             message: `Za izabranu varijantu artikla "${prod.title}" više nema dovoljno zaliha na stanju.`,
           });
         }
-        if (varChanged) {
-          await updatedProd.save();
+      }
+
+      if (updateInfo.colorDeductions && updateInfo.colorDeductions.size > 0 && Array.isArray(updatedProd.colors) && updatedProd.colors.length > 0) {
+        let colorInsufficient = false;
+        updatedProd.colors.forEach((c) => {
+          if (!c || typeof c !== "object") return;
+          const cKey = String(c.name || "").trim().toLowerCase();
+          const cSub = updateInfo.colorDeductions.get(cKey);
+          if (cSub) {
+            const avail = typeof c.stock === "number" ? c.stock : updateInfo.currentStock;
+            if (avail < cSub) {
+              colorInsufficient = true;
+            } else {
+              c.stock = avail - cSub;
+              subUpdated = true;
+            }
+          }
+        });
+        if (colorInsufficient) {
+          await Product.findOneAndUpdate({ _id: prod._id }, { $inc: { stock: deductQty } });
+          await rollbackDeductedStock();
+          return res.status(400).json({
+            success: false,
+            message: `Za izabranu boju artikla "${prod.title}" više nema dovoljno zaliha na stanju.`,
+          });
         }
       }
 
-      if (updatedProd.stock <= 0) {
-        await Product.updateOne(
-          { _id: prod._id },
-          { $set: { stock: 0, status: updatedProd.status === "neaktivan" ? "neaktivan" : "rasprodato" } }
-        );
+      const hasVars = Array.isArray(updatedProd.variants) && updatedProd.variants.length > 0;
+      const hasCols = Array.isArray(updatedProd.colors) && updatedProd.colors.length > 0;
+      const varSum = hasVars
+        ? updatedProd.variants.reduce((sum, v) => sum + Math.max(0, typeof v.stock === "number" ? v.stock : 0), 0)
+        : null;
+      const colSum = hasCols
+        ? updatedProd.colors.reduce((sum, c) => sum + Math.max(0, typeof c.stock === "number" ? c.stock : updateInfo.currentStock), 0)
+        : null;
+
+      if ((varSum !== null && varSum <= 0) || (colSum !== null && colSum <= 0)) {
+        updatedProd.stock = 0;
+        if (updatedProd.status !== "neaktivan") {
+          updatedProd.status = "rasprodato";
+        }
+        subUpdated = true;
+      } else if (updatedProd.stock <= 0) {
+        updatedProd.stock = 0;
+        if (updatedProd.status !== "neaktivan") {
+          updatedProd.status = "rasprodato";
+        }
+        subUpdated = true;
+      }
+
+      if (subUpdated) {
+        await updatedProd.save();
       }
 
       deductedProducts.push({
         productId: prod._id,
         deductQty,
+        prevStock: updateInfo.currentStock,
         variantDeductions: updateInfo.variantDeductions,
+        colorDeductions: updateInfo.colorDeductions,
       });
     }
     } finally {

@@ -134,7 +134,9 @@
                         stock: Number(product.stock) || 0
                       }))
                     : []);
-              const activeVariant = rawVariants[0] || null;
+              const firstInStockVarIdx = rawVariants.findIndex(v => (typeof v.stock === 'number' ? v.stock : (Number(product.stock) || 0)) > 0);
+              const activeVarIdx = firstInStockVarIdx >= 0 ? firstInStockVarIdx : 0;
+              const activeVariant = rawVariants[activeVarIdx] || null;
               const curPrice = activeVariant ? (Number(activeVariant.price) || Number(product.price) || 0) : (Number(product.price) || 0);
               const rawOld = activeVariant ? activeVariant.oldPrice : product.oldPrice;
               const oldPriceVal = rawOld && Number(rawOld) > curPrice ? Number(rawOld) : null;
@@ -216,12 +218,13 @@
                     %>
                     <button
                       type="button"
-                      class="size-btn <%= idx === 0 ? 'active' : '' %>"
+                      class="size-btn <%= idx === activeVarIdx ? 'active' : '' %><%= vStock <= 0 ? ' is-out-of-stock' : '' %>"
                       data-size="<%= v.label %>"
                       data-variant-label="<%= v.label %>"
                       data-variant-price="<%= vPrice %>"
                       data-variant-oldprice="<%= vOld %>"
                       data-variant-stock="<%= vStock %>"
+                      title="<%= vStock <= 0 ? `${v.label} (Trenutno rasprodato)` : v.label %>"
                     >
                       <%= v.label %>
                     </button>
@@ -231,6 +234,7 @@
             <% } %>
 
             <%
+              const prodFallbackStock = typeof product.stock === 'number' ? product.stock : 10;
               const normalizedColors = Array.isArray(product.colors)
                 ? product.colors
                     .map((c) => {
@@ -239,24 +243,31 @@
                       const bgCol = (rawHex && rawHex !== '#2c2527' && rawHex.startsWith('#'))
                         ? rawHex
                         : (label.startsWith('#') ? label : (colorHexMap[label.toLowerCase()] || rawHex || '#4b5563'));
-                      return label ? { label, bgCol } : null;
+                      const colStock = typeof c === 'object' && c && typeof c.stock === 'number' ? c.stock : prodFallbackStock;
+                      return label ? { label, bgCol, stock: colStock } : null;
                     })
                     .filter(Boolean)
                 : [];
+              const firstInStockColIdx = normalizedColors.findIndex(c => c.stock > 0);
+              const activeColIdx = firstInStockColIdx >= 0 ? firstInStockColIdx : 0;
+              const initColor = normalizedColors[activeColIdx] || null;
             %>
             <% if (normalizedColors.length > 0) { %>
               <div class="product-option reveal delay-200" id="colorSelectorGroup">
                 <div class="option-header">
                   <span class="option-title">Boja / Varijanta izgleda:</span>
-                  <span class="stock-warning" id="selectedColorName"><%= normalizedColors[0].label %></span>
+                  <span class="stock-warning <%= initColor && initColor.stock === 0 ? 'out-of-stock' : (initColor && initColor.stock <= 5 ? 'low-stock' : '') %>" id="selectedColorName">
+                    <%= initColor ? (initColor.stock <= 0 ? `${initColor.label} (Rasprodato)` : (initColor.stock <= 5 ? `${initColor.label} (Još ${initColor.stock} kom)` : initColor.label)) : '' %>
+                  </span>
                 </div>
                 <div class="color-options">
                   <% normalizedColors.forEach((cObj, idx) => { %>
                     <button
                       type="button"
-                      class="color-btn <%= idx === 0 ? 'active' : '' %>"
+                      class="color-btn <%= idx === activeColIdx ? 'active' : '' %><%= cObj.stock <= 0 ? ' is-out-of-stock' : '' %>"
                       data-color="<%= cObj.label %>"
-                      title="<%= cObj.label %>"
+                      data-color-stock="<%= cObj.stock %>"
+                      title="<%= cObj.stock <= 0 ? `${cObj.label} (Rasprodato)` : cObj.label %>"
                       style="background-color: <%= cObj.bgCol %>;"
                     ></button>
                   <% }); %>

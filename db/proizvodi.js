@@ -110,6 +110,7 @@ const ProductSchema = new mongoose.Schema(
         name: { type: String, trim: true },
         hex: { type: String, trim: true },
         code: { type: String, trim: true },
+        stock: { type: Number, default: 10, min: 0 },
       },
     ],
     material: {
@@ -153,6 +154,8 @@ ProductSchema.index({ title: "text", description: "text" });
 ProductSchema.index({ status: 1, createdAt: -1 });
 ProductSchema.index({ status: 1, stock: 1 });
 ProductSchema.index({ stock: 1 });
+ProductSchema.index({ "variants.stock": 1 });
+ProductSchema.index({ "colors.stock": 1 });
 ProductSchema.index({ status: 1, price: 1 });
 ProductSchema.index({ status: 1, isBestseller: 1 });
 ProductSchema.index({ status: 1, isFeatured: 1 });

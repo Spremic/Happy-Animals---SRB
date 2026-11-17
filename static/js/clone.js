@@ -154,12 +154,13 @@ window.normalizeProductVariants = normalizeProductVariants;
 
 function normalizeProductColors(product) {
   if (!product || !Array.isArray(product.colors)) return [];
+  const defaultStock = typeof product.stock === 'number' ? product.stock : 10;
   return product.colors
     .filter(Boolean)
     .map(c => {
       if (typeof c === 'string') {
         const name = c.trim();
-        return name ? { name, hex: getPetColorBackground(name) } : null;
+        return name ? { name, hex: getPetColorBackground(name), stock: defaultStock } : null;
       }
       if (typeof c === 'object') {
         const name = String(c.name || c.label || '').trim();
@@ -167,7 +168,8 @@ function normalizeProductColors(product) {
         const hexRaw = String(c.code || c.hex || '').trim();
         const mapped = getPetColorBackground(name);
         const hex = (hexRaw && hexRaw !== '#2c2527') ? hexRaw : (mapped !== '#777777' ? mapped : (hexRaw || mapped));
-        return { name, hex };
+        const stock = typeof c.stock === 'number' ? c.stock : defaultStock;
+        return { name, hex, stock };
       }
       return null;
     })
@@ -194,7 +196,8 @@ function buildCardOptionsHTML(product) {
         ${visibleColors.map(c => {
           const safeC = escapeHtml(c.name);
           const safeBg = escapeHtml(c.hex);
-          return `<span class="card-color-dot" role="button" tabindex="0" data-color="${safeC}" title="${safeC}" aria-label="Boja: ${safeC}" style="background: ${safeBg};"></span>`;
+          const isOos = typeof c.stock === 'number' && c.stock <= 0;
+          return `<span class="card-color-dot${isOos ? ' is-out-of-stock' : ''}" role="button" tabindex="${isOos ? '-1' : '0'}" data-color="${safeC}" data-color-stock="${c.stock}" title="${isOos ? `${safeC} (Rasprodato)` : safeC}" aria-label="Boja: ${safeC}" style="background: ${safeBg};"></span>`;
         }).join("")}
         ${extraCount > 0 ? `<span class="more-colors-badge">+${extraCount}</span>` : ""}
       </div>
@@ -1882,6 +1885,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     if (!card) return;
 
     if (colorDot) {
+      if (colorDot.classList.contains('is-out-of-stock')) return;
       const row = colorDot.closest('.card-colors-row');
       const allDots = row ? Array.from(row.querySelectorAll('.card-color-dot')) : [];
       const wasActive = colorDot.classList.contains('active');
@@ -1969,13 +1973,15 @@ document.addEventListener("DOMContentLoaded", async function () {
       let priceNum = parseFloat(formatPrice(currentProduct)) || 0;
       let oldNum = currentProduct.oldPrice ? parseFloat(currentProduct.oldPrice) : null;
       let showRangePrefix = false;
+      let variantMaxStock = typeof currentProduct.stock === 'number' ? currentProduct.stock : 99;
+      let colorMaxStock = typeof currentProduct.stock === 'number' ? currentProduct.stock : 99;
 
       if (selectedVariant) {
         const matched = currentVariants.find(v => v.label === selectedVariant);
         if (matched) {
           priceNum = matched.price;
           oldNum = matched.oldPrice;
-          currentMaxStock = Math.max(0, typeof matched.stock === 'number' ? matched.stock : 99);
+          variantMaxStock = Math.max(0, typeof matched.stock === 'number' ? matched.stock : 99);
         }
       } else if (currentVariants.length > 0) {
         const inStockVars = currentVariants.filter(v => v.stock > 0);
@@ -1990,10 +1996,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         } else if (showRangePrefix) {
           oldNum = null;
         }
-        currentMaxStock = Math.max(...pool.map(v => typeof v.stock === 'number' ? v.stock : 99));
-      } else {
-        currentMaxStock = typeof currentProduct.stock === 'number' ? currentProduct.stock : 99;
+        variantMaxStock = Math.max(...pool.map(v => typeof v.stock === 'number' ? v.stock : 99));
       }
+
+      if (selectedColor) {
+        const matchedColor = currentColors.find(c => c.name === selectedColor);
+        if (matchedColor) {
+          colorMaxStock = Math.max(0, typeof matchedColor.stock === 'number' ? matchedColor.stock : 99);
+        }
+      } else if (currentColors.length > 0) {
+        const inStockCols = currentColors.filter(c => c.stock > 0);
+        const cPool = inStockCols.length ? inStockCols : currentColors;
+        colorMaxStock = Math.max(...cPool.map(c => typeof c.stock === 'number' ? c.stock : 99));
+      }
+
+      currentMaxStock = Math.min(variantMaxStock, colorMaxStock);
 
       if (selectedQty > currentMaxStock && currentMaxStock > 0) {
         selectedQty = currentMaxStock;
@@ -2025,9 +2042,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       }
 
       // Out of stock guard when selected or entire product unavailable
-      const isOutOfStock = currentVariants.length > 0
-        ? (selectedVariant ? currentMaxStock <= 0 : currentVariants.every(v => v.stock <= 0))
-        : currentMaxStock <= 0;
+      const noVariantAvail = currentVariants.length > 0 && (selectedVariant ? variantMaxStock <= 0 : currentVariants.every(v => v.stock <= 0));
+      const noColorAvail = currentColors.length > 0 && (selectedColor ? colorMaxStock <= 0 : currentColors.every(c => c.stock <= 0));
+      const isOutOfStock = noVariantAvail || noColorAvail || currentMaxStock <= 0;
 
       if (isOutOfStock) {
         btnAdd.disabled = true;
@@ -2037,7 +2054,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       } else {
         btnAdd.disabled = false;
         btnBuy.disabled = false;
-        if (currentMaxStock > 0 && currentMaxStock <= 5 && selectedVariant) {
+        if (currentMaxStock > 0 && currentMaxStock <= 5 && (selectedVariant || selectedColor)) {
           stockNoticeEl.textContent = `Preostalo još samo ${currentMaxStock} kom.`;
           stockNoticeEl.style.display = 'block';
         } else {
@@ -2211,13 +2228,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         selectedVariant = inStockVariants[0].label;
       }
 
+      const inStockColors = currentColors.filter(c => typeof c.stock !== 'number' || c.stock > 0);
       colorRequired = currentColors.length > 0;
       selectedColor = null;
       if (product.preselectedColor) {
-        const foundPreC = currentColors.find(c => c.name.toLowerCase() === String(product.preselectedColor).trim().toLowerCase());
+        const foundPreC = inStockColors.find(c => c.name.toLowerCase() === String(product.preselectedColor).trim().toLowerCase());
         if (foundPreC) selectedColor = foundPreC.name;
-      } else if (currentColors.length === 1) {
-        selectedColor = currentColors[0].name;
+      } else if (currentColors.length === 1 && inStockColors.length === 1) {
+        selectedColor = inStockColors[0].name;
       }
 
       // Render Colors Grid
@@ -2225,22 +2243,26 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (currentColors.length > 0) {
         colorSection.style.display = 'block';
         currentColors.forEach(colorObj => {
+          const isColorOos = typeof colorObj.stock === 'number' && colorObj.stock <= 0;
           const btn = document.createElement('button');
           btn.type = 'button';
-          btn.className = 'quick-color-option' + (selectedColor === colorObj.name ? ' active' : '');
+          btn.className = 'quick-color-option' + (selectedColor === colorObj.name ? ' active' : '') + (isColorOos ? ' is-out-of-stock' : '');
           btn.dataset.color = colorObj.name;
+          btn.dataset.colorStock = String(typeof colorObj.stock === 'number' ? colorObj.stock : 99);
+          btn.disabled = isColorOos;
 
           const circle = document.createElement('span');
           circle.className = 'quick-color-circle';
           circle.style.background = colorObj.hex;
 
           const textSpan = document.createElement('span');
-          textSpan.textContent = colorObj.name;
+          textSpan.textContent = isColorOos ? `${colorObj.name} (Rasprodato)` : colorObj.name;
 
           btn.appendChild(circle);
           btn.appendChild(textSpan);
 
           btn.addEventListener('click', () => {
+            if (isColorOos) return;
             colorsGrid.querySelectorAll('.quick-color-option').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             selectedColor = colorObj.name;

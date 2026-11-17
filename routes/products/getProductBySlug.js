@@ -101,14 +101,17 @@ async function getProductBySlug(req, res) {
       images: images,
       imageUrl: images[0] || "/img/customPageBcg.png",
       colors: (product.colors || []).map((c) => {
+        const fallbackStk = typeof product.stock === "number" ? product.stock : 10;
         if (typeof c === "string") {
-          return { name: c, code: "#2c2527", hex: "#2c2527" };
+          return { name: c, code: "#2c2527", hex: "#2c2527", stock: fallbackStk };
         }
         const colHex = c.code || c.hex || "#2c2527";
+        const colStock = typeof c.stock === "number" ? c.stock : fallbackStk;
         return {
           name: c.name || "Boja",
           code: colHex,
           hex: colHex,
+          stock: colStock,
         };
       }),
     };

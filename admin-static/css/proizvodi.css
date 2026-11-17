@@ -1,4 +1,4 @@
-/* Proizvodi CSS - Happy Animals Admin (Dark / Black Flat Theme) */
+/* Proizvodi CSS - Happy Animals Admin (Clean White Flat Theme) */
 
 .product-thumb-table {
   width: 54px;
@@ -7,36 +7,101 @@
   border-radius: 8px;
   border: 1px solid var(--color-border);
   box-shadow: none !important;
-  background: #1e1b1b;
+  background: #f8faf8;
 }
 
 .color-dot-sm {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   display: inline-block;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-right: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  flex-shrink: 0;
   vertical-align: middle;
+}
+
+.color-stock-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #334155;
+  border: 1px solid var(--color-border);
+  margin: 0 3px 3px 0;
+  vertical-align: middle;
+}
+
+.color-stock-chip.is-oos {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
 }
 
 .size-pill-sm {
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: rgba(0, 153, 0, 0.15);
-  color: #009900;
-  border: 1px solid var(--color-border);
-  margin-right: 3px;
-  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: #f0fdf4;
+  color: #007700;
+  border: 1px solid #bbf7d0;
+  margin: 0 3px 3px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.size-pill-sm.is-oos {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.stock-issues-alert {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 7px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.stock-issues-alert:hover {
+  background: #fee2e2;
+  border-color: #f87171;
+}
+
+.stock-issues-alert i {
+  margin-top: 2px;
+  flex-shrink: 0;
+  color: #dc2626;
+}
+
+.table-danger-soft {
+  background-color: #fef2f2 !important;
+}
+
+.table-danger-soft td {
+  border-color: #fecaca !important;
 }
 
 /* Drag and Drop Upload Zone */
 .modern-upload-zone {
   border: 2px dashed #009900;
   border-radius: 12px;
-  background: #181515;
+  background: #f0fdf4;
   padding: 30px 20px;
   text-align: center;
   cursor: pointer;
@@ -47,9 +112,8 @@
 
 .modern-upload-zone:hover,
 .modern-upload-zone.dragover {
-  background: #201c1c;
-  border-color: #009900;
-  transform: translateY(-2px);
+  background: #dcfce7;
+  border-color: #007700;
 }
 
 .modern-upload-zone i {
@@ -72,7 +136,7 @@
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid var(--color-border);
-  background: #181515;
+  background: #ffffff;
   box-shadow: none !important;
   cursor: grab;
   transition: transform 0.2s ease, border-color 0.2s ease;
@@ -130,7 +194,7 @@
   position: absolute;
   top: 4px;
   right: 4px;
-  background: rgba(231, 76, 60, 0.92);
+  background: rgba(220, 38, 38, 0.92);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -149,7 +213,7 @@
 
 .modern-preview-card .btn-remove-img:hover {
   transform: scale(1.15);
-  background: #c0392b;
+  background: #b91c1c;
 }
 
 .modern-preview-card .main-badge {
@@ -172,7 +236,7 @@
 .modern-preview-card .upload-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(255, 255, 255, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -199,11 +263,11 @@
   display: inline-block;
   padding: 6px 14px;
   border-radius: 8px;
-  border: 1px solid var(--color-border);
-  background: #1e1b1b;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
   font-weight: 700;
   font-size: 0.88rem;
-  color: #f0f0f0;
+  color: #334155;
   transition: all 0.2s ease;
 }
 
@@ -214,12 +278,12 @@
   box-shadow: none !important;
 }
 
-/* Color tags */
+/* Color tags (if any inline) */
 .color-tag-item {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #1e1b1b;
+  background: #ffffff;
   border: 1px solid var(--color-border);
   padding: 5px 12px;
   border-radius: 20px;
@@ -227,17 +291,17 @@
   margin-bottom: 6px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #f0f0f0;
+  color: #1e293b;
 }
 
 .color-tag-item .btn-remove-color {
   cursor: pointer;
-  color: #888888;
+  color: #64748b;
   margin-left: 4px;
 }
 
 .color-tag-item .btn-remove-color:hover {
-  color: #e74c3c;
+  color: #dc2626;
 }
 
 /* Dugme "Zalepi URL" unutar upload zone */
@@ -248,7 +312,7 @@
 }
 
 .btn-paste-url {
-  background: #1e1b1b;
+  background: #ffffff;
   color: #009900;
   border: 1px solid #009900;
   border-radius: 20px;
@@ -268,15 +332,10 @@
   color: #ffffff;
   border-color: #009900;
   box-shadow: none !important;
-  transform: translateY(-1px);
-}
-
-.btn-paste-url:active {
-  transform: translateY(0);
 }
 
 /* ==========================================================================
-   Segmentirani filter slajder (Svi / Istaknuto / Bestseller)
+   Segmentirani filter slajder (Svi / Istaknuto / Van lagera / Obaveštenja)
    ========================================================================== */
 .product-scope-slider-wrapper {
   display: flex;
@@ -287,7 +346,7 @@
 .product-scope-slider {
   display: inline-flex;
   align-items: center;
-  background: #181515;
+  background: #ffffff;
   padding: 6px;
   border-radius: 14px;
   border: 1px solid var(--color-border);
@@ -299,7 +358,7 @@
 .scope-slider-btn {
   border: none;
   background: transparent;
-  color: #a0a0a0;
+  color: #475569;
   font-size: 0.88rem;
   font-weight: 600;
   padding: 8px 16px;
@@ -314,8 +373,8 @@
 }
 
 .scope-slider-btn:hover {
-  background: #252222;
-  color: #ffffff;
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .scope-slider-btn.active {
@@ -325,8 +384,13 @@
 }
 
 .scope-slider-btn.active .text-warning,
-.scope-slider-btn.active .text-danger {
+.scope-slider-btn.active .text-danger,
+.scope-slider-btn.active .text-secondary {
   color: #ffffff !important;
+}
+
+.scope-slider-btn[data-scope="stock_alerts"].active {
+  background: #dc2626;
 }
 
 .scope-count-badge {
@@ -339,15 +403,22 @@
   border-radius: 11px;
   font-size: 0.75rem;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: #f1f5f9;
+  color: #1e293b;
   transition: all 0.2s ease;
   line-height: 1;
 }
 
+.scope-count-badge.has-alerts {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
 .scope-slider-btn.active .scope-count-badge {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.25);
   color: #ffffff;
+  border-color: transparent;
 }
 
 /* Pojedinačne cifre unutar bedža */
@@ -363,8 +434,7 @@
 }
 
 .count-num-item:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-1px);
+  background: rgba(0, 153, 0, 0.12);
 }
 
 .scope-slider-btn.active .count-num-item:hover {
@@ -373,8 +443,12 @@
 }
 
 .count-num-active {
-  font-weight: 600;
-  opacity: 0.92;
+  font-weight: 700;
+  color: #009900;
+}
+
+.scope-slider-btn.active .count-num-active {
+  color: #ffffff;
 }
 
 .count-num-sep {
@@ -382,11 +456,11 @@
   width: 3px;
 }
 
-/* Custom animirani Tooltip (lebdeći oblačić sa strelicom) */
+/* Custom animirani Tooltip */
 .mia-custom-tooltip {
   position: absolute;
   z-index: 9999999;
-  background: #231b1e;
+  background: #1e293b;
   color: #ffffff;
   padding: 6px 11px;
   border-radius: 7px;
@@ -401,7 +475,7 @@
   transform: translateY(4px);
   transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: var(--font-body);
-  border: 1px solid var(--color-border);
+  border: 1px solid #334155;
 }
 
 .mia-custom-tooltip.show {
@@ -417,16 +491,16 @@
   transform: translateX(-50%);
   border-width: 5px;
   border-style: solid;
-  border-color: #231b1e transparent transparent transparent;
+  border-color: #1e293b transparent transparent transparent;
 }
 
 .mia-custom-tooltip.tooltip-bottom::after {
   top: auto;
   bottom: 100%;
-  border-color: transparent transparent #231b1e transparent;
+  border-color: transparent transparent #1e293b transparent;
 }
 
-/* Skeleton loader za brojeve u bedževima slajdera i ukupnog broja */
+/* Skeleton loader za brojeve u bedževima */
 .skeleton-badge-num {
   width: 18px;
   height: 12px;
@@ -442,12 +516,12 @@
 
 .scope-slider-btn.active .skeleton,
 .scope-slider-btn.active .skeleton-badge-num {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.35) 30%, rgba(255, 255, 255, 0.15) 60%, rgba(255, 255, 255, 0.15) 100%) !important;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.45) 30%, rgba(255, 255, 255, 0.25) 60%, rgba(255, 255, 255, 0.25) 100%) !important;
   background-size: 250% 100% !important;
 }
 
 /* ==========================================================================
-   Brze oznake u tabeli (Istaknuto / Bestseller)
+   Brze oznake u tabeli (Istaknuto)
    ========================================================================== */
 .product-flags-row {
   display: flex;
@@ -459,8 +533,8 @@
 
 .flag-toggle-btn {
   border: 1px solid var(--color-border);
-  background: #181515;
-  color: #a0a0a0;
+  background: #ffffff;
+  color: #64748b;
   font-size: 0.74rem;
   font-weight: 600;
   padding: 3px 9px;
@@ -482,31 +556,18 @@
 .flag-toggle-btn:hover {
   border-color: #009900;
   color: #009900;
-  transform: translateY(-1px);
 }
 
 .flag-toggle-btn.active-featured {
-  background: rgba(245, 158, 11, 0.15);
+  background: #fffbeb;
   border-color: #f59e0b;
-  color: #f59e0b;
+  color: #b45309;
   font-weight: 700;
   box-shadow: none !important;
 }
 
 .flag-toggle-btn.active-featured i {
   color: #f59e0b;
-}
-
-.flag-toggle-btn.active-bestseller {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: #ef4444;
-  color: #ef4444;
-  font-weight: 700;
-  box-shadow: none !important;
-}
-
-.flag-toggle-btn.active-bestseller i {
-  color: #ef4444;
 }
 
 .flag-toggle-btn.loading-flag {
@@ -546,7 +607,7 @@
   height: 26px;
   border: none;
   background: transparent;
-  color: #888888;
+  color: #64748b;
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
@@ -558,7 +619,7 @@
 }
 
 .combo-toggle-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: #f1f5f9;
   color: #009900;
 }
 
@@ -574,7 +635,7 @@
   right: 0;
   max-height: 230px;
   overflow-y: auto;
-  background: #1c1919;
+  background: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: 10px;
   box-shadow: none !important;
@@ -592,7 +653,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #888888;
+  color: #64748b;
   padding: 5px 10px 3px;
   user-select: none;
 }
@@ -606,7 +667,7 @@
   border-radius: 7px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #f0f0f0;
+  color: #1e293b;
   cursor: pointer;
   transition: background 0.14s ease, color 0.14s ease;
   user-select: none;
@@ -614,8 +675,8 @@
 
 .combo-dropdown-item:hover,
 .combo-dropdown-item.active-item {
-  background: #262222;
-  color: #009900;
+  background: #f0fdf4;
+  color: #007700;
 }
 
 .combo-dropdown-item .combo-item-label {
@@ -627,8 +688,8 @@
 .combo-dropdown-item .combo-item-meta {
   font-size: 0.7rem;
   font-weight: 700;
-  color: #009900;
-  background: rgba(0, 153, 0, 0.15);
+  color: #007700;
+  background: #ecfdf3;
   padding: 2px 7px;
   border-radius: 10px;
   flex-shrink: 0;
@@ -637,7 +698,7 @@
 .combo-dropdown-empty {
   padding: 10px 12px;
   font-size: 0.8rem;
-  color: #888888;
+  color: #64748b;
   text-align: center;
 }
 
@@ -649,12 +710,12 @@
   border-top: 1px dashed var(--color-border);
   margin-top: 3px;
   font-size: 0.78rem;
-  color: #009900;
+  color: #007700;
   font-weight: 600;
   cursor: pointer;
   border-radius: 6px;
 }
 
 .combo-dropdown-custom-hint:hover {
-  background: #252222;
+  background: #f0fdf4;
 }

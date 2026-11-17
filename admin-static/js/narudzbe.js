@@ -163,8 +163,8 @@ async function loadOrders(page = 1) {
             <td><strong>${fullName}</strong></td>
             <td>${city}<br><small class="text-muted">${phone}</small></td>
             <td><small>${dateStr}</small></td>
-            <td><span class="badge badge-light border" style="background: #1e1b1b; color: #f0f0f0; border-color: var(--color-border) !important;">${itemsCount} kom</span></td>
-            <td><strong style="color: #ffffff;">${totalAmountStr} RSD</strong></td>
+            <td><span class="badge badge-light border" style="background: #f8fafc; color: #1e293b; border-color: var(--color-border) !important;">${itemsCount} kom</span></td>
+            <td><strong style="color: #1e293b;">${totalAmountStr} RSD</strong></td>
             <td><span class="${statusClass}">${formatStatusName(o.status)}</span></td>
             <td style="text-align: center; white-space: nowrap; width: 120px; min-width: 120px;">
               <div class="table-action-btns" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
@@ -436,7 +436,7 @@ function viewOrderDetails(orderOrId) {
 
       <!-- 6. Finansijski pregled -->
       <div class="col-12">
-        <div class="card modal-info-card" style="border: 1px solid var(--color-border); background: #1e1b1b;">
+        <div class="card modal-info-card" style="border: 1px solid var(--color-border); background: #ffffff;">
           <div class="card-header">
             <h6><i class="fas fa-receipt"></i> Finansijski pregled</h6>
           </div>
@@ -444,7 +444,7 @@ function viewOrderDetails(orderOrId) {
             <div class="row align-items-center">
               <div class="col-md-4 mb-2 mb-md-0">
                 <span class="text-muted small d-block">Način dostave:</span>
-                <span class="font-weight-bold" style="color: #ffffff;">Standardna kurirska dostava</span>
+                <span class="font-weight-bold" style="color: #1e293b;">Standardna kurirska dostava</span>
               </div>
               <div class="col-md-4 mb-2 mb-md-0 text-md-center">
                 ${discountAmount > 0 ? `

@@ -29,6 +29,7 @@ function aggregateOrderItems(items) {
     const rawCode = String(item.code || "").trim().toLowerCase();
     const rawTitle = String(item.title || "").trim();
     const rawVar = String(item.variant || item.size || "").trim().toLowerCase();
+    const rawCol = String(item.color || item.boja || "").trim().toLowerCase();
 
     const key =
       rawId && mongoose.Types.ObjectId.isValid(rawId)
@@ -40,18 +41,24 @@ function aggregateOrderItems(items) {
     const existing = grouped.get(key);
     if (existing) {
       existing.qty += qty;
-      if (rawVar) {
+      if (rawVar && rawVar !== "standard") {
         existing.variantQtys.set(rawVar, (existing.variantQtys.get(rawVar) || 0) + qty);
+      }
+      if (rawCol && rawCol !== "standard") {
+        existing.colorQtys.set(rawCol, (existing.colorQtys.get(rawCol) || 0) + qty);
       }
     } else {
       const variantQtys = new Map();
-      if (rawVar) variantQtys.set(rawVar, qty);
+      const colorQtys = new Map();
+      if (rawVar && rawVar !== "standard") variantQtys.set(rawVar, qty);
+      if (rawCol && rawCol !== "standard") colorQtys.set(rawCol, qty);
       grouped.set(key, {
         productId: rawId,
         code: rawCode,
         title: rawTitle,
         qty,
         variantQtys,
+        colorQtys,
       });
     }
   }
@@ -95,17 +102,30 @@ async function restoreStockForOrder(items) {
         { new: true }
       );
 
-      if (updatedProd && entry.variantQtys && entry.variantQtys.size > 0 && Array.isArray(updatedProd.variants) && updatedProd.variants.length > 0) {
-        let varChanged = false;
-        updatedProd.variants.forEach((v) => {
-          const vKey = String(v.label || "").trim().toLowerCase();
-          const vAdd = entry.variantQtys.get(vKey);
-          if (vAdd) {
-            v.stock = Math.max(0, (typeof v.stock === "number" ? v.stock : 0) + vAdd);
-            varChanged = true;
-          }
-        });
-        if (varChanged) await updatedProd.save();
+      if (updatedProd) {
+        let subChanged = false;
+        if (entry.variantQtys && entry.variantQtys.size > 0 && Array.isArray(updatedProd.variants) && updatedProd.variants.length > 0) {
+          updatedProd.variants.forEach((v) => {
+            const vKey = String(v.label || "").trim().toLowerCase();
+            const vAdd = entry.variantQtys.get(vKey);
+            if (vAdd) {
+              v.stock = Math.max(0, (typeof v.stock === "number" ? v.stock : 0) + vAdd);
+              subChanged = true;
+            }
+          });
+        }
+        if (entry.colorQtys && entry.colorQtys.size > 0 && Array.isArray(updatedProd.colors) && updatedProd.colors.length > 0) {
+          updatedProd.colors.forEach((c) => {
+            if (!c || typeof c !== "object") return;
+            const cKey = String(c.name || "").trim().toLowerCase();
+            const cAdd = entry.colorQtys.get(cKey);
+            if (cAdd) {
+              c.stock = Math.max(0, (typeof c.stock === "number" ? c.stock : 0) + cAdd);
+              subChanged = true;
+            }
+          });
+        }
+        if (subChanged) await updatedProd.save();
       }
 
       if (updatedProd && updatedProd.stock > 0 && updatedProd.status === "rasprodato") {
@@ -152,6 +172,31 @@ async function deductStockForOrder(items) {
           { $inc: { stock: prev.qty } },
           { new: true }
         );
+        if (restored) {
+          let rChanged = false;
+          if (prev.variantQtys && prev.variantQtys.size > 0 && Array.isArray(restored.variants)) {
+            restored.variants.forEach((v) => {
+              const vKey = String(v.label || "").trim().toLowerCase();
+              const vAdd = prev.variantQtys.get(vKey);
+              if (vAdd) {
+                v.stock = Math.max(0, (typeof v.stock === "number" ? v.stock : 0) + vAdd);
+                rChanged = true;
+              }
+            });
+          }
+          if (prev.colorQtys && prev.colorQtys.size > 0 && Array.isArray(restored.colors)) {
+            restored.colors.forEach((c) => {
+              if (!c || typeof c !== "object") return;
+              const cKey = String(c.name || "").trim().toLowerCase();
+              const cAdd = prev.colorQtys.get(cKey);
+              if (cAdd) {
+                c.stock = Math.max(0, (typeof c.stock === "number" ? c.stock : 0) + cAdd);
+                rChanged = true;
+              }
+            });
+          }
+          if (rChanged) await restored.save();
+        }
         if (restored && restored.stock > 0 && restored.status === "rasprodato") {
           await Product.updateOne(
             { _id: prev.productId, status: "rasprodato", stock: { $gt: 0 } },
@@ -166,27 +211,51 @@ async function deductStockForOrder(items) {
       throw err;
     }
 
-    if (updatedProd && entry.variantQtys && entry.variantQtys.size > 0 && Array.isArray(updatedProd.variants) && updatedProd.variants.length > 0) {
-      let varChanged = false;
-      updatedProd.variants.forEach((v) => {
-        const vKey = String(v.label || "").trim().toLowerCase();
-        const vSub = entry.variantQtys.get(vKey);
-        if (vSub) {
-          v.stock = Math.max(0, (typeof v.stock === "number" ? v.stock : 0) - vSub);
-          varChanged = true;
-        }
-      });
-      if (varChanged) await updatedProd.save();
+    if (updatedProd) {
+      let subChanged = false;
+      if (entry.variantQtys && entry.variantQtys.size > 0 && Array.isArray(updatedProd.variants) && updatedProd.variants.length > 0) {
+        updatedProd.variants.forEach((v) => {
+          const vKey = String(v.label || "").trim().toLowerCase();
+          const vSub = entry.variantQtys.get(vKey);
+          if (vSub) {
+            v.stock = Math.max(0, (typeof v.stock === "number" ? v.stock : 0) - vSub);
+            subChanged = true;
+          }
+        });
+      }
+      if (entry.colorQtys && entry.colorQtys.size > 0 && Array.isArray(updatedProd.colors) && updatedProd.colors.length > 0) {
+        updatedProd.colors.forEach((c) => {
+          if (!c || typeof c !== "object") return;
+          const cKey = String(c.name || "").trim().toLowerCase();
+          const cSub = entry.colorQtys.get(cKey);
+          if (cSub) {
+            c.stock = Math.max(0, (typeof c.stock === "number" ? c.stock : 0) - cSub);
+            subChanged = true;
+          }
+        });
+      }
+      if (subChanged) await updatedProd.save();
     }
 
-    if (updatedProd.stock <= 0 && updatedProd.status !== "rasprodato") {
-      await Product.updateOne(
-        { _id: prod._id, stock: { $lte: 0 }, status: { $ne: "neaktivan" } },
-        { $set: { status: "rasprodato" } }
-      );
+    const hasVars = Array.isArray(updatedProd.variants) && updatedProd.variants.length > 0;
+    const hasCols = Array.isArray(updatedProd.colors) && updatedProd.colors.length > 0;
+    const varSum = hasVars
+      ? updatedProd.variants.reduce((sum, v) => sum + Math.max(0, typeof v.stock === "number" ? v.stock : 0), 0)
+      : null;
+    const colSum = hasCols
+      ? updatedProd.colors.reduce((sum, c) => sum + Math.max(0, typeof c.stock === "number" ? c.stock : 10), 0)
+      : null;
+
+    if (updatedProd.stock <= 0 || (varSum !== null && varSum <= 0) || (colSum !== null && colSum <= 0)) {
+      if (updatedProd.status !== "neaktivan") {
+        await Product.updateOne(
+          { _id: prod._id, status: { $ne: "neaktivan" } },
+          { $set: { stock: 0, status: "rasprodato" } }
+        );
+      }
     }
 
-    deducted.push({ productId: prod._id, qty: entry.qty, variantQtys: entry.variantQtys });
+    deducted.push({ productId: prod._id, qty: entry.qty, variantQtys: entry.variantQtys, colorQtys: entry.colorQtys });
   }
 }
 

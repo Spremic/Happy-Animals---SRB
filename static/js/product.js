@@ -1316,20 +1316,81 @@ document.addEventListener("DOMContentLoaded", async function () {
     return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function syncProductPurchaseState() {
+    const activeSizeBtn = document.querySelector(".size-btn.active");
+    const activeColorBtn = document.querySelector(".color-btn.active");
+    const stockEl = document.getElementById("variantStockStatus");
+    const selectedColorNameEl = document.getElementById("selectedColorName");
+
+    const vStockRaw = activeSizeBtn ? activeSizeBtn.getAttribute("data-variant-stock") : null;
+    const vStock = vStockRaw !== null && vStockRaw !== "" ? parseInt(vStockRaw, 10) : null;
+
+    const cStockRaw = activeColorBtn ? activeColorBtn.getAttribute("data-color-stock") : null;
+    const cStock = cStockRaw !== null && cStockRaw !== "" ? parseInt(cStockRaw, 10) : null;
+
+    const effectiveStocks = [];
+    if (vStock !== null && !isNaN(vStock)) effectiveStocks.push(vStock);
+    if (cStock !== null && !isNaN(cStock)) effectiveStocks.push(cStock);
+    const minStock = effectiveStocks.length ? Math.min(...effectiveStocks) : null;
+
+    if (stockEl && minStock !== null) {
+      stockEl.classList.remove("low-stock", "out-of-stock");
+      if (minStock <= 0) {
+        stockEl.textContent = "Trenutno nema na stanju";
+        stockEl.classList.add("out-of-stock");
+      } else if (minStock <= 5) {
+        stockEl.textContent = `Još samo ${minStock} na stanju`;
+        stockEl.classList.add("low-stock");
+      } else {
+        stockEl.textContent = "Na stanju";
+      }
+    }
+
+    if (selectedColorNameEl && activeColorBtn) {
+      const colorLbl = activeColorBtn.getAttribute("data-color") || "";
+      selectedColorNameEl.classList.remove("low-stock", "out-of-stock");
+      if (cStock !== null && !isNaN(cStock)) {
+        if (cStock <= 0) {
+          selectedColorNameEl.textContent = `${colorLbl} (Rasprodato)`;
+          selectedColorNameEl.classList.add("out-of-stock");
+        } else if (cStock <= 5) {
+          selectedColorNameEl.textContent = `${colorLbl} (Još ${cStock} kom)`;
+          selectedColorNameEl.classList.add("low-stock");
+        } else {
+          selectedColorNameEl.textContent = colorLbl;
+        }
+      } else {
+        selectedColorNameEl.textContent = colorLbl;
+      }
+    }
+
+    const addCartCtrl = document.querySelector(".btn-add-cart");
+    const buyNowCtrl = document.querySelector(".btn-buy-now");
+    const isOutOfStock =
+      (vStock !== null && !isNaN(vStock) && vStock <= 0) ||
+      (cStock !== null && !isNaN(cStock) && cStock <= 0);
+
+    if (addCartCtrl) {
+      addCartCtrl.disabled = isOutOfStock;
+      addCartCtrl.classList.toggle("out-of-stock-disabled", isOutOfStock);
+    }
+    if (buyNowCtrl) {
+      buyNowCtrl.disabled = isOutOfStock;
+      buyNowCtrl.classList.toggle("out-of-stock-disabled", isOutOfStock);
+    }
+  }
+
   function applySelectedVariantUI(btn) {
     if (!btn) return;
     const vPrice = parseFloat(btn.getAttribute("data-variant-price"));
     const vOldRaw = btn.getAttribute("data-variant-oldprice");
     const vOld = vOldRaw ? parseFloat(vOldRaw) : null;
-    const vStockRaw = btn.getAttribute("data-variant-stock");
-    const vStock = vStockRaw !== null && vStockRaw !== "" ? parseInt(vStockRaw, 10) : null;
 
     const priceAmountEl = document.getElementById("productPriceAmount") || document.querySelector(".current-price .price-amount");
     const oldRowEl = document.getElementById("productOriginalPriceRow") || document.querySelector(".original-price");
     const oldAmountEl = document.getElementById("productOriginalAmount") || document.querySelector(".original-price .original-amount");
     const discountEl = document.getElementById("productDiscountLabel") || document.querySelector(".discount-label");
     const savingsEl = document.getElementById("productSavingsHint");
-    const stockEl = document.getElementById("variantStockStatus");
 
     if (!isNaN(vPrice) && priceAmountEl) {
       priceAmountEl.textContent = formatLocalPriceStr(vPrice);
@@ -1354,30 +1415,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (savingsEl) savingsEl.style.display = "none";
     }
 
-    if (stockEl && vStock !== null && !isNaN(vStock)) {
-      stockEl.classList.remove("low-stock", "out-of-stock");
-      if (vStock <= 0) {
-        stockEl.textContent = "Trenutno nema na stanju";
-        stockEl.classList.add("out-of-stock");
-      } else if (vStock <= 5) {
-        stockEl.textContent = `Još samo ${vStock} na stanju`;
-        stockEl.classList.add("low-stock");
-      } else {
-        stockEl.textContent = "Na stanju";
-      }
-    }
-
-    const addCartCtrl = document.querySelector(".btn-add-cart");
-    const buyNowCtrl = document.querySelector(".btn-buy-now");
-    const isOutOfStock = vStock !== null && !isNaN(vStock) && vStock <= 0;
-    if (addCartCtrl) {
-      addCartCtrl.disabled = isOutOfStock;
-      addCartCtrl.classList.toggle("out-of-stock-disabled", isOutOfStock);
-    }
-    if (buyNowCtrl) {
-      buyNowCtrl.disabled = isOutOfStock;
-      buyNowCtrl.classList.toggle("out-of-stock-disabled", isOutOfStock);
-    }
+    syncProductPurchaseState();
   }
 
   const sizeButtons = document.querySelectorAll(".size-btn");
@@ -1396,16 +1434,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   // Color selection
   const colorButtons = document.querySelectorAll(".color-btn");
-  const selectedColorNameEl = document.getElementById("selectedColorName");
   colorButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
       colorButtons.forEach((b) => b.classList.remove("active"));
       this.classList.add("active");
-      if (selectedColorNameEl) {
-        selectedColorNameEl.textContent = this.getAttribute("data-color") || "";
-      }
+      syncProductPurchaseState();
     });
   });
+
+  syncProductPurchaseState();
 
   // Favorite button toggle
   const favoriteBtn = document.querySelector(".btn-favorite");
@@ -1536,6 +1573,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (activeStockRaw !== null && activeStockRaw !== "" && parseInt(activeStockRaw, 10) <= 0) {
         return;
       }
+      const activeColorBtnEarly = document.querySelector(".color-btn.active");
+      const activeColorStockRaw = activeColorBtnEarly?.getAttribute("data-color-stock");
+      if (activeColorStockRaw !== null && activeColorStockRaw !== "" && parseInt(activeColorStockRaw, 10) <= 0) {
+        return;
+      }
 
       // Get button position
       const buttonRect = addToCartBtn.getBoundingClientRect();
@@ -1626,6 +1668,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       const activeVariantBtnEarly = document.querySelector(".size-btn.active");
       const activeStockRaw = activeVariantBtnEarly?.getAttribute("data-variant-stock");
       if (activeStockRaw !== null && activeStockRaw !== "" && parseInt(activeStockRaw, 10) <= 0) {
+        return;
+      }
+      const activeColorBtnEarly = document.querySelector(".color-btn.active");
+      const activeColorStockRaw = activeColorBtnEarly?.getAttribute("data-color-stock");
+      if (activeColorStockRaw !== null && activeColorStockRaw !== "" && parseInt(activeColorStockRaw, 10) <= 0) {
         return;
       }
 

@@ -6,6 +6,7 @@ const getProducts = require("./getProducts");
 const getCategories = require("../categories/getCategories");
 const {
   normalizeVariantsInput,
+  normalizeColorsInput,
   resolveVariantType,
   normalizeStringArray,
 } = require("../../utils/productVariants");
@@ -85,7 +86,6 @@ async function createProduct(req, res) {
     const trimmedSubcategory = safeParseArray(subcategory);
     const trimmedSubcategory2 = safeParseArray(subcategory2);
     const trimmedSizes = safeParseArray(sizes);
-    const parsedColors = safeParseColors(colors);
     const trimmedPetType = normalizeStringArray(safeParseArray(petType));
     const trimmedSpecialDiet = normalizeStringArray(safeParseArray(specialDiet));
 
@@ -126,12 +126,20 @@ async function createProduct(req, res) {
       const s = parseInt(stock, 10);
       if (!isNaN(s) && s >= 0) parsedStock = s;
     }
+    const colorData = normalizeColorsInput(colors, parsedStock);
     if (variants !== undefined && Array.isArray(variantData.variants) && variantData.variants.length > 0 && typeof variantData.totalStock === "number") {
       parsedStock = variantData.totalStock;
+    } else if (colors !== undefined && Array.isArray(colorData.colors) && colorData.colors.length > 0 && typeof colorData.totalStock === "number") {
+      parsedStock = colorData.totalStock;
+    }
+    if (variantData.variants.length > 0 && colorData.colors.length > 0) {
+      if (variantData.totalStock === 0 || colorData.totalStock === 0) {
+        parsedStock = 0;
+      }
     }
 
     let initialStatus = status || "aktivan";
-    if (parsedStock === 0) initialStatus = "rasprodato";
+    if (parsedStock === 0 && initialStatus !== "neaktivan") initialStatus = "rasprodato";
 
     let baseSlug = generateSlug(title) || generateSlug(cleanCode);
     let slug = baseSlug;
@@ -163,7 +171,7 @@ async function createProduct(req, res) {
       lifeStage: lifeStage ? String(lifeStage).trim() : "",
       flavor: flavor ? String(flavor).trim() : "",
       specialDiet: trimmedSpecialDiet,
-      colors: parsedColors,
+      colors: colorData.colors,
       material: material ? String(material).trim() : "",
       brand: brand ? String(brand).trim() : "",
       technicalData: technicalData && typeof technicalData === "object"

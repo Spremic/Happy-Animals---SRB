@@ -3420,6 +3420,24 @@ html.no-scroll {
   transform: scale(1.16);
 }
 
+.card-color-dot.is-out-of-stock {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-style: dashed;
+  transform: none;
+}
+
+.card-color-dot.is-out-of-stock::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -2px;
+  right: -2px;
+  height: 2px;
+  background: #ff4d4f;
+  transform: rotate(-45deg);
+}
+
 .more-colors-badge,
 .more-variants-badge {
   font-size: 0.72rem;
@@ -3702,6 +3720,14 @@ html.no-scroll {
   border-color: #00cc00;
   background: rgba(0, 153, 0, 0.25);
   box-shadow: 0 0 0 1px #00cc00;
+}
+
+.quick-color-option.is-out-of-stock,
+.quick-color-option:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  border-style: dashed;
+  text-decoration: line-through;
 }
 
 .quick-color-circle {

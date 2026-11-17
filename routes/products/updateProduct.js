@@ -13,6 +13,7 @@ const getProducts = require("./getProducts");
 const getCategories = require("../categories/getCategories");
 const {
   normalizeVariantsInput,
+  normalizeColorsInput,
   resolveVariantType,
   normalizeStringArray,
 } = require("../../utils/productVariants");
@@ -183,11 +184,6 @@ async function updateProduct(req, res) {
         existingProduct.variants = variantData.variants;
         if (variantData.variants.length > 0 && typeof variantData.totalStock === "number") {
           existingProduct.stock = variantData.totalStock;
-          if (existingProduct.stock === 0 && existingProduct.status !== "neaktivan") {
-            existingProduct.status = "rasprodato";
-          } else if (existingProduct.stock > 0 && existingProduct.status === "rasprodato" && (!status || status === "rasprodato")) {
-            existingProduct.status = "aktivan";
-          }
         }
       }
       existingProduct.sizes = variantData.sizes;
@@ -211,7 +207,36 @@ async function updateProduct(req, res) {
     }
 
     if (colors !== undefined) {
-      existingProduct.colors = safeParseColors(colors);
+      const baseStkForColors = stock !== undefined ? stock : existingProduct.stock;
+      const colorData = normalizeColorsInput(colors, baseStkForColors);
+      existingProduct.colors = colorData.colors;
+    }
+
+    // Sinhronizacija ukupnog lagera i statusa kada su menjane varijante, boje ili lager
+    if (variants !== undefined || colors !== undefined || stock !== undefined) {
+      const varsArr = Array.isArray(existingProduct.variants) ? existingProduct.variants : [];
+      const colsArr = Array.isArray(existingProduct.colors) ? existingProduct.colors : [];
+      const varTotal = varsArr.length > 0
+        ? varsArr.reduce((sum, v) => sum + (typeof v.stock === "number" && !isNaN(v.stock) ? Math.max(0, v.stock) : 0), 0)
+        : null;
+      const colTotal = colsArr.length > 0
+        ? colsArr.reduce((sum, c) => sum + (typeof c.stock === "number" && !isNaN(c.stock) ? Math.max(0, c.stock) : 0), 0)
+        : null;
+
+      if (varTotal !== null && colTotal !== null) {
+        existingProduct.stock = (varTotal === 0 || colTotal === 0) ? 0 : varTotal;
+      } else if (varTotal !== null) {
+        existingProduct.stock = varTotal;
+      } else if (colTotal !== null) {
+        existingProduct.stock = colTotal;
+      }
+
+      if (existingProduct.stock <= 0 && existingProduct.status !== "neaktivan") {
+        existingProduct.stock = 0;
+        existingProduct.status = "rasprodato";
+      } else if (existingProduct.stock > 0 && existingProduct.status === "rasprodato" && (!status || status === "rasprodato")) {
+        existingProduct.status = "aktivan";
+      }
     }
 
     if (material !== undefined) existingProduct.material = String(material).trim();
