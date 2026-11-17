@@ -9,14 +9,14 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     
-    <!-- Google Fonts Matching Storefront -->
+    <!-- Google Fonts Matching Storefront (Roboto + Baloo 2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
 
     <!-- Classic Admin Styles (0 SCSS, 0 Frameworks) -->
-    <link href="/admin/css/admin.css?v=2.4" rel="stylesheet" />
-    <link href="/admin/css/proizvodi.css?v=3.4" rel="stylesheet" />
+    <link href="/admin/css/admin.css?v=3.0" rel="stylesheet" />
+    <link href="/admin/css/proizvodi.css?v=4.0" rel="stylesheet" />
   </head>
 
   <body id="page-top">
@@ -52,7 +52,7 @@
             <!-- Header red -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
               <div>
-                <h1 class="h3 mb-1" style="color: #2c2527; font-weight: 800;">Svi Pet Shop artikli</h1>
+                <h1 class="h3 mb-1" style="color: #ffffff; font-weight: 800; font-family: var(--font-heading);">Svi Pet Shop artikli</h1>
                 <p class="text-muted small mb-0">Pregled, unos i ažuriranje artikala i njihovih zaliha</p>
               </div>
               <button class="btn btn-primary" onclick="openAddModal()">
@@ -83,7 +83,7 @@
             </div>
 
             <!-- Filteri i pretraga -->
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-4">
               <div class="card-body py-3">
                 <div class="row align-items-center">
                   <div class="col-md-5 mb-2 mb-md-0">
@@ -110,14 +110,14 @@
                     </select>
                   </div>
                   <div class="col-md-2 text-md-right">
-                    <span id="productTotalCount" class="badge badge-light p-2" style="font-size: 0.9rem; border: 1px solid #f3d5dc;">Ukupno: <span class="skeleton skeleton-badge-num" style="width: 28px; height: 13px;"></span></span>
+                    <span id="productTotalCount" class="badge badge-light p-2" style="font-size: 0.9rem; border: 1px solid var(--color-border);">Ukupno: <span class="skeleton skeleton-badge-num" style="width: 28px; height: 13px;"></span></span>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Tabela sa proizvodima -->
-            <div class="card shadow mb-4">
+            <div class="card mb-4">
               <div class="card-body p-0">
                 <div class="table-responsive">
                   <table class="table table-hover align-middle mb-0" id="productsTable" width="100%" cellspacing="0">
@@ -163,7 +163,7 @@
               </div>
 
               <!-- Paginacija -->
-              <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
+              <div class="card-footer d-flex align-items-center justify-content-between py-3">
                 <div id="paginationInfo" class="text-muted small">Prikazano 0 od 0</div>
                 <ul class="pagination pagination-sm mb-0" id="paginationControls"></ul>
               </div>
@@ -187,7 +187,7 @@
             </button>
           </div>
           <form id="productForm">
-            <div class="modal-body p-4" style="max-height: 80vh; overflow-y: auto; background-color: #faf7f8;">
+            <div class="modal-body p-4" style="max-height: 80vh; overflow-y: auto;">
               <input type="hidden" id="productId" />
               <input type="hidden" id="productMainImages" />
 
@@ -256,7 +256,7 @@
                       <div class="input-group">
                         <input type="number" class="form-control" id="productPrice" placeholder="1890" min="0" required style="border-radius: 8px 0 0 8px;" />
                         <div class="input-group-append">
-                          <span class="input-group-text font-weight-bold" style="border-radius: 0 8px 8px 0; background: #faf4f6; color: #7c2e4b; font-size: 0.85rem;">RSD</span>
+                          <span class="input-group-text font-weight-bold" style="border-radius: 0 8px 8px 0; background: #eef8ee; color: #009900; font-size: 0.85rem;">RSD</span>
                         </div>
                       </div>
                       <small class="text-muted">Automatski prati najnižu cenu varijante ako postoje varijante</small>
@@ -266,7 +266,7 @@
                       <div class="input-group">
                         <input type="number" class="form-control" id="productOldPrice" placeholder="2290" min="0" style="border-radius: 8px 0 0 8px;" />
                         <div class="input-group-append">
-                          <span class="input-group-text" style="border-radius: 0 8px 8px 0; background: #faf4f6; font-size: 0.85rem;">RSD</span>
+                          <span class="input-group-text" style="border-radius: 0 8px 8px 0; background: #eef8ee; font-size: 0.85rem;">RSD</span>
                         </div>
                       </div>
                     </div>
@@ -423,7 +423,7 @@
                     </div>
                   </div>
 
-                  <div class="row align-items-end mb-3 p-3 rounded" style="background: #f8f5f6; border: 1px dashed #d8c8ce;">
+                  <div class="row align-items-end mb-3 p-3 rounded" style="background: #181515; border: 1px dashed var(--color-border);">
                     <div class="col-md-4 form-group mb-2 mb-md-0">
                       <label class="small font-weight-bold mb-1">Oznaka varijante</label>
                       <input type="text" id="newVariantLabel" class="form-control" placeholder="npr. 2.5kg, L (80x60cm), 500ml" style="border-radius: 8px;" />
@@ -450,7 +450,7 @@
                     <label class="font-weight-bold" style="font-size: 0.88rem;">Dostupne boje (opciono za povodce, amove, krevete, igračke)</label>
                     <div id="colorsContainer" class="mb-2"></div>
                     <div class="input-group">
-                      <input type="color" id="newColorHex" value="#2c2527" class="form-control p-1" style="max-width: 50px; height: 38px; border-radius: 8px 0 0 8px; cursor: pointer;" />
+                      <input type="color" id="newColorHex" value="#009900" class="form-control p-1" style="max-width: 50px; height: 38px; border-radius: 8px 0 0 8px; cursor: pointer;" />
                       <input type="text" id="newColorName" class="form-control" placeholder="Naziv boje (npr. Zelena, Crna, Plava)" style="height: 38px;" />
                       <div class="input-group-append">
                         <button class="btn btn-outline-primary" type="button" onclick="addColor()" style="border-radius: 0 8px 8px 0;">
@@ -473,7 +473,7 @@
                     <textarea class="form-control" id="productDescription" rows="3" placeholder="Detaljan opis sastava, namene, doziranja i prednosti za ljubimca..." style="border-radius: 8px;"></textarea>
                   </div>
 
-                  <div class="mb-3 p-3 rounded" style="background: #f8f5f6; border: 1px solid #eadfe3;">
+                  <div class="mb-3 p-3 rounded" style="background: #181515; border: 1px solid var(--color-border);">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                       <label class="font-weight-bold mb-0" style="font-size: 0.88rem;">Dodatne specifikacije (npr. Proteini: 28%, Masti: 16%, Zemlja porekla)</label>
                       <button type="button" class="btn btn-sm btn-outline-primary" id="addTechSpecBtn" style="border-radius: 6px;">

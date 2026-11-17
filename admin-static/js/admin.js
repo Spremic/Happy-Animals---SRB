@@ -262,7 +262,7 @@ async function loadAdmins() {
 
         return `
           <tr>
-            <td class="font-weight-bold" style="color: #2c2527;">${name}</td>
+            <td class="font-weight-bold" style="color: #ffffff;">${name}</td>
             <td>${mail}</td>
             <td>${roleBadge}</td>
             <td><small class="text-muted font-weight-500">${permsStr}</small></td>

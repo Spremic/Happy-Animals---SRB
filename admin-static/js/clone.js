@@ -106,7 +106,7 @@ function loadNav(name, user) {
   navContainer.innerHTML = `
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin">
       <div class="sidebar-brand-icon">
-        <i class="fas fa-paw" style="color: #d76a92;"></i>
+        <i class="fas fa-paw" style="color: #009900;"></i>
       </div>
       <div class="sidebar-brand-text mx-3">Happy Animals</div>
     </a>

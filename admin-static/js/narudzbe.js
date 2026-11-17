@@ -159,12 +159,12 @@ async function loadOrders(page = 1) {
 
         return `
           <tr>
-            <td class="font-weight-bold" style="color: #7c2e4b;">${orderNum}</td>
+            <td class="font-weight-bold" style="color: #009900;">${orderNum}</td>
             <td><strong>${fullName}</strong></td>
             <td>${city}<br><small class="text-muted">${phone}</small></td>
             <td><small>${dateStr}</small></td>
-            <td><span class="badge badge-light border">${itemsCount} kom</span></td>
-            <td><strong style="color: #2c2527;">${totalAmountStr} RSD</strong></td>
+            <td><span class="badge badge-light border" style="background: #1e1b1b; color: #f0f0f0; border-color: var(--color-border) !important;">${itemsCount} kom</span></td>
+            <td><strong style="color: #ffffff;">${totalAmountStr} RSD</strong></td>
             <td><span class="${statusClass}">${formatStatusName(o.status)}</span></td>
             <td style="text-align: center; white-space: nowrap; width: 120px; min-width: 120px;">
               <div class="table-action-btns" style="display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
@@ -416,7 +416,7 @@ function viewOrderDetails(orderOrId) {
           <div class="card-body p-0">
             <div class="table-responsive">
               <table class="table table-hover mb-0" style="font-size: 0.92rem;">
-                <thead style="background: #faf4f6; color: #7c2e4b; font-size: 0.8rem; text-transform: uppercase;">
+                <thead style="background: #eef8ee; color: #009900; font-size: 0.8rem; text-transform: uppercase;">
                   <tr>
                     <th style="width: 70px; text-align: center;">Slika</th>
                     <th>Naziv artikla i varijanta</th>
@@ -436,7 +436,7 @@ function viewOrderDetails(orderOrId) {
 
       <!-- 6. Finansijski pregled -->
       <div class="col-12">
-        <div class="card modal-info-card" style="border: 1px solid #ebd9df; background: #ffffff;">
+        <div class="card modal-info-card" style="border: 1px solid var(--color-border); background: #1e1b1b;">
           <div class="card-header">
             <h6><i class="fas fa-receipt"></i> Finansijski pregled</h6>
           </div>
@@ -444,7 +444,7 @@ function viewOrderDetails(orderOrId) {
             <div class="row align-items-center">
               <div class="col-md-4 mb-2 mb-md-0">
                 <span class="text-muted small d-block">Način dostave:</span>
-                <span class="font-weight-bold text-dark">Standardna kurirska dostava</span>
+                <span class="font-weight-bold" style="color: #ffffff;">Standardna kurirska dostava</span>
               </div>
               <div class="col-md-4 mb-2 mb-md-0 text-md-center">
                 ${discountAmount > 0 ? `
@@ -457,7 +457,7 @@ function viewOrderDetails(orderOrId) {
               </div>
               <div class="col-md-4 text-md-right">
                 <span class="text-muted small d-block">Ukupan iznos za naplatu:</span>
-                <div class="h4 mb-0 font-weight-bold" style="color: #7c2e4b;">
+                <div class="h4 mb-0 font-weight-bold" style="color: #009900;">
                   ${totalAmountStr} RSD
                 </div>
               </div>

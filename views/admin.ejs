@@ -8,13 +8,13 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     
-    <!-- Google Fonts Matching Storefront -->
+    <!-- Google Fonts Matching Storefront (Roboto + Baloo 2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
 
     <!-- Classic Admin Styles (0 SCSS, 0 Frameworks) -->
-    <link href="/admin/css/admin.css?v=2.5" rel="stylesheet" />
+    <link href="/admin/css/admin.css?v=3.0" rel="stylesheet" />
   </head>
   <body id="page-top">
     <div id="wrapper">
@@ -47,7 +47,7 @@
           <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
               <div>
-                <h1 class="h3 mb-1" style="color: #2c2527; font-weight: 800;">Upravljanje administratorima</h1>
+                <h1 class="h3 mb-1" style="color: #ffffff; font-weight: 800; font-family: var(--font-heading);">Upravljanje administratorima</h1>
                 <p class="text-muted small mb-0">Pregled, dodavanje i izmena administratorskih naloga i dozvola pristupa</p>
               </div>
               <button type="button" class="btn btn-primary" onclick="prepareAddAdmin()">
@@ -55,9 +55,9 @@
               </button>
             </div>
 
-            <div class="card shadow mb-4">
+            <div class="card mb-4">
               <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold" style="color: #7c2e4b;">Lista administratora</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #009900; font-family: var(--font-heading);">Lista administratora</h6>
               </div>
               <div class="card-body">
                 <div class="table-responsive">
@@ -110,7 +110,7 @@
             </button>
           </div>
           <form id="adminForm">
-            <div class="modal-body p-4" style="max-height: 82vh; overflow-y: auto; background-color: #faf7f8;">
+            <div class="modal-body p-4" style="max-height: 82vh; overflow-y: auto; background-color: #181515;">
               <input type="hidden" id="adminId" />
 
               <!-- 1. Osnovni podaci naloga -->
@@ -147,11 +147,11 @@
                 </div>
                 <div class="card-body">
                   <!-- Glavni administrator switch card -->
-                  <div class="card mb-3 shadow-sm border-left-primary" id="mainAdminCard" style="background: #fdf8fa; border: 1px solid #ebd9df; border-left: 4px solid #7c2e4b !important; border-radius: 8px; cursor: pointer;">
+                  <div class="card mb-3 border-left-primary" id="mainAdminCard" style="background: #181515; border: 1px solid var(--color-border); border-left: 4px solid #009900 !important; border-radius: 8px; cursor: pointer;">
                     <div class="card-body py-3">
                       <div class="custom-control custom-switch">
                         <input type="checkbox" class="custom-control-input" id="adminTypeSwitch" />
-                        <label class="custom-control-label font-weight-bold" for="adminTypeSwitch" style="color: #7c2e4b; font-size: 1.02rem;">
+                        <label class="custom-control-label font-weight-bold" for="adminTypeSwitch" style="color: #009900; font-size: 1.02rem;">
                           Glavni Administrator (Superadmin)
                         </label>
                       </div>
@@ -163,8 +163,8 @@
 
                   <!-- Sekcija za pojedinačne dozvole -->
                   <div id="permissionsSection">
-                    <label class="font-weight-bold d-block mb-2" style="font-size: 0.86rem; color: #4a3e42;">
-                      <i class="fas fa-key mr-1" style="color: #7c2e4b;"></i> Dozvole za pristup stranicama
+                    <label class="font-weight-bold d-block mb-2" style="font-size: 0.86rem; color: #f0f0f0;">
+                      <i class="fas fa-key mr-1" style="color: #009900;"></i> Dozvole za pristup stranicama
                     </label>
                     <div class="row">
                       <div class="col-md-6 mb-2">
@@ -198,9 +198,9 @@
                   </div>
 
                   <!-- Banner kada je Glavni Admin -->
-                  <div id="mainAdminInfo" class="alert alert-success text-center shadow-sm py-4 mb-0" style="display: none; border-left: 4px solid #27ae60; background: #eafaf1; border-radius: 8px;">
-                    <div class="mb-2"><i class="fas fa-user-shield fa-3x" style="color: #27ae60;"></i></div>
-                    <h5 class="alert-heading font-weight-bold" style="color: #1e824c;">Pun pristup sistemu</h5>
+                  <div id="mainAdminInfo" class="alert alert-success text-center py-4 mb-0" style="display: none; border-left: 4px solid #009900; background: #1c1919; border: 1px solid var(--color-border); border-radius: 8px;">
+                    <div class="mb-2"><i class="fas fa-user-shield fa-3x" style="color: #009900;"></i></div>
+                    <h5 class="alert-heading font-weight-bold" style="color: #009900;">Pun pristup sistemu</h5>
                     <p class="mb-0 text-muted" style="font-size: 0.9rem;">Ovaj korisnik je označen kao <strong>Glavni administrator</strong> i automatski ima neograničen pristup svim funkcijama.</p>
                   </div>
                 </div>

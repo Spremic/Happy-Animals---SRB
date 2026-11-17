@@ -979,9 +979,9 @@ async function loadProducts(page = 1) {
             <td>
               <img src="${thumbUrl}" alt="${title}" class="product-thumb-table" onerror="this.src='/img/customPageBcg.png'" />
             </td>
-            <td class="font-weight-bold text-uppercase" style="color: #7c2e4b; font-size: 0.88rem;">${code}</td>
+            <td class="font-weight-bold text-uppercase" style="color: #009900; font-size: 0.88rem;">${code}</td>
             <td>
-              <div class="font-weight-bold" style="color: #2c2527;">${title}</div>
+              <div class="font-weight-bold" style="color: #ffffff;">${title}</div>
               <small class="text-muted d-block mb-1">${material}</small>
               <div class="product-flags-row">
                 <button type="button" class="flag-toggle-btn ${p.isFeatured ? 'active-featured' : ''}" 
@@ -1002,7 +1002,7 @@ async function loadProducts(page = 1) {
               ${subcat2Str ? `<div class="small text-muted text-capitalize" style="padding-left: 8px;"><i class="fas fa-angle-double-right mr-1"></i>${subcat2Str}</div>` : ""}
             </td>
             <td>
-              <strong style="color: #2c2527;">${priceFormatted} RSD</strong>
+              <strong style="color: #ffffff;">${priceFormatted} RSD</strong>
               ${oldPriceFormatted ? `<br><small class="text-muted text-decoration-line-through" style="text-decoration: line-through;">${oldPriceFormatted} RSD</small>` : ""}
             </td>
             <td>${sizesStr || '<span class="text-muted small">-</span>'}</td>

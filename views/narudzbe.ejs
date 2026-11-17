@@ -8,13 +8,13 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     
-    <!-- Google Fonts Matching Storefront -->
+    <!-- Google Fonts Matching Storefront (Roboto + Baloo 2) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
 
     <!-- Classic Admin Styles (0 SCSS, 0 Frameworks) -->
-    <link href="/admin/css/admin.css?v=2.4" rel="stylesheet" />
+    <link href="/admin/css/admin.css?v=3.0" rel="stylesheet" />
   </head>
 
   <body id="page-top">
@@ -48,7 +48,7 @@
           <div class="container-fluid">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
               <div>
-                <h1 class="h3 mb-1" style="color: #2c2527; font-weight: 800;">Porudžbine kupaca</h1>
+                <h1 class="h3 mb-1" style="color: #ffffff; font-weight: 800; font-family: var(--font-heading);">Porudžbine kupaca</h1>
                 <p class="text-muted small mb-0">Pregled, statusi i detalji pristiglih online porudžbina</p>
               </div>
             </div>
@@ -88,7 +88,7 @@
             </div>
 
             <!-- Filteri i pretraga -->
-            <div class="card shadow-sm mb-4">
+            <div class="card mb-4">
               <div class="card-body py-3">
                 <div class="row align-items-center">
                   <div class="col-md-7 mb-2 mb-md-0">
@@ -103,15 +103,15 @@
                   </div>
                   <div class="col-md-5 text-md-right d-flex align-items-center justify-content-md-end justify-content-between">
                     <input type="hidden" id="orderStatusFilter" value="" />
-                    <span id="orderActiveFilterBadge" class="badge badge-primary mr-2 p-2" style="font-size: 0.85rem; background: #7c2e4b;">Sve porudžbine</span>
-                    <span id="orderTotalCount" class="badge badge-light p-2" style="font-size: 0.85rem; border: 1px solid #f3d5dc;">Prikazano: 0</span>
+                    <span id="orderActiveFilterBadge" class="badge badge-primary mr-2 p-2" style="font-size: 0.85rem; background: #009900;">Sve porudžbine</span>
+                    <span id="orderTotalCount" class="badge badge-light p-2" style="font-size: 0.85rem; border: 1px solid var(--color-border); background: #1e1b1b; color: #f0f0f0;">Prikazano: 0</span>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Tabela porudžbina -->
-            <div class="card shadow mb-4">
+            <div class="card mb-4">
               <div class="card-body p-0">
                 <div class="table-responsive">
                   <table class="table table-hover align-middle mb-0" id="ordersTable" width="100%" cellspacing="0">
@@ -152,7 +152,7 @@
                   </table>
                 </div>
               </div>
-              <div class="card-footer bg-white d-flex align-items-center justify-content-between py-3">
+              <div class="card-footer d-flex align-items-center justify-content-between py-3" style="background: #181515; border-top: 1px solid var(--color-border);">
                 <div id="orderPaginationInfo" class="text-muted small">Prikazano 0 od 0</div>
                 <ul class="pagination pagination-sm mb-0" id="orderPaginationControls"></ul>
               </div>
@@ -175,7 +175,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body p-4" id="orderDetailsBody" style="max-height: 82vh; overflow-y: auto; background-color: #faf7f8;">
+          <div class="modal-body p-4" id="orderDetailsBody" style="max-height: 82vh; overflow-y: auto; background-color: #181515;">
             <!-- Dinamički se popunjava po uzoru na Supermedia -->
           </div>
           <div class="modal-footer">
